@@ -40,7 +40,7 @@ public class Teleop extends LinearOpMode {
 
             s_drivetrain.drive(
                     gamepad.getLeftY(),
-                    gamepad.getLeftX(),
+                    -gamepad.getLeftX(),
                     gamepad.getRightX()
             );
 
@@ -48,6 +48,11 @@ public class Teleop extends LinearOpMode {
             xPressed = gamepad.isDown(GamepadKeys.Button.X);
 
             gamepad.readButtons();
+
+            if (xPressed) {
+                s_drivetrain.resetYaw();
+            }
+
 
             s_drivetrain.periodic(telemetry);
             telemetry.addData("A button: ", aPressed);

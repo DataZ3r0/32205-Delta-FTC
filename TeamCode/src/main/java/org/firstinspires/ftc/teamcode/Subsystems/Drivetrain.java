@@ -82,7 +82,7 @@ public class Drivetrain {
 
         if(heading > 180) {
             heading -= 360;
-        } else if (heading < 180) {
+        } else if (heading < -180) {
             heading += 360;
         }
 

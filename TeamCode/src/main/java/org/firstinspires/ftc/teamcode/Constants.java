@@ -11,7 +11,7 @@ public class Constants {
 
         public static final double strafingBalancer = 1.1;
 
-        public static final double controlHubOffset = 0;
+        public static final double controlHubOffset = 90;
 
     }
 
