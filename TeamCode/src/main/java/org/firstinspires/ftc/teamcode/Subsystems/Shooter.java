@@ -4,5 +4,5 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Shooter {
 
-    int x = 67;
+    int x = 69;
 }
