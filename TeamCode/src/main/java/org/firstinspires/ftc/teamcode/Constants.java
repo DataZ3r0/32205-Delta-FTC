@@ -27,4 +27,8 @@ public class Constants {
 
         public static final double maxSpeed = 1.0;
     }
+
+    public static final class VisionConstants {
+        public static final String webcam = "Webcam 1";
+    }
 }

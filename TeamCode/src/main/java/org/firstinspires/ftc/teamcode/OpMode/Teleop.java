@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilTagDetection;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
@@ -22,6 +23,7 @@ public class Teleop extends LinearOpMode {
     boolean xPressed;
 
     Drivetrain s_drivetrain;
+    AprilTagDetection s_aprilTagVision;
     //Intake s_intake;
     //Shooter s_shooter;
 
@@ -31,6 +33,7 @@ public class Teleop extends LinearOpMode {
         gamepad = new GamepadEx(gamepad1);
 
         s_drivetrain = new Drivetrain(hardwareMap);
+        s_aprilTagVision = new AprilTagDetection(hardwareMap);
         //s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
 
@@ -43,6 +46,8 @@ public class Teleop extends LinearOpMode {
                     -gamepad.getLeftX(),
                     gamepad.getRightX()
             );
+
+            s_aprilTagVision.getAprilTagData(telemetry);
 
             aPressed = gamepad.isDown(GamepadKeys.Button.A);
             xPressed = gamepad.isDown(GamepadKeys.Button.X);
