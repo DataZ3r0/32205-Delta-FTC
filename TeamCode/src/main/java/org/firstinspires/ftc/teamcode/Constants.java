@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.Servo;
 public class Constants {
-
+    public static final boolean compMode = false;
     public static final class DrivetrainConstants {
         public static final String frontLeftMotor = "frontLeft0";
         public static final String frontRightMotor = "frontRight1";
