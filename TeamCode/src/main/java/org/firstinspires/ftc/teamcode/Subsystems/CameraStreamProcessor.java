@@ -13,7 +13,7 @@ import org.opencv.core.Mat;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CameraStream implements VisionProcessor, CameraStreamSource {
+public class CameraStreamProcessor implements VisionProcessor, CameraStreamSource {
     private final AtomicReference<Bitmap> lastFrame = new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
     @Override
@@ -33,7 +33,6 @@ public class CameraStream implements VisionProcessor, CameraStreamSource {
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
         // do nothing
     }
-
 
     @Override
     public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {

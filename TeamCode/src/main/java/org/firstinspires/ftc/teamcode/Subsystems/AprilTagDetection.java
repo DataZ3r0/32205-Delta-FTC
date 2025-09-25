@@ -8,9 +8,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
+import org.firstinspires.ftc.robotcore.internal.ftdi.eeprom.FT_EE_Ctrl;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.features2d.SimpleBlobDetector_Params;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +23,21 @@ public class AprilTagDetection {
     private VisionPortal visionPortal;
     private Telemetry telemetry;
     private Telemetry dashboardTelemetry;
+    private CameraStreamProcessor s_Processor;
 
     public AprilTagDetection(HardwareMap hardwaremap) {
+        s_Processor = new CameraStreamProcessor();
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-        visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
+//        visionPortal = VisionPortal.easyCreateWithDefaults(
+//                hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
+        visionPortal = new VisionPortal.Builder()
+                .addProcessor(aprilTag)
+                .addProcessor(s_Processor)
+                .setCamera(hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam))
+                .build();
         dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
+
+        FtcDashboard.getInstance().startCameraStream(s_Processor, 60);
     }
 
     public void getAprilTagData(Telemetry telemetry) {
