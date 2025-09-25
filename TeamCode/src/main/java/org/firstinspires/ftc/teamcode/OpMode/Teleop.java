@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpMode;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilTagDetection;
+import org.firstinspires.ftc.teamcode.Commands.AutoAlignCommand;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
 @TeleOp(name="Delta", group="Teleop")
 public class Teleop extends LinearOpMode {
@@ -23,9 +19,11 @@ public class Teleop extends LinearOpMode {
     boolean xPressed;
 
     Drivetrain s_drivetrain;
-    AprilTagDetection s_aprilTagVision;
+    AprilVision s_aprilVision;
     //Intake s_intake;
     //Shooter s_shooter;
+
+    AutoAlignCommand autoAlign;
 
     @Override
     public void runOpMode() {
@@ -33,9 +31,11 @@ public class Teleop extends LinearOpMode {
         gamepad = new GamepadEx(gamepad1);
 
         s_drivetrain = new Drivetrain(hardwareMap);
-        s_aprilTagVision = new AprilTagDetection(hardwareMap);
+        s_aprilVision = new AprilVision(hardwareMap);
         //s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
+
+        CommandScheduler.getInstance().run();
 
         waitForStart();
 
@@ -47,7 +47,7 @@ public class Teleop extends LinearOpMode {
                     gamepad.getRightX()
             );
 
-            s_aprilTagVision.getAprilTagData(telemetry);
+            s_aprilVision.getAprilTagData(telemetry);
 
             aPressed = gamepad.isDown(GamepadKeys.Button.A);
             xPressed = gamepad.isDown(GamepadKeys.Button.X);
@@ -56,6 +56,10 @@ public class Teleop extends LinearOpMode {
 
             if (xPressed) {
                 s_drivetrain.resetYaw();
+            }
+
+            if(aPressed) {
+                autoAlign = new AutoAlignCommand(s_drivetrain, s_aprilVision);
             }
 
 
