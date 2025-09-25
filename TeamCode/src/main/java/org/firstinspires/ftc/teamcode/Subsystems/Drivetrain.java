@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -13,13 +14,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Constants;
 
-public class Drivetrain {
+public class Drivetrain extends SubsystemBase {
     private final DcMotor frontLeft;
     private final DcMotor frontRight;
     private final DcMotor backLeft;
     private final DcMotor backRight;
 
-    private BNO055IMU IMU;
+    private final BNO055IMU IMU;
 
     private double yawOffset;
 
