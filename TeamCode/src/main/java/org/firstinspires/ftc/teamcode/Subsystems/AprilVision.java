@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -25,39 +26,22 @@ public class AprilVision extends SubsystemBase {
 
     final int DESIRED_TAG_ID = -1;
     final AprilTagProcessor aprilTag;
+    final VisionPortal visionPortal;
     public AprilTagPoseFtc ftcPose;
-    private AprilTagDetection desiredTag = null;
+    public static AprilTagDetection desiredTag = null;
+
+    public static double targetRange;
+    public static double targetYaw;
+    public static double targetBearing;
+    public static double targetY;
+    public static double targetX;
 
     public AprilVision(HardwareMap hardwaremap) {
-        final VisionPortal visionPortal;
-
         final boolean USE_WEBCAM = true;
 
-        Position cameraPosition = new Position(DistanceUnit.INCH,
-                0, 0, 0, 0);
-
-        YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-                0, -90, 0, 0);
-
-        aprilTag = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagOutline(true)
-                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
-                .setTagLibrary(AprilTagGameDatabase.getCenterStageTagLibrary())
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
-                .setCameraPose(cameraPosition, cameraOrientation)
-                .build();
-
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCameraResolution(new Size(640, 480));
-        builder.enableLiveView(true);
-        builder.setStreamFormat(StreamFormat.YUY2);
-        builder.setAutoStopLiveView(false);
-        builder.addProcessor(aprilTag);
-        builder.setCamera(hardwaremap.get(WebcamName.class, "Webcam 1"));
-
-        visionPortal = builder.build();
+        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+        visionPortal = VisionPortal.easyCreateWithDefaults(
+                hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
     }
 
     public void getAprilTagData(Telemetry telemetry) {
@@ -68,19 +52,26 @@ public class AprilVision extends SubsystemBase {
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                if (detection.metadata.name.contains("Obelisk")) {
-                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
+                if (!detection.metadata.name.contains("Obelisk")) {
+                    telemetry.addLine(String.format("Robot XYZ %6.1f %6.1f %6.1f  (inch)",
                             detection.robotPose.getPosition().x,
                             detection.robotPose.getPosition().y,
                             detection.robotPose.getPosition().z));
-                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
+                    telemetry.addLine(String.format("Robot PRY %6.1f %6.1f %6.1f  (deg)",
                             detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
                             detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
                             detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)));
                 }
-                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-                telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+                telemetry.addLine(String.format("Tag XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                telemetry.addLine(String.format("Tag PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                telemetry.addLine(String.format("Tag RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+                setTargetYaw(detection.ftcPose.yaw);
+                setTargetRange(detection.ftcPose.range);
+                setTargetBearing(detection.ftcPose.bearing);
+                setTargetY(detection.ftcPose.y);
+                setTargetX(detection.ftcPose.x);
+//                setTargetBearing(detection.ftcPose.bearing);
+
             } else {
                 telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
@@ -110,5 +101,51 @@ public class AprilVision extends SubsystemBase {
             }
         }
         return targetFound;
+    }
+
+    public void setTargetYaw(double yaw) {
+        targetYaw = yaw;
+    }
+    public static double getTargetYaw() {
+        return targetYaw;
+    }
+
+    public void setTargetBearing(double bearing) {
+        targetBearing = bearing;
+    }
+    public static double getTargetBearing() {
+        return targetBearing;
+    }
+
+    public void setTargetRange(double range) {
+        targetRange = range;
+    }
+    public static double getTargetRange() {
+        return targetRange;
+    }
+
+    public void setTargetY(double y) {
+        targetYaw = y;
+    }
+    public static double getTargetY() {
+        return targetY;
+    }
+
+    public void setTargetX(double x) {
+        targetX = x;
+    }
+    public static double getTargetX() {
+        return targetX;
+    }
+//
+//    public void setRobotRange(double range) {
+//        robotRange = range;
+//    }
+//    public static double geRobotRange() {
+//        return robotRange;
+//    }
+    @Override
+    public void periodic() {
+
     }
 }

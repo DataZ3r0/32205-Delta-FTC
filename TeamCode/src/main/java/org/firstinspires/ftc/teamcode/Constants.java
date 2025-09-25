@@ -13,6 +13,14 @@ public class Constants {
 
         public static final double controlHubOffset = 90;
 
+        public static final double kPdrive = 0.02;
+        public static final double kPstrafe = 0.015;
+        public static final double kPturn = 0.05;
+
+        public static final double maxDrive = 0.5;
+        public static final double maxStrafe = 0.5;
+        public static final double maxTurn = 0.5;
+
     }
 
     public static final class IntakeConstants {

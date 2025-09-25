@@ -37,12 +37,15 @@ public class Teleop extends LinearOpMode {
         //s_shooter = new Shooter(hardwareMap);
 
         AutoAlignCommand autoAlign = new AutoAlignCommand(s_drivetrain, s_aprilTagVision);
+        CommandScheduler.getInstance().registerSubsystem(s_drivetrain, s_aprilTagVision);
 
         waitForStart();
 
         while (opModeIsActive()) {
+            CommandScheduler.getInstance().run();
 
             s_drivetrain.drive(
+//                    0,0, 1
                     gamepad.getLeftY(),
                     -gamepad.getLeftX(),
                     gamepad.getRightX()
@@ -50,7 +53,11 @@ public class Teleop extends LinearOpMode {
 
             s_aprilTagVision.getAprilTagData(telemetry);
 
-            aPressed = gamepad.isDown(GamepadKeys.Button.A);
+            if(s_aprilTagVision.findTarget()) {
+                gamepad.getGamepadButton(GamepadKeys.Button.A).
+                        whenPressed(autoAlign);
+            }
+
             xPressed = gamepad.isDown(GamepadKeys.Button.X);
 
             gamepad.readButtons();
@@ -59,9 +66,9 @@ public class Teleop extends LinearOpMode {
                 s_drivetrain.resetYaw();
             }
 
-//            if (aPressed && s_aprilTagVision.findTarget()) {
-//                CommandScheduler.getInstance().schedule(autoAlign);
-//            }
+            while (aPressed && s_aprilTagVision.findTarget()) {
+                CommandScheduler.getInstance().schedule(autoAlign);
+            }
 
             s_drivetrain.periodic(telemetry);
             telemetry.update();
