@@ -25,6 +25,7 @@ public class Constants {
 
         public static final String intakeMotor = "shooterMotor";
 
+
         public static final double maxSpeed = 1.0;
     }
 
