@@ -198,7 +198,7 @@ public class Drivetrain extends SubsystemBase {
         while (headingError <= -180) headingError += 360;
 
         // Multiply the error by the gain to determine the required steering correction/  Limit the result to +/- 1.0
-        return Range.clip(headingError * Constants.DrivetrainConstants.kPturn,
+        return Range.clip(headingError * 0.02,
                 -Constants.DrivetrainConstants.maxDrive,
                 Constants.DrivetrainConstants.maxDrive);
     }
