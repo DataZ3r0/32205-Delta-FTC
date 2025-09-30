@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 
-public class AutoAlignCommand extends CommandBase {
+public class AlignToTagCommand extends CommandBase {
     private final Drivetrain s_drivetrain;
     private final AprilVision s_tagDetection;
 
@@ -26,7 +26,7 @@ public class AutoAlignCommand extends CommandBase {
     double headingError;
     double yawError;
 
-    public AutoAlignCommand(Drivetrain drivetrain, AprilVision s_tagDetection) {
+    public AlignToTagCommand(Drivetrain drivetrain, AprilVision s_tagDetection) {
         this.s_drivetrain = drivetrain;
         this.s_tagDetection = s_tagDetection;
 

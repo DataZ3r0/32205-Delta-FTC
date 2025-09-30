@@ -3,10 +3,11 @@ package org.firstinspires.ftc.teamcode.OpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.AutoAlignCommand;
+import org.firstinspires.ftc.teamcode.Commands.AlignToTagCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 
@@ -23,14 +24,14 @@ public class Teleop extends LinearOpMode {
     //Intake s_intake;
     //Shooter s_shooter;
 
-    AutoAlignCommand autoAlign;
+    AlignToTagCommand autoAlign;
 
     @Override
     public void runOpMode() {
 
         gamepad = new GamepadEx(gamepad1);
 
-        s_drivetrain = new Drivetrain(hardwareMap);
+        s_drivetrain = new Drivetrain(hardwareMap, false);
         s_aprilVision = new AprilVision(hardwareMap);
         //s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
@@ -59,9 +60,8 @@ public class Teleop extends LinearOpMode {
             }
 
             if(aPressed) {
-                autoAlign = new AutoAlignCommand(s_drivetrain, s_aprilVision);
+                autoAlign = new AlignToTagCommand(s_drivetrain, s_aprilVision);
             }
-
 
             s_drivetrain.periodic(telemetry);
             telemetry.addData("A button: ", aPressed);
