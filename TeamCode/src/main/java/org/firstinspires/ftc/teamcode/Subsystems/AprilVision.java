@@ -42,23 +42,25 @@ public class AprilVision extends SubsystemBase {
     public static double targetX;
 
     public AprilVision(HardwareMap hardwaremap) {
-        s_Processor = new CameraStreamProcessor();
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-//        visionPortal = VisionPortal.easyCreateWithDefaults(
-//                hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
-        visionPortal = new VisionPortal.Builder()
-                .addProcessor(aprilTag)
-                .addProcessor(s_Processor)
-                .setCamera(hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam))
-                .build();
+        if (Constants.toggles.toggleCamStream) {
+            s_Processor = new CameraStreamProcessor();
+            visionPortal = new VisionPortal.Builder()
+                    .addProcessor(aprilTag)
+                    .addProcessor(s_Processor)
+                    .setCamera(hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam))
+                    .build();
+            FtcDashboard.getInstance().startCameraStream(s_Processor, 60);
+        } else {
+            visionPortal = VisionPortal.easyCreateWithDefaults(
+                    hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
+        }
         dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
-
-        FtcDashboard.getInstance().startCameraStream(s_Processor, 60);
     }
 
     public void getAprilTagData(Telemetry telemetry) {
         List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTag.getDetections();
-        if (Constants.compMode) {
+        if (Constants.toggles.compMode) {
             telemetry.addData("# AprilTags Detected", currentDetections.size());
             // Step through the list of detections and display info for each one.
             for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : currentDetections) {

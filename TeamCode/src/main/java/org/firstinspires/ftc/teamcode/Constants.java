@@ -1,8 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Servo;
 public class Constants {
-    public static final boolean compMode = false;
+
+    public static final class toggles{
+        public static final boolean compMode = false;
+        public static final boolean toggleCamStream = true;
+    }
+
     public static final class DrivetrainConstants {
         public static final String frontLeftMotor = "frontLeft0";
         public static final String frontRightMotor = "frontRight1";
@@ -19,14 +25,16 @@ public class Constants {
 
         public static final double controlHubOffset = 90;
 
-        public static final double kPdrive = 0.02;
-        public static final double kPstrafe = 0.015;
-        public static final double kPturn = 0.05;
-
         public static final double maxDrive = 0.5;
         public static final double maxStrafe = 0.5;
         public static final double maxTurn = 0.5;
 
+        @Config
+        public static final class drivePID {
+            public static double kPdrive = 0.02;
+            public static double kPstrafe = 0.015;
+            public static double kPturn = 0.05;
+        }
     }
 
     public static final class IntakeConstants {

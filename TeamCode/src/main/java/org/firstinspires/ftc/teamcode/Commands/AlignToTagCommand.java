@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.kPdrive;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.kPstrafe;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.kPturn;
+import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPdrive;
+import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPstrafe;
+import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPturn;
 import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxDrive;
 import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxStrafe;
 import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxTurn;
