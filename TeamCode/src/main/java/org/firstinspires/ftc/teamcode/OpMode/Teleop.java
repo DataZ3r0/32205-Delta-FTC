@@ -31,7 +31,7 @@ public class Teleop extends LinearOpMode {
 
         gamepad = new GamepadEx(gamepad1);
 
-        s_drivetrain = new Drivetrain(hardwareMap, false);
+        s_drivetrain = new Drivetrain(hardwareMap);
         s_aprilVision = new AprilVision(hardwareMap);
         //s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
