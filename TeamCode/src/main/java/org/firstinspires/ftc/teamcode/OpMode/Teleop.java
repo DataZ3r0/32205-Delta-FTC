@@ -6,10 +6,12 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Commands.AlignToTagCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 
 @TeleOp(name="Delta", group="Teleop")
 public class Teleop extends LinearOpMode {
@@ -23,6 +25,7 @@ public class Teleop extends LinearOpMode {
     AprilVision s_aprilVision;
     //Intake s_intake;
     //Shooter s_shooter;
+    OTOS s_otos;
 
     AlignToTagCommand autoAlign;
 
@@ -35,6 +38,8 @@ public class Teleop extends LinearOpMode {
         s_aprilVision = new AprilVision(hardwareMap);
         //s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
+
+        s_otos = new OTOS(hardwareMap, telemetry);
 
         CommandScheduler.getInstance().run();
 
@@ -64,6 +69,7 @@ public class Teleop extends LinearOpMode {
             }
 
             s_drivetrain.periodic(telemetry);
+            s_otos.periodic(telemetry);
             telemetry.addData("A button: ", aPressed);
             telemetry.update();
         }

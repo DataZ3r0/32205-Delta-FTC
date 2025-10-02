@@ -5,6 +5,8 @@
 */
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -23,9 +25,13 @@ import org.firstinspires.ftc.teamcode.Constants;
  *
  * See the sensor's product page: https://www.sparkfun.com/products/24904
  */
-public class OTOS {
+public class OTOS extends SubsystemBase {
     // Create an instance of the sensor
     SparkFunOTOS otos;
+
+    SparkFunOTOS.Pose2D pos;
+
+    private Telemetry dashboardTelemetry;
 
     public OTOS(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -33,14 +39,9 @@ public class OTOS {
 
         configureOtos(telemetry);
 
-        SparkFunOTOS.Pose2D pos = otos.getPosition();
+        pos = otos.getPosition();
 
-            // Log the position to the telemetry
-        telemetry.addData("X coordinate", pos.x);
-        telemetry.addData("Y coordinate", pos.y);
-        telemetry.addData("Heading angle", pos.h);
-
-        telemetry.update();
+        dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
     }
 
     private void configureOtos(Telemetry telemetry) {
@@ -71,6 +72,19 @@ public class OTOS {
         telemetry.addLine();
         telemetry.addLine(String.format("OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
         telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
+        telemetry.update();
+    }
+
+    public void periodic(Telemetry telemetry) {
+        if (Constants.toggles.compMode) {
+            telemetry.addData("X coordinate", pos.x);
+            telemetry.addData("Y coordinate", pos.y);
+            telemetry.addData("Heading angle", pos.h);
+        } else {
+            dashboardTelemetry.addData("OTOS X", pos.x);
+            dashboardTelemetry.addData("OTOS Y", pos.y);
+            dashboardTelemetry.addData("OTOS HEADING", pos.h);
+        }
         telemetry.update();
     }
 }
