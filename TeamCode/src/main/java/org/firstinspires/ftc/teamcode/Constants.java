@@ -55,7 +55,9 @@ public class Constants {
         public static final String webcam = "Webcam 1";
     }
 
-    public static final class otherConstants {
-
+    public static final class OtosConstants {
+        public static final int offsetX = 0;
+        public static final int offsetY = 0;
+        public static final int offsetHeading = 0;
     }
 }

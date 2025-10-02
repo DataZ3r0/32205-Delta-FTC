@@ -24,12 +24,7 @@ public class Drivetrain extends SubsystemBase {
     private final BNO055IMU IMU;
 
     private double yawOffset;
-    private double turnSpeed;
-    private double headingError;
-    private double headingThreshold;
-    private double driveSpeed;
-    private double strafeSpeed;
-
+    private double azimuth;
     public Drivetrain(HardwareMap hardwaremap) {
         frontLeft = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.frontLeftMotor);
         frontRight = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.frontRightMotor);
@@ -98,6 +93,10 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetYaw() {
         yawOffset = getRawHeading() - Constants.DrivetrainConstants.controlHubOffset;
+    }
+
+    public void resetAzimuth() {
+        azimuth = getHeading();
     }
 
     public void periodic(Telemetry telemetry) {
