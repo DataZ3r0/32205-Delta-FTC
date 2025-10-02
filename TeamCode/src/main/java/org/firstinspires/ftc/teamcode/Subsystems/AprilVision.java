@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.vision.VisionPortal.*;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -29,8 +30,6 @@ public class AprilVision extends SubsystemBase {
     final int DESIRED_TAG_ID = -1;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
-    private Telemetry telemetry;
-    private Telemetry dashboardTelemetry;
     private CameraStreamProcessor s_Processor;
     public AprilTagPoseFtc ftcPose;
     public static AprilTagDetection desiredTag = null;
@@ -55,50 +54,22 @@ public class AprilVision extends SubsystemBase {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
         }
-        dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
     }
 
-    public void getAprilTagData(Telemetry telemetry) {
-        List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTag.getDetections();
-        if (Constants.toggles.compMode) {
-            telemetry.addData("# AprilTags Detected", currentDetections.size());
-            // Step through the list of detections and display info for each one.
-            for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : currentDetections) {
-                if (detection.metadata != null) {
-                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-                    setTargetYaw(detection.ftcPose.yaw);
-                    setTargetRange(detection.ftcPose.range);
-                    setTargetBearing(detection.ftcPose.bearing);
-                    setTargetY(detection.ftcPose.y);
-                    setTargetX(detection.ftcPose.x);
-                } else {
-                    telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
-                    telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
-                }
-            }
-        } else {
-            dashboardTelemetry.addData("# AprilTags Detected", currentDetections.size());
-            for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : currentDetections) {
-                if (detection.metadata != null) {
-                    dashboardTelemetry.addData("Tag ID: ", detection.id);
+    public void getAprilTagData(MultipleTelemetry m_telemetry) {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        m_telemetry.addData("# AprilTags Detected", currentDetections.size());
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                m_telemetry.addData("Tag ID: ", detection.id);
 
-                    String[][] keys = {{"X", "Y", "Z"}, {"Pitch", "Roll", "Yaw"}, {"Range", "Bearing", "Elevation"}};
-                    double[][] tagInfo = {{detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z},
-                            {detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw},
-                            {detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation}};
+                String[] keys = {" Tag X", "Tag Y", "Tag Yaw", "Tag Range", "Tag Bearing"};
+                double[] tagInfo = {detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.yaw,
+                        detection.ftcPose.range, detection.ftcPose.bearing};
 
-                    for (int x = 0; x < 3; x++) {
-                        for (int y = 0; y < 3; y++) {
-                            dashboardTelemetry.addData(keys[x][y], tagInfo[x][y]);
-                        }
-                    }
-                } else {
-                    dashboardTelemetry.addData("No Tag Detected", null);
+                for (int x = 0; x < 5; x++) {
+                    m_telemetry.addData(keys[x], tagInfo[x]);
                 }
-                dashboardTelemetry.update();
             }
         }
     }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpMode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -21,6 +23,8 @@ public class Teleop extends LinearOpMode {
     boolean aPressed;
     boolean xPressed;
 
+    MultipleTelemetry m_telemetry;
+
     Drivetrain s_drivetrain;
     AprilVision s_aprilVision;
     //Intake s_intake;
@@ -34,12 +38,14 @@ public class Teleop extends LinearOpMode {
 
         gamepad = new GamepadEx(gamepad1);
 
+        m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         s_drivetrain = new Drivetrain(hardwareMap);
         s_aprilVision = new AprilVision(hardwareMap);
         //s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
 
-        s_otos = new OTOS(hardwareMap, telemetry);
+        s_otos = new OTOS(hardwareMap, m_telemetry);
 
         CommandScheduler.getInstance().run();
 
@@ -53,9 +59,7 @@ public class Teleop extends LinearOpMode {
                     gamepad.getRightX()
             );
 
-            s_aprilVision.getAprilTagData(telemetry);
-
-            aPressed = gamepad.isDown(GamepadKeys.Button.A);
+//            aPressed = gamepad.isDown(GamepadKeys.Button.A);
             xPressed = gamepad.isDown(GamepadKeys.Button.X);
 
             gamepad.readButtons();
@@ -68,10 +72,10 @@ public class Teleop extends LinearOpMode {
                 autoAlign = new AlignToTagCommand(s_drivetrain, s_aprilVision);
             }
 
-            s_drivetrain.periodic(telemetry);
-            s_otos.periodic(telemetry);
-            telemetry.addData("A button: ", aPressed);
-            telemetry.update();
+            s_drivetrain.periodic(m_telemetry);
+            s_otos.periodic(m_telemetry);
+            s_aprilVision.getAprilTagData(m_telemetry);
+            m_telemetry.update();
         }
     }
 }

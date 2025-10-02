@@ -6,6 +6,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -31,17 +32,11 @@ public class OTOS extends SubsystemBase {
 
     SparkFunOTOS.Pose2D pos;
 
-    private Telemetry dashboardTelemetry;
-
     public OTOS(HardwareMap hardwareMap, Telemetry telemetry) {
 
         otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
 
         configureOtos(telemetry);
-
-        pos = otos.getPosition();
-
-        dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
     }
 
     private void configureOtos(Telemetry telemetry) {
@@ -75,16 +70,10 @@ public class OTOS extends SubsystemBase {
         telemetry.update();
     }
 
-    public void periodic(Telemetry telemetry) {
-        if (Constants.toggles.compMode) {
-            telemetry.addData("X coordinate", pos.x);
-            telemetry.addData("Y coordinate", pos.y);
-            telemetry.addData("Heading angle", pos.h);
-        } else {
-            dashboardTelemetry.addData("OTOS X", pos.x);
-            dashboardTelemetry.addData("OTOS Y", pos.y);
-            dashboardTelemetry.addData("OTOS HEADING", pos.h);
-        }
-        telemetry.update();
+    public void periodic(MultipleTelemetry m_telemetry) {
+        pos = otos.getPosition();
+        m_telemetry.addData("OTOS X", pos.x);
+        m_telemetry.addData("OTOS Y", pos.y);
+        m_telemetry.addData("OTOS HEADING", pos.h);
     }
 }
