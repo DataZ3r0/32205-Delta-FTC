@@ -56,7 +56,7 @@ public class Teleop extends LinearOpMode {
             s_drivetrain.drive(
                     gamepad.getLeftY(),
                     -gamepad.getLeftX(),
-                    gamepad.getRightX()
+                    -gamepad.getRightX()
             );
 
 //            aPressed = gamepad.isDown(GamepadKeys.Button.A);
