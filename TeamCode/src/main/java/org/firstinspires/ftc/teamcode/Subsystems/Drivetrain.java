@@ -1,4 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -40,6 +43,11 @@ public class Drivetrain extends SubsystemBase {
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         IMU = hardwaremap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -99,17 +107,13 @@ public class Drivetrain extends SubsystemBase {
         azimuth = getHeading();
     }
 
-    public void periodic(Telemetry telemetry) {
-        telemetry.addLine("Drive train");
-        telemetry.addData("Heading: ", getHeading());
+    public void periodic(MultipleTelemetry m_telemetry) {
 
-        telemetry.addData("Front Left Power: ", frontLeft.getPower());
-
-        telemetry.addData("Front Right Power: ", frontRight.getPower());
-
-        telemetry.addData("Back Left Power: ", backLeft.getPower());
-
-        telemetry.addData("Back Right Power: ", backRight.getPower());
+        m_telemetry.addData("DRIVE: Heading: ", getHeading());
+//        m_telemetry.addData("DRIVE: Front Left Power: ", frontLeft.getPower());
+//        m_telemetry.addData("DRIVE: Front Right Power: ", frontRight.getPower());
+//        m_telemetry.addData("DRIVE: Back Left Power: ", backLeft.getPower());
+//        m_telemetry.addData("DRIVE: Back Right Power: ", backRight.getPower());
     }
 
 
