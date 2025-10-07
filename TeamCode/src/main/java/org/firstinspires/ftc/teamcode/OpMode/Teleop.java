@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Commands.AlignToTagCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 
 @TeleOp(name="Delta", group="Teleop")
@@ -23,9 +24,11 @@ public class Teleop extends LinearOpMode {
 
     Drivetrain s_drivetrain;
     AprilVision s_aprilVision;
-    //Intake s_intake;
+    Intake s_intake;
     //Shooter s_shooter;
     OTOS s_otos;
+
+    boolean intakeReversed;
 
     AlignToTagCommand autoAlign;
 
@@ -36,10 +39,12 @@ public class Teleop extends LinearOpMode {
 
         s_drivetrain = new Drivetrain(hardwareMap);
         s_aprilVision = new AprilVision(hardwareMap);
-        //s_intake = new Intake(hardwareMap);
+        s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
 
         s_otos = new OTOS(hardwareMap, telemetry);
+
+        intakeReversed = false;
 
         CommandScheduler.getInstance().run();
 
@@ -55,7 +60,7 @@ public class Teleop extends LinearOpMode {
 
             s_aprilVision.getAprilTagData(telemetry);
 
-            aPressed = gamepad.isDown(GamepadKeys.Button.A);
+            gamepad.wasJustPressed(GamepadKeys.Button.A);
             xPressed = gamepad.isDown(GamepadKeys.Button.X);
 
             gamepad.readButtons();
@@ -64,8 +69,17 @@ public class Teleop extends LinearOpMode {
                 s_drivetrain.resetYaw();
             }
 
-            if(aPressed) {
-                autoAlign = new AlignToTagCommand(s_drivetrain, s_aprilVision);
+            if(gamepad.wasJustPressed(GamepadKeys.Button.A)) {
+                s_intake.toggleOuttakeMode(intakeReversed);
+                intakeReversed = !intakeReversed;
+            }
+
+            if(gamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                if(s_intake.getPower() > 0.001) {
+                    s_intake.stop();
+                } else {
+                    s_intake.run();
+                }
             }
 
             s_drivetrain.periodic(telemetry);
