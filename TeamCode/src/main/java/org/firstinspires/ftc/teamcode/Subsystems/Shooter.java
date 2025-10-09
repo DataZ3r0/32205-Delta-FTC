@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Shooter extends SubsystemBase {
 
     public Shooter(HardwareMap hardwaremap) {
-        int x = 69;
+        int x = 67;
 
     }
     public void periodic() {
