@@ -16,12 +16,12 @@ public class Intake extends SubsystemBase {
         intakeMotor.setDirection(direction);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void toggleOuttakeMode(boolean reversed) {
-        if(!reversed) {
-            direction = DcMotorSimple.Direction.REVERSE;
-        } else {
-            direction = DcMotorSimple.Direction.FORWARD;
-        }
+    public void outtake() {
+        direction = DcMotorSimple.Direction.REVERSE;
+    }
+
+    public void intake() {
+        direction = DcMotorSimple.Direction.FORWARD;
     }
 
     public double getPower() {

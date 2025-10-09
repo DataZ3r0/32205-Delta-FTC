@@ -57,7 +57,17 @@ public class Constants {
 
     public static final class OtosConstants {
         public static final int offsetX = 0;
-        public static final int offsetY = 0;
-        public static final int offsetHeading = 0;
+        public static final int offsetY = 1;
+        public static final int offsetHeading = 180;
+    }
+
+    public static final class AutoConstants {
+
+        @Config
+        public static final class AutoStart{
+            public static double autoTargetX = 10;
+            public static double autoTargetY = 10;
+            public static double autoTargetH = 90;
+        }
     }
 }

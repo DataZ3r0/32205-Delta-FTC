@@ -29,8 +29,8 @@ public class AprilVision extends SubsystemBase {
 
     final int DESIRED_TAG_ID = -1;
     private AprilTagProcessor aprilTag;
-    private VisionPortal visionPortal;
-    private CameraStreamProcessor s_Processor;
+    private final VisionPortal visionPortal;
+    private final CameraStreamProcessor s_Processor;
     public AprilTagPoseFtc ftcPose;
     public static AprilTagDetection desiredTag = null;
 

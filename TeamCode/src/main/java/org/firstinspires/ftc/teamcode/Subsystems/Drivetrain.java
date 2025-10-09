@@ -57,7 +57,7 @@ public class Drivetrain extends SubsystemBase {
         yawOffset = IMU.getAngularOrientation().firstAngle - Constants.DrivetrainConstants.controlHubOffset;
     }
 
-    public void drive(double driveX, double driveY, double rotation) {
+    public void drive(double driveY, double driveX, double rotation) {
 
         double botHeading = getHeading();
         double headingRadians = Math.toRadians(botHeading);
@@ -65,8 +65,8 @@ public class Drivetrain extends SubsystemBase {
         double sin =  Math.sin(-headingRadians);
         double cos =  Math.cos(-headingRadians);
 
-        double fieldOrientedX = driveX * cos - driveY * sin;
-        double fieldOrientedY = driveX * sin + driveY * cos;
+        double fieldOrientedX = driveY * cos - driveX * sin;
+        double fieldOrientedY = driveY * sin + driveX * cos;
 
         fieldOrientedX *= Constants.DrivetrainConstants.strafingBalancer;
 
@@ -101,6 +101,13 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetYaw() {
         yawOffset = getRawHeading() - Constants.DrivetrainConstants.controlHubOffset;
+    }
+
+    public void stop() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
     }
 
     public void resetAzimuth() {

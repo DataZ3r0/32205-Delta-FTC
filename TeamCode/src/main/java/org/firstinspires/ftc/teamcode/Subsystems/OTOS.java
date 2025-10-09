@@ -8,6 +8,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -68,6 +69,20 @@ public class OTOS extends SubsystemBase {
         telemetry.addLine(String.format("OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
         telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
         telemetry.update();
+    }
+
+    public double getX() {
+        return pos.x;
+    }
+    public double getY() {
+        return pos.y;
+    }
+    public double getH() {
+        return pos.h;
+    }
+
+    public SparkFunOTOS.Pose2D getPose() {
+        return otos.getPosition();
     }
 
     public void periodic(MultipleTelemetry m_telemetry) {
