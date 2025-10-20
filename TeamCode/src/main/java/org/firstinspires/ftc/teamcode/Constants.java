@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.Servo;
+
 public class Constants {
 
     public static final class toggles{
@@ -31,9 +31,19 @@ public class Constants {
 
         @Config
         public static final class drivePID {
-            public static double kPdrive = 0.02;
-            public static double kPstrafe = 0.015;
-            public static double kPturn = 0.05;
+            public static double drivekP = 0.02;
+            public static double drivekI = 0.0;
+            public static double drivekD = 0.0;
+            public static double driveTolerance = 0.2; // inches
+
+            public static double strafekP = 0.015;
+            public static double strafekI = 0.0;
+            public static double strafekD = 0.0;
+            public static double strafeTolerance = 0.2; // inches
+            public static double turnkP = 0.05;
+            public static double turnkI = 0.0;
+            public static double turnkD = 0.0;
+            public static double turnTolerance = 1; // degrees
         }
     }
 

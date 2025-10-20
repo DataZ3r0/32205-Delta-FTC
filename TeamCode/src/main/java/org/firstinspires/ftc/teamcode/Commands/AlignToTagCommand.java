@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPdrive;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPstrafe;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPturn;
+import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.drivekP;
+import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.strafekP;
+import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.turnkP;
 import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxDrive;
 import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxStrafe;
 import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxTurn;
@@ -11,11 +11,11 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
-import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrains.TeleopMecanum;
 
 public class AlignToTagCommand extends CommandBase {
-    private final Drivetrain s_drivetrain;
+    private final TeleopMecanum s_drivetrain;
     private final AprilVision s_tagDetection;
 
     double driveX;
@@ -26,7 +26,7 @@ public class AlignToTagCommand extends CommandBase {
     double headingError;
     double yawError;
 
-    public AlignToTagCommand(Drivetrain drivetrain, AprilVision s_tagDetection) {
+    public AlignToTagCommand(TeleopMecanum drivetrain, AprilVision s_tagDetection) {
         this.s_drivetrain = drivetrain;
         this.s_tagDetection = s_tagDetection;
 
@@ -47,9 +47,9 @@ public class AlignToTagCommand extends CommandBase {
         yawError = AprilVision.getTargetYaw();
         headingError = AprilVision.getTargetBearing();
 
-        driveY = Range.clip(rangeError * kPdrive, -maxDrive, maxDrive);
-        driveX = Range.clip(yawError * kPstrafe, -maxStrafe, maxStrafe);
-        rotation = Range.clip(headingError * kPturn, -maxTurn, maxTurn);
+        driveY = Range.clip(rangeError * drivekP, -maxDrive, maxDrive);
+        driveX = Range.clip(yawError * strafekP, -maxStrafe, maxStrafe);
+        rotation = Range.clip(headingError * turnkP, -maxTurn, maxTurn);
 
 //        s_drivetrain.drive(2, 2, 2);
         s_drivetrain.drive(0, 0, -rotation);
