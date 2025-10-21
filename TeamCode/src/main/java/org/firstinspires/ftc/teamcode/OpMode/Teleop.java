@@ -30,6 +30,9 @@ public class Teleop extends LinearOpMode {
     //Shooter s_shooter;
     OTOS s_otos;
 
+    GamepadKeys.Trigger intakeTrigger;
+    GamepadKeys.Trigger outtakeTrigger;
+
     boolean intakeReversed;
 
     @Override
@@ -42,10 +45,13 @@ public class Teleop extends LinearOpMode {
 
         s_drivetrain = new Drivetrain(hardwareMap);
         s_aprilVision = new AprilVision(hardwareMap);
-//        s_intake = new Intake(hardwareMap);
+        s_intake = new Intake(hardwareMap);
         //s_shooter = new Shooter(hardwareMap);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
+
+        intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
+        outtakeTrigger = GamepadKeys.Trigger.LEFT_TRIGGER;
 
         intakeReversed = false;
 
@@ -70,18 +76,14 @@ public class Teleop extends LinearOpMode {
                 s_drivetrain.resetYaw();
             }
 
-//            if(opGamepad.isDown(GamepadKeys.Button.A)) {
-//                s_intake.outtake();
-//            } else {
-//                s_intake.intake();
-//            }
-//            if(opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-//                if(s_intake.getPower() > 0.001) {
-//                    s_intake.stop();
-//                } else {
-//                    s_intake.run();
-//                }
-//            }
+            if (opGamepad.getTrigger(intakeTrigger) > 0.001) {
+                s_intake.runIntake(opGamepad.getTrigger(intakeTrigger));
+            } else if (opGamepad.getTrigger(outtakeTrigger) > 0.001) {
+                s_intake.runOuttake(opGamepad.getTrigger(outtakeTrigger));
+            } else {
+                s_intake.stop();
+            }
+
 
             s_drivetrain.periodic(m_telemetry);
             s_otos.periodic(m_telemetry);

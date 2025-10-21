@@ -39,10 +39,9 @@ public class Auto extends LinearOpMode {
 
         a_drivetrain = new Drivetrain(hardwareMap);
         a_aprilVision = new AprilVision(hardwareMap);
-//        a_intake = new Intake(hardwareMap);
-        //s_shooter = new Shooter(hardwareMap);
-
-        a_otos = new OTOS(hardwareMap, m_telemetry);
+//       a_intake = new Intake(hardwareMap);
+//        s_shooter = new Shooter(hardwareMap);
+    a_otos = new OTOS(hardwareMap, m_telemetry);
 
         waitForStart();
 

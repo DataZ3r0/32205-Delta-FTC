@@ -7,13 +7,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
+import java.util.function.DoubleSupplier;
+
 public class Intake extends SubsystemBase {
     private final DcMotor intakeMotor;
     private DcMotorSimple.Direction direction;
 
     public Intake(HardwareMap hardwareMap) {
         intakeMotor = hardwareMap.get(DcMotor.class, Constants.IntakeConstants.intakeMotor);
-        intakeMotor.setDirection(direction);
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void outtake() {
@@ -30,6 +32,14 @@ public class Intake extends SubsystemBase {
 
     public void run() {
         intakeMotor.setPower(1);
+    }
+
+    public void runIntake(double power) {
+        intakeMotor.setPower(power);
+    }
+
+    public void runOuttake(double power) {
+        intakeMotor.setPower(-power);
     }
     public void stop() {
         intakeMotor.setPower(0);
