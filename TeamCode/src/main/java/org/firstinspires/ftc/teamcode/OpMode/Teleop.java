@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
 @TeleOp(name="Delta", group="Teleop")
 public class Teleop extends LinearOpMode {
@@ -27,11 +28,12 @@ public class Teleop extends LinearOpMode {
     Drivetrain s_drivetrain;
     AprilVision s_aprilVision;
     Intake s_intake;
-    //Shooter s_shooter;
+    Shooter s_shooter;
     OTOS s_otos;
 
     GamepadKeys.Trigger intakeTrigger;
     GamepadKeys.Trigger outtakeTrigger;
+    GamepadKeys.Button shooterButton;
 
     boolean intakeReversed;
 
@@ -46,12 +48,14 @@ public class Teleop extends LinearOpMode {
         s_drivetrain = new Drivetrain(hardwareMap);
         s_aprilVision = new AprilVision(hardwareMap);
         s_intake = new Intake(hardwareMap);
-        //s_shooter = new Shooter(hardwareMap);
+        s_shooter = new Shooter(hardwareMap);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
         outtakeTrigger = GamepadKeys.Trigger.LEFT_TRIGGER;
+
+        shooterButton = GamepadKeys.Button.X;
 
         intakeReversed = false;
 
@@ -82,6 +86,12 @@ public class Teleop extends LinearOpMode {
                 s_intake.runOuttake(opGamepad.getTrigger(outtakeTrigger));
             } else {
                 s_intake.stop();
+            }
+
+            if (opGamepad.isDown(shooterButton)) {
+                s_shooter.runShooter(1.0);
+            } else {
+                s_shooter.stop();
             }
 
 
