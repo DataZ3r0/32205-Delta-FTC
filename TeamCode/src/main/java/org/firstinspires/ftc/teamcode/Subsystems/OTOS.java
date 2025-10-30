@@ -5,6 +5,8 @@
 */
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import android.annotation.SuppressLint;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -30,6 +32,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 public class OTOS extends SubsystemBase {
     // Create an instance of the sensor
     SparkFunOTOS otos;
+    double headingOffset;
 
     SparkFunOTOS.Pose2D pos;
 
@@ -40,6 +43,7 @@ public class OTOS extends SubsystemBase {
         configureOtos(telemetry);
     }
 
+    @SuppressLint("DefaultLocale")
     private void configureOtos(Telemetry telemetry) {
         telemetry.addLine("Configuring OTOS...");
         telemetry.update();
@@ -81,6 +85,7 @@ public class OTOS extends SubsystemBase {
         return pos.h;
     }
 
+    public void resetOTOS() { otos.resetTracking(); }
     public SparkFunOTOS.Pose2D getPose() {
         return otos.getPosition();
     }
@@ -91,4 +96,9 @@ public class OTOS extends SubsystemBase {
         m_telemetry.addData("OTOS Y", pos.y);
         m_telemetry.addData("OTOS HEADING", pos.h);
     }
+//    public void autoPeriodic(MultipleTelemetry m_telemetry, SparkFunOTOS.Pose2D targetPose) {
+//        m_telemetry.addData("OTOS X", targetPose.x);
+//        m_telemetry.addData("OTOS Y", targetPose.y);
+//        m_telemetry.addData("OTOS HEADING", targetPose.h);
+//    }
 }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpMode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Commands.AlignToTagCommand;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -70,11 +72,9 @@ public class Teleop extends LinearOpMode {
                 s_drivetrain.resetYaw();
             }
 
-//            if(opGamepad.isDown(GamepadKeys.Button.A)) {
-//                s_intake.outtake();
-//            } else {
-//                s_intake.intake();
-//            }
+            if(driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
+                s_otos.resetOTOS();
+            }
 //            if(opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
 //                if(s_intake.getPower() > 0.001) {
 //                    s_intake.stop();
