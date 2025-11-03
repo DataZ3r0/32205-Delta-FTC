@@ -19,6 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Constants;
 
 public class Drivetrain extends SubsystemBase {
+
+    private MultipleTelemetry telemetry;
     private final DcMotor frontLeft;
     private final DcMotor frontRight;
     private final DcMotor backLeft;
@@ -28,7 +30,7 @@ public class Drivetrain extends SubsystemBase {
 
     private double yawOffset;
     private double azimuth;
-    public Drivetrain(HardwareMap hardwaremap) {
+    public Drivetrain(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
         frontLeft = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.frontLeftMotor);
         frontRight = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.frontRightMotor);
         backLeft = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.backLeftMotor);
@@ -55,6 +57,8 @@ public class Drivetrain extends SubsystemBase {
         IMU.initialize(parameters);
 
         yawOffset = IMU.getAngularOrientation().firstAngle - Constants.DrivetrainConstants.controlHubOffset;
+
+        this.telemetry = telemetry;
     }
 
     public void drive(double driveY, double driveX, double rotation) {
@@ -114,9 +118,9 @@ public class Drivetrain extends SubsystemBase {
         azimuth = getHeading();
     }
 
-    public void periodic(MultipleTelemetry m_telemetry) {
-
-        m_telemetry.addData("DRIVE: Heading: ", getHeading());
+    @Override
+    public void periodic() {
+        telemetry.addData("DRIVE: Heading: ", getHeading());
 //        m_telemetry.addData("DRIVE: Front Left Power: ", frontLeft.getPower());
 //        m_telemetry.addData("DRIVE: Front Right Power: ", frontRight.getPower());
 //        m_telemetry.addData("DRIVE: Back Left Power: ", backLeft.getPower());

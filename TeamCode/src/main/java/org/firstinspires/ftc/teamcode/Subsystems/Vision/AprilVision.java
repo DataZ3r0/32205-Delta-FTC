@@ -1,25 +1,14 @@
-package org.firstinspires.ftc.teamcode.Subsystems;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static org.firstinspires.ftc.vision.VisionPortal.*;
-
-import android.util.Size;
+package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -27,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 public class AprilVision extends SubsystemBase {
 
+    private MultipleTelemetry telemetry;
     final int DESIRED_TAG_ID = -1;
     private AprilTagProcessor aprilTag;
     private final VisionPortal visionPortal;
@@ -40,7 +30,7 @@ public class AprilVision extends SubsystemBase {
     public static double targetY;
     public static double targetX;
 
-    public AprilVision(HardwareMap hardwaremap) {
+    public AprilVision(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
         if (Constants.toggles.toggleCamStream) {
             s_Processor = new CameraStreamProcessor();
@@ -54,6 +44,8 @@ public class AprilVision extends SubsystemBase {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
         }
+
+        this.telemetry = telemetry;
     }
 
     public void getAprilTagData(MultipleTelemetry m_telemetry) {
@@ -137,6 +129,6 @@ public class AprilVision extends SubsystemBase {
 //    }
     @Override
     public void periodic() {
-
+        getAprilTagData(telemetry);
     }
 }

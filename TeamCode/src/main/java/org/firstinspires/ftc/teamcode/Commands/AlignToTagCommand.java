@@ -11,7 +11,7 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 
 public class AlignToTagCommand extends CommandBase {

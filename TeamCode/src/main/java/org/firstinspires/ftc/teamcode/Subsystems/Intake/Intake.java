@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems;
+package org.firstinspires.ftc.teamcode.Subsystems.Intake;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Constants;
-
-import java.util.function.DoubleSupplier;
 
 public class Intake extends SubsystemBase {
     private final DcMotor intakeMotor;
@@ -18,21 +16,21 @@ public class Intake extends SubsystemBase {
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void outtake() {
-        direction = DcMotorSimple.Direction.REVERSE;
-    }
-
-    public void intake() {
-        direction = DcMotorSimple.Direction.FORWARD;
-    }
-
-    public double getPower() {
-        return intakeMotor.getPower();
-    }
-
-    public void run() {
-        intakeMotor.setPower(1);
-    }
+//    public void outtake() {
+//        direction = DcMotorSimple.Direction.REVERSE;
+//    }
+//
+//    public void intake() {
+//        direction = DcMotorSimple.Direction.FORWARD;
+//    }
+//
+//    public double getPower() {
+//        return intakeMotor.getPower();
+//    }
+//
+//    public void run() {
+//        intakeMotor.setPower(1);
+//    }
 
     public void runIntake(double power) {
         intakeMotor.setPower(power);
@@ -45,8 +43,6 @@ public class Intake extends SubsystemBase {
         intakeMotor.setPower(0);
     }
 
-
-    public void periodic() {
-
-    }
+    @Override
+    public void periodic() {}
 }

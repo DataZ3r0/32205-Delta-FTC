@@ -5,18 +5,14 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Commands.AlignToTagCommand;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
 
 @TeleOp(name="Delta", group="Teleop")
 public class Teleop extends LinearOpMode {
@@ -45,8 +41,8 @@ public class Teleop extends LinearOpMode {
 
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        s_drivetrain = new Drivetrain(hardwareMap);
-        s_aprilVision = new AprilVision(hardwareMap);
+        s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
+        s_aprilVision = new AprilVision(hardwareMap, m_telemetry);
         s_intake = new Intake(hardwareMap);
         s_shooter = new Shooter(hardwareMap);
 
@@ -94,10 +90,6 @@ public class Teleop extends LinearOpMode {
                 s_shooter.stop();
             }
 
-
-            s_drivetrain.periodic(m_telemetry);
-            s_otos.periodic(m_telemetry);
-            s_aprilVision.getAprilTagData(m_telemetry);
             m_telemetry.update();
         }
     }

@@ -33,10 +33,13 @@ public class OTOS extends SubsystemBase {
 
     SparkFunOTOS.Pose2D pos;
 
-    public OTOS(HardwareMap hardwareMap, Telemetry telemetry) {
+    MultipleTelemetry telemetry;
+
+    public OTOS(HardwareMap hardwareMap, MultipleTelemetry telemetry) {
 
         otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
 
+        this.telemetry = telemetry;
         configureOtos(telemetry);
     }
 
@@ -85,10 +88,11 @@ public class OTOS extends SubsystemBase {
         return otos.getPosition();
     }
 
-    public void periodic(MultipleTelemetry m_telemetry) {
+    @Override
+    public void periodic() {
         pos = otos.getPosition();
-        m_telemetry.addData("OTOS X", pos.x);
-        m_telemetry.addData("OTOS Y", pos.y);
-        m_telemetry.addData("OTOS HEADING", pos.h);
+        telemetry.addData("OTOS X", pos.x);
+        telemetry.addData("OTOS Y", pos.y);
+        telemetry.addData("OTOS HEADING", pos.h);
     }
 }

@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode.OpMode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 
 @Autonomous(name="Delta", group="Auto")
@@ -37,8 +35,8 @@ public class Auto extends LinearOpMode {
     public void runOpMode() {
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        a_drivetrain = new Drivetrain(hardwareMap);
-        a_aprilVision = new AprilVision(hardwareMap);
+        a_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
+        a_aprilVision = new AprilVision(hardwareMap, m_telemetry);
 //       a_intake = new Intake(hardwareMap);
 //        s_shooter = new Shooter(hardwareMap);
     a_otos = new OTOS(hardwareMap, m_telemetry);
