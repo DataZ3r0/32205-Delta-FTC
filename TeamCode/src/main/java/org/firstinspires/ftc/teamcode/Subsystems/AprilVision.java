@@ -39,17 +39,33 @@ public class AprilVision extends SubsystemBase {
     public static double targetBearing;
     public static double targetY;
     public static double targetX;
+    //Fx/Fy = 946.233
+    //Cx = 667.521
+    //Cy = 464.348
+//    Radial distortion (Brown's Model)
+//            K1: 0.0607443 K2: 0.0624121 K3: -0.303675
+//            P1: 0.0142314 P2: 0.00530697
+//            Skew: 0
+    //Mean Square Reprojection Error: 0.433367 pixels
 
     public AprilVision(HardwareMap hardwaremap) {
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+        aprilTag = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagID(true)
+                .setDrawTagOutline(true)
+                .setLensIntrinsics(946.233, 946.233, 667.521, 464.348)
+                .build();
         if (Constants.toggles.toggleCamStream) {
             s_Processor = new CameraStreamProcessor();
             visionPortal = new VisionPortal.Builder()
                     .addProcessor(aprilTag)
                     .addProcessor(s_Processor)
+                    .setCameraResolution(new Size(1280, 800))
+                    .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                     .setCamera(hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam))
                     .build();
-            FtcDashboard.getInstance().startCameraStream(s_Processor, 60);
+            FtcDashboard.getInstance().startCameraStream(s_Processor, 120);
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
