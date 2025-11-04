@@ -3,6 +3,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -27,6 +29,20 @@ public class Drivetrain extends SubsystemBase {
     private final DcMotor backRight;
 
     private final BNO055IMU IMU;
+
+    private final PIDController drivePID = new PIDController(
+            Constants.DrivetrainConstants.drivingPID.driveP
+            , Constants.DrivetrainConstants.drivingPID.driveI
+            , Constants.DrivetrainConstants.drivingPID.driveD);
+    private final PIDController strafePID = new PIDController(
+            Constants.DrivetrainConstants.drivingPID.strafeP
+            , Constants.DrivetrainConstants.drivingPID.strafeI
+            , Constants.DrivetrainConstants.drivingPID.strafeD);
+    private final PIDController turnPID = new PIDController(
+            Constants.DrivetrainConstants.drivingPID.turnP
+            , Constants.DrivetrainConstants.drivingPID.turnI
+            , Constants.DrivetrainConstants.drivingPID.turnD);
+
 
     private double yawOffset;
     private double azimuth;
@@ -107,11 +123,17 @@ public class Drivetrain extends SubsystemBase {
         yawOffset = getRawHeading() - Constants.DrivetrainConstants.controlHubOffset;
     }
 
-    public void stop() {
+    public void stop(OTOS otos) {
+//        double yPow = drivePID.calculate(otos.getY(), otos.getY());
+//        double xPow = strafePID.calculate(otos.getX(), otos.getX());
+//        double hPow = turnPID.calculate(otos.getH(), otos.getH());
+
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+
+//        drive(yPow, xPow, hPow);
     }
 
     public void resetAzimuth() {

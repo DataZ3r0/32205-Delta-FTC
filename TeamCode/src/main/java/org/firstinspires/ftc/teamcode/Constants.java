@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.Servo;
 public class Constants {
 
@@ -30,10 +32,19 @@ public class Constants {
         public static final double maxTurn = 0.5;
 
         @Config
-        public static final class drivePID {
-            public static double kPdrive = 0.02;
-            public static double kPstrafe = 0.015;
-            public static double kPturn = 0.05;
+        public static final class drivingPID {
+            public static double driveP = 0.06;
+            public static double driveI = 0.01;
+            public static double driveD = 0.001;
+            public static double tolY = 0.5;
+            public static double strafeP = 0.08;
+            public static double strafeI = 0.02;
+            public static double strafeD = 0;
+            public static double tolX = 0.5;
+            public static double turnP = 0.008;
+            public static double turnI = 0.008;
+            public static double turnD = 0;
+            public static double tolH = 1;
         }
     }
 
@@ -66,17 +77,18 @@ public class Constants {
 
     public static final class OtosConstants {
         public static final int offsetX = 0;
-        public static final int offsetY = 1;
+        public static final int offsetY = 0;
         public static final int offsetHeading = 180;
     }
 
     public static final class AutoConstants {
 
         @Config
-        public static final class AutoStart{
-            public static double autoTargetX = 10;
-            public static double autoTargetY = 10;
-            public static double autoTargetH = 90;
+        public static final class AutoPoints{
+            public static SparkFunOTOS.Pose2D autoOne = new SparkFunOTOS.Pose2D(0, 30, 0);
+            public static SparkFunOTOS.Pose2D autoTwo = new SparkFunOTOS.Pose2D(0, 30, 180);
+            public static SparkFunOTOS.Pose2D autoThree = new SparkFunOTOS.Pose2D(72, 0, 90);
+            public static SparkFunOTOS.Pose2D autoFour = new SparkFunOTOS.Pose2D(0, 0, 0);
         }
     }
 }

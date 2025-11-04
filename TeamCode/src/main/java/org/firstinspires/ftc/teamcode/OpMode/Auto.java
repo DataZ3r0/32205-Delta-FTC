@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.OpMode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,6 +12,10 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
+import org.firstinspires.ftc.teamcode.Commands.AutoCommandLine;
+import org.firstinspires.ftc.teamcode.Commands.LinearAutoCommand;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.*;
 
 @Autonomous(name="Delta", group="Auto")
 public class Auto extends LinearOpMode {
@@ -18,9 +24,9 @@ public class Auto extends LinearOpMode {
 
     Drivetrain a_drivetrain;
     AprilVision a_aprilVision;
-    Intake a_intake;
-//    Shooter a_shooter;
+    LinearAutoCommand a_cmd;
     OTOS a_otos;
+    int state;
 
     SparkFunOTOS.Pose2D currentPose;
     private SparkFunOTOS.Pose2D targetPose;
@@ -41,29 +47,76 @@ public class Auto extends LinearOpMode {
 //        s_shooter = new Shooter(hardwareMap);
     a_otos = new OTOS(hardwareMap, m_telemetry);
 
+        CommandScheduler scheduler = CommandScheduler.getInstance();
+        a_otos.resetOTOS();
+//        scheduler.schedule(new LinearAutoCommand(a_drivetrain, a_otos, m_telemetry,
+//                Constants.AutoConstants.AutoPoints.autoOne));
+        scheduler.schedule(new AutoCommandLine(a_drivetrain, a_otos, m_telemetry));
         waitForStart();
-
-        while(opModeIsActive()) {
-            driveToPoint(new SparkFunOTOS.Pose2D(10,10,0));
-            a_aprilVision.getAprilTagData(m_telemetry);
+        state = 0;
+        while (opModeIsActive()) {
+            a_otos.periodic(m_telemetry);
+            a_drivetrain.periodic(m_telemetry);
+//            m_telemetry.addData("state", state);
+//            m_telemetry.addData("isFinished1", move1.isFinished());
+//            m_telemetry.addData("isFinished2", move2.isFinished());
+            scheduler.run();
+            m_telemetry.update();
+//            switch(state) {
+//                case 0:
+//                    scheduler.schedule(move1);
+//                    while(!move1.isFinished()) {
+//                        scheduler.run();
+//                    }
+//                    if(move1.isFinished()) {
+//                        state++;
+//                        break;
+//                    }
+//                case 1:
+//                    scheduler.schedule(move2);
+//                    while(!move2.isFinished()) {
+//                        scheduler.run();
+//                    }
+//
+//                    if(move2.isFinished()) {
+//                        state++;
+//                        break;
+//                    }
+//                case 2:
+//            }
         }
     }
 
-    public void driveToPoint(SparkFunOTOS.Pose2D targetPose) {
-        currentPose = a_otos.getPose();
 
-        xError = targetPose.x - currentPose.x;
-        yError = targetPose.y - currentPose.y;
-        hError = targetPose.h - currentPose.h;
-
-        double xPower = xError;
-        double yPower = yError;
-        double hPower = hError;
-
-        a_drivetrain.drive(yPower, xPower, hPower);
-
-        if(Math.hypot(xError, yError) < 0.2 && Math.abs(hError) < 0.2) {
-            a_drivetrain.stop();
-        }
-    }
+//    public void driveToPoint(SparkFunOTOS.Pose2D targetPose) {
+//        while (opModeIsActive()) {
+//            currentPose = a_otos.getPose();
+//
+//            double xError = targetPose.x - currentPose.x;
+//            double yError = targetPose.y - currentPose.y;
+//            Rotation2d angleError = new Rotation2d(targetPose.h).minus(new Rotation2d(currentPose.h));
+//            double hError = angleError.getRadians();
+//            double hError = targetPose.h - currentPose.h;
+//
+//            double xPower = xError * Constants.DrivetrainConstants.drivePID.kPdrive;
+//            double yPower = yError * Constants.DrivetrainConstants.drivePID.kPstrafe;
+//            double hPower = hError * Constants.DrivetrainConstants.drivePID.kPturn;
+//
+//            a_drivetrain.drive(yPower, xPower, hPower);
+//
+//            m_telemetry.addData("Target X", targetPose.x);
+//            m_telemetry.addData("Target Y", targetPose.y);
+//            m_telemetry.addData("Current X", currentPose.x);
+//            m_telemetry.addData("Current Y", currentPose.y);
+//            m_telemetry.addData("xError", xError);
+//            m_telemetry.addData("yError", yError);
+//            m_telemetry.addData("hError", hError);
+//            m_telemetry.update();
+//
+//            if (Math.hypot(xError, yError) < 0.3 && Math.abs(hError) < Math.toRadians(3)) {
+//                a_drivetrain.stop();
+//                break;
+//            }
+//        }
+//    }
 }
