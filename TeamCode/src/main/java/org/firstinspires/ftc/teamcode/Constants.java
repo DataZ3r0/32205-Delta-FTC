@@ -61,14 +61,15 @@ public class Constants {
         public static final double ballTolerance = 2.5;
         public static final double shooterHeight = 0.0;
         public static final double shooterAngle = 50.0; //potentially 60.0
-
         public static final double maxSpeed = 1.0;
+        @Config
+        public static final class shooterPID {
+            public static final double shooterkP = 0.0;
 
-        public static final double shooterkP = 0.0;
+            public static final double shooterkI = 0.0;
 
-        public static final double shooterkI = 0.0;
-
-        public static final double shooterkD = 0.0;
+            public static final double shooterkD = 0.0;
+        }
     }
 
     public static final class VisionConstants {

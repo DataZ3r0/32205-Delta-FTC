@@ -24,9 +24,9 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         shooterController = new PIDController(
-                Constants.shooterConstants.shooterkP,
-                Constants.shooterConstants.shooterkI,
-                Constants.shooterConstants.shooterkD);
+                Constants.shooterConstants.shooterPID.shooterkP,
+                Constants.shooterConstants.shooterPID.shooterkI,
+                Constants.shooterConstants.shooterPID.shooterkD);
     }
 
     public double getPower() {

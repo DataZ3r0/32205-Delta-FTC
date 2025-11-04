@@ -55,8 +55,6 @@ public class Auto extends LinearOpMode {
         waitForStart();
         state = 0;
         while (opModeIsActive()) {
-            a_otos.periodic(m_telemetry);
-            a_drivetrain.periodic(m_telemetry);
 //            m_telemetry.addData("state", state);
 //            m_telemetry.addData("isFinished1", move1.isFinished());
 //            m_telemetry.addData("isFinished2", move2.isFinished());
