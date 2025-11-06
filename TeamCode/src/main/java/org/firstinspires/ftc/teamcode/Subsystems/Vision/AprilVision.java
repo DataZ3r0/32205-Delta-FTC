@@ -7,22 +7,26 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.VisionStates;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 public class AprilVision extends SubsystemBase {
 
     private MultipleTelemetry telemetry;
-    final int DESIRED_TAG_ID = -1;
+    private int[] desiredTagID;
     private AprilTagProcessor aprilTag;
     private final VisionPortal visionPortal;
     private final CameraStreamProcessor s_Processor;
+    private VisionStates visionStates;
     public AprilTagPoseFtc ftcPose;
-    public static AprilTagDetection desiredTag = null;
+    public static AprilTagDetection desiredTag;
+
 
     public static double targetRange;
     public static double targetYaw;
@@ -30,7 +34,7 @@ public class AprilVision extends SubsystemBase {
     public static double targetY;
     public static double targetX;
 
-    public AprilVision(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
+    public AprilVision(HardwareMap hardwaremap, MultipleTelemetry telemetry, VisionStates visionState) {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
         if (Constants.toggles.toggleCamStream) {
             s_Processor = new CameraStreamProcessor();
@@ -46,6 +50,9 @@ public class AprilVision extends SubsystemBase {
         }
 
         this.telemetry = telemetry;
+        this.visionStates = visionState;
+
+        refreshDesiredID();
     }
 
     public void getAprilTagData(MultipleTelemetry m_telemetry) {
@@ -54,26 +61,49 @@ public class AprilVision extends SubsystemBase {
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 m_telemetry.addData("Tag ID: ", detection.id);
+                if (checkDesiredTagID(detection.id)) {
+                    desiredTag = detection;
 
-                String[] keys = {" Tag X", "Tag Y", "Tag Yaw", "Tag Range", "Tag Bearing"};
-                double[] tagInfo = {detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.yaw,
-                        detection.ftcPose.range, detection.ftcPose.bearing};
+                    String[] keys = {" Tag X", "Tag Y", "Tag Yaw", "Tag Range", "Tag Bearing"};
+                    double[] tagInfo = {detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.yaw,
+                            detection.ftcPose.range, detection.ftcPose.bearing};
 
-                for (int x = 0; x < 5; x++) {
-                    m_telemetry.addData(keys[x], tagInfo[x]);
+                    for (int x = 0; x < keys.length; x++) {
+                        m_telemetry.addData(keys[x], tagInfo[x]);
+                    }
                 }
+
             }
         }
     }
 
-    public boolean findTarget() {
+    public void refreshDesiredID() {
+        if (visionStates.getState() == VisionStates.VisionState.MOTIF) {
+            desiredTagID = new int[] {21,22,23};
+        } else if (visionStates.getState() == VisionStates.VisionState.SHOOT) {
+            int shootID = Constants.toggles.blueTeam ? 20 : 24;
+            desiredTagID = new int[] {shootID};
+        }
+    }
+
+    public boolean checkDesiredTagID(int tagID) {
+        for (int i : desiredTagID) {
+            if (tagID == i) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean foundTarget() {
         boolean targetFound = false;
         ArrayList<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for (AprilTagDetection detection : currentDetections) {
             // Look to see if we have size info on this tag.
             if (detection.metadata != null) {
                 //  Check to see if we want to track towards this tag.
-                if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                refreshDesiredID();
+                if (checkDesiredTagID(detection.id)) {
                     // Yes, we want to use this tag.
                     targetFound = true;
                     desiredTag = detection;
@@ -84,41 +114,41 @@ public class AprilVision extends SubsystemBase {
                 }
             }
         }
-        return findTarget();
+        return targetFound;
     }
     public void setTargetYaw(double yaw) {
         targetYaw = yaw;
     }
-    public static double getTargetYaw() {
-        return targetYaw;
+    public double getTargetYaw() {
+        return desiredTag.ftcPose.yaw;
     }
 
     public void setTargetBearing(double bearing) {
         targetBearing = bearing;
     }
-    public static double getTargetBearing() {
-        return targetBearing;
+    public double getTargetBearing() {
+        return desiredTag.ftcPose.bearing;
     }
 
     public void setTargetRange(double range) {
         targetRange = range;
     }
-    public static double getTargetRange() {
-        return targetRange;
+    public double getTargetRange() {
+        return desiredTag.ftcPose.range;
     }
 
     public void setTargetY(double y) {
         targetYaw = y;
     }
-    public static double getTargetY() {
-        return targetY;
+    public double getTargetY() {
+        return desiredTag.ftcPose.y;
     }
 
     public void setTargetX(double x) {
         targetX = x;
     }
-    public static double getTargetX() {
-        return targetX;
+    public double getTargetX() {
+        return desiredTag.ftcPose.x;
     }
 //
 //    public void setRobotRange(double range) {
@@ -129,6 +159,7 @@ public class AprilVision extends SubsystemBase {
 //    }
     @Override
     public void periodic() {
+        refreshDesiredID();
         getAprilTagData(telemetry);
     }
 }

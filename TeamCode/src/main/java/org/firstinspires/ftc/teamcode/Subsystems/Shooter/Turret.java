@@ -22,9 +22,9 @@ public class Turret extends SubsystemBase {
         turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         turretController = new PIDController(
-                Constants.shooterConstants.shooterkP,
-                Constants.shooterConstants.shooterkI,
-                Constants.shooterConstants.shooterkD);
+                Constants.turretConstants.turretPID.turretkP,
+                Constants.turretConstants.turretPID.turretkI,
+                Constants.turretConstants.turretPID.turretkD);
     }
 
 

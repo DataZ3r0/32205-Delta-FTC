@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
+import org.firstinspires.ftc.teamcode.VisionStates;
 
 @Autonomous(name="Delta", group="Auto")
 public class Auto extends LinearOpMode {
@@ -21,6 +22,8 @@ public class Auto extends LinearOpMode {
     Intake a_intake;
 //    Shooter a_shooter;
     OTOS a_otos;
+
+    VisionStates visionState;
 
     SparkFunOTOS.Pose2D currentPose;
     private SparkFunOTOS.Pose2D targetPose;
@@ -36,7 +39,7 @@ public class Auto extends LinearOpMode {
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         a_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        a_aprilVision = new AprilVision(hardwareMap, m_telemetry);
+        a_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
 //       a_intake = new Intake(hardwareMap);
 //        s_shooter = new Shooter(hardwareMap);
     a_otos = new OTOS(hardwareMap, m_telemetry);

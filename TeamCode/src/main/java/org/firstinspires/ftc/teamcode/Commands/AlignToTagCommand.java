@@ -42,23 +42,23 @@ public class AlignToTagCommand extends CommandBase {
 
     @Override
     public void execute() {
-
-        rangeError = AprilVision.getTargetRange() - desiredRange;
-        yawError = AprilVision.getTargetYaw();
-        headingError = AprilVision.getTargetBearing();
-
-        driveY = Range.clip(rangeError * kPdrive, -maxDrive, maxDrive);
-        driveX = Range.clip(yawError * kPstrafe, -maxStrafe, maxStrafe);
-        rotation = Range.clip(headingError * kPturn, -maxTurn, maxTurn);
-
-//        s_drivetrain.drive(2, 2, 2);
-        s_drivetrain.drive(0, 0, -rotation);
+//
+//        rangeError = AprilVision.getTargetRange() - desiredRange;
+//        yawError = s_tagDetection.getTargetYaw();
+//        headingError = AprilVision.getTargetBearing();
+//
+//        driveY = Range.clip(rangeError * kPdrive, -maxDrive, maxDrive);
+//        driveX = Range.clip(yawError * kPstrafe, -maxStrafe, maxStrafe);
+//        rotation = Range.clip(headingError * kPturn, -maxTurn, maxTurn);
+//
+////        s_drivetrain.drive(2, 2, 2);
+//        s_drivetrain.drive(0, 0, -rotation);
     }
 
 
     @Override
     public boolean isFinished() {
-        if(s_tagDetection.findTarget()) {
+        if(s_tagDetection.foundTarget()) {
             if(Math.abs(headingError) < 0.2) {
                 return true;
             } else {

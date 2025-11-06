@@ -1,12 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.Servo;
 public class Constants {
 
     public static final class toggles{
         public static final boolean compMode = false;
         public static final boolean toggleCamStream = true;
+        public static final boolean blueTeam = false;
+    }
+
+    public static final class FieldConstants {
+        public static final SparkFunOTOS.Pose2D blueGoal = new SparkFunOTOS.Pose2D(0,0,0);
+        public static final SparkFunOTOS.Pose2D redGoal = new SparkFunOTOS.Pose2D(0,0,0);
+        public static final SparkFunOTOS.Pose2D motif = new SparkFunOTOS.Pose2D(0,0,0);
     }
 
     public static final class DrivetrainConstants {
@@ -53,11 +61,24 @@ public class Constants {
 
         public static final double maxSpeed = 1.0;
 
-        public static final double shooterkP = 0.0;
+        @Config
+        public static final class shooterPID {
+            public static final double shooterkP = 0.0;
 
-        public static final double shooterkI = 0.0;
+            public static final double shooterkI = 0.0;
 
-        public static final double shooterkD = 0.0;
+            public static final double shooterkD = 0.0;
+
+        }
+    }
+
+    public static final class turretConstants {
+        @Config
+        public static final class turretPID {
+            public static final double turretkP = 0.0;
+            public static final double turretkI = 0.0;
+            public static final double turretkD = 0.0;
+        }
     }
 
     public static final class VisionConstants {
