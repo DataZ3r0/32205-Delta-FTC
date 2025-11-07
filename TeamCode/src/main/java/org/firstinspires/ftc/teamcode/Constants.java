@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.Servo;
 public class Constants {
 
@@ -58,7 +59,6 @@ public class Constants {
         public static final double ballTolerance = 2.5;
         public static final double shooterHeight = 0.0;
         public static final double shooterAngle = 50.0; //potentially 60.0
-
         public static final double maxSpeed = 1.0;
 
         @Config
@@ -87,17 +87,18 @@ public class Constants {
 
     public static final class OtosConstants {
         public static final int offsetX = 0;
-        public static final int offsetY = 1;
+        public static final int offsetY = 0;
         public static final int offsetHeading = 180;
     }
 
     public static final class AutoConstants {
 
         @Config
-        public static final class AutoStart{
-            public static double autoTargetX = 10;
-            public static double autoTargetY = 10;
-            public static double autoTargetH = 90;
+        public static final class AutoPoints{
+            public static SparkFunOTOS.Pose2D autoOne = new SparkFunOTOS.Pose2D(0, 30, 0);
+            public static SparkFunOTOS.Pose2D autoTwo = new SparkFunOTOS.Pose2D(0, 30, 180);
+            public static SparkFunOTOS.Pose2D autoThree = new SparkFunOTOS.Pose2D(72, 0, 90);
+            public static SparkFunOTOS.Pose2D autoFour = new SparkFunOTOS.Pose2D(0, 0, 0);
         }
     }
 }
