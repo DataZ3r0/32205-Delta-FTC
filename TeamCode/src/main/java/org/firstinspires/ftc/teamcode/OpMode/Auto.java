@@ -48,8 +48,8 @@ public class Auto extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            driveToPoint(new SparkFunOTOS.Pose2D(10,10,0));
-            a_aprilVision.getAprilTagData(m_telemetry);
+//            driveToPoint(new SparkFunOTOS.Pose2D(10,10,0));
+//            a_aprilVision.getAprilTagData(m_telemetry);
         }
     }
 
