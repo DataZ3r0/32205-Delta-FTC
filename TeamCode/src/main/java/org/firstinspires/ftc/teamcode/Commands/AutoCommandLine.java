@@ -21,11 +21,11 @@ public class AutoCommandLine extends SequentialCommandGroup {
         this.m_telemetry = m_telemetry;
 
         addCommands(
-                new LinearAutoCommand(a_drivetrain, a_otos, m_telemetry,
-                        Constants.AutoConstants.AutoPoints.autoOne),
-                new WaitCommand(1000),
-                new LinearAutoCommand(a_drivetrain, a_otos, m_telemetry,
-                        Constants.AutoConstants.AutoPoints.autoTwo),
+//                new LinearAutoCommand(a_drivetrain, a_otos, m_telemetry,
+//                        Constants.AutoConstants.AutoPoints.autoOne),
+//                new WaitCommand(1000),
+//                new LinearAutoCommand(a_drivetrain, a_otos, m_telemetry,
+//                        Constants.AutoConstants.AutoPoints.autoTwo),
                 new WaitCommand(1000),
 //                new LinearAutoCommand(a_drivetrain, a_otos, m_telemetry,
 //                        Constants.AutoConstants.AutoPoints.autoThree),

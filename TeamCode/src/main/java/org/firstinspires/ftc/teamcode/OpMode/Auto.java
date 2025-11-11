@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.OpMode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,21 +10,21 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
-import org.firstinspires.ftc.teamcode.Commands.AutoCommandLine;
-import org.firstinspires.ftc.teamcode.Commands.LinearAutoCommand;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
+import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="Delta", group="Auto")
+@Autonomous(name="Delta-Autonomous", group="Auto")
 public class Auto extends LinearOpMode {
 
     MultipleTelemetry m_telemetry;
 
     Drivetrain a_drivetrain;
     AprilVision a_aprilVision;
-    LinearAutoCommand a_cmd;
     OTOS a_otos;
     int state;
+
+    VisionStates visionState;
 
     SparkFunOTOS.Pose2D currentPose;
     private SparkFunOTOS.Pose2D targetPose;
@@ -42,46 +40,16 @@ public class Auto extends LinearOpMode {
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         a_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        a_aprilVision = new AprilVision(hardwareMap, m_telemetry);
+        a_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
 //       a_intake = new Intake(hardwareMap);
 //        s_shooter = new Shooter(hardwareMap);
     a_otos = new OTOS(hardwareMap, m_telemetry);
 
-        CommandScheduler scheduler = CommandScheduler.getInstance();
-        a_otos.resetOTOS();
-//        scheduler.schedule(new LinearAutoCommand(a_drivetrain, a_otos, m_telemetry,
-//                Constants.AutoConstants.AutoPoints.autoOne));
-        scheduler.schedule(new AutoCommandLine(a_drivetrain, a_otos, m_telemetry));
         waitForStart();
-        state = 0;
-        while (opModeIsActive()) {
-//            m_telemetry.addData("state", state);
-//            m_telemetry.addData("isFinished1", move1.isFinished());
-//            m_telemetry.addData("isFinished2", move2.isFinished());
-            scheduler.run();
-            m_telemetry.update();
-//            switch(state) {
-//                case 0:
-//                    scheduler.schedule(move1);
-//                    while(!move1.isFinished()) {
-//                        scheduler.run();
-//                    }
-//                    if(move1.isFinished()) {
-//                        state++;
-//                        break;
-//                    }
-//                case 1:
-//                    scheduler.schedule(move2);
-//                    while(!move2.isFinished()) {
-//                        scheduler.run();
-//                    }
-//
-//                    if(move2.isFinished()) {
-//                        state++;
-//                        break;
-//                    }
-//                case 2:
-//            }
+
+        while(opModeIsActive()) {
+//            driveToPoint(new SparkFunOTOS.Pose2D(10,10,0));
+//            a_aprilVision.getAprilTagData(m_telemetry);
         }
     }
 

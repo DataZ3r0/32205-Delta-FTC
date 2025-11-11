@@ -1,14 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.hardware.Servo;
+
 public class Constants {
 
     public static final class toggles{
         public static final boolean compMode = false;
         public static final boolean toggleCamStream = true;
+        public static final boolean blueTeam = true;
+    }
+
+    public static final class FieldConstants {
+        public static final SparkFunOTOS.Pose2D blueGoal = new SparkFunOTOS.Pose2D(0,0,0);
+        public static final SparkFunOTOS.Pose2D redGoal = new SparkFunOTOS.Pose2D(0,0,0);
+        public static final SparkFunOTOS.Pose2D motif = new SparkFunOTOS.Pose2D(0,0,0);
     }
 
     public static final class DrivetrainConstants {
@@ -32,19 +38,10 @@ public class Constants {
         public static final double maxTurn = 0.5;
 
         @Config
-        public static final class drivingPID {
-            public static double driveP = 0.06;
-            public static double driveI = 0.01;
-            public static double driveD = 0.001;
-            public static double tolY = 0.5;
-            public static double strafeP = 0.08;
-            public static double strafeI = 0.02;
-            public static double strafeD = 0;
-            public static double tolX = 0.5;
-            public static double turnP = 0.008;
-            public static double turnI = 0.008;
-            public static double turnD = 0;
-            public static double tolH = 1;
+        public static final class drivePID {
+            public static double kPdrive = 0.02;
+            public static double kPstrafe = 0.015;
+            public static double kPturn = 0.05;
         }
     }
 
@@ -59,18 +56,33 @@ public class Constants {
     public static final class shooterConstants {
 
         public static final String shooterMotor = "shooterMotor";
+        public static final double ticksPerRev = 28;
         public static final double goalHeight = 0.0;
         public static final double ballTolerance = 2.5;
-        public static final double shooterHeight = 0.0;
+        public static final double shooterHeight = 0.2;
         public static final double shooterAngle = 50.0; //potentially 60.0
-        public static final double maxSpeed = 1.0;
+
+
         @Config
-        public static final class shooterPID {
-            public static final double shooterkP = 0.0;
+        public static final class shooterConfigs {
+            public static double testRPM = 2400;
+            public static double maxSpeed = 1;
+            public static double shooterkP = 0.0;
+            public static double shooterkI = 0.0;
+            public static double shooterkD = 0.0;
+            public static double shooterkS = 0.0;
+            public static double shooterkV = 0.0;
 
-            public static final double shooterkI = 0.0;
+        }
+    }
 
-            public static final double shooterkD = 0.0;
+    public static final class turretConstants {
+        @Config
+        public static final class turretConfigs {
+            public static double maxSpeed = 0.5;
+            public static double turretkP = 0.0;
+            public static double turretkI = 0.0;
+            public static double turretkD = 0.0;
         }
     }
 

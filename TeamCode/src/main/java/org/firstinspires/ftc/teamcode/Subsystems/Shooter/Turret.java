@@ -20,15 +20,13 @@ public class Turret extends SubsystemBase {
     public Turret(HardwareMap hardwaremap) {
         turretMotor = hardwaremap.get(DcMotorEx.class, Constants.shooterConstants.shooterMotor);
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         turretController = new PIDController(
-                Constants.shooterConstants.shooterPID.shooterkP,
-                Constants.shooterConstants.shooterPID.shooterkI,
-                Constants.shooterConstants.shooterPID.shooterkD);
+                Constants.turretConstants.turretConfigs.turretkP,
+                Constants.turretConstants.turretConfigs.turretkI,
+                Constants.turretConstants.turretConfigs.turretkD);
     }
-
-
 
     public double getTurretPosition() {
         return (double) turretMotor.getCurrentPosition();
@@ -41,10 +39,15 @@ public class Turret extends SubsystemBase {
 
     public void setTurretAngle(double desiredAngle) {
         if (getTurretAngle() < Math.abs(135)) {
-            turretController.calculate(getTurretAngle(), desiredAngle);
+            turretMotor.setPower(Math.max(Math.min(turretController.calculate(getTurretAngle(), desiredAngle),
+                            Constants.turretConstants.turretConfigs.maxSpeed),
+                            -Constants.turretConstants.turretConfigs.maxSpeed));
         } else {
-            turretController.calculate(getTurretAngle(), 0);
+            turretMotor.setPower(Math.max(Math.min(turretController.calculate(getTurretAngle(), 0),
+                            Constants.turretConstants.turretConfigs.maxSpeed),
+                            -Constants.turretConstants.turretConfigs.maxSpeed));
         }
+
     }
 
     public void setSetpoint(double newSetpoint) {
@@ -59,7 +62,6 @@ public class Turret extends SubsystemBase {
         return getSetpoint() - getTurretAngle() < Math.abs(2);
     }
 
-    @Override
     public void periodic() {
         setTurretAngle(setpoint);
     }

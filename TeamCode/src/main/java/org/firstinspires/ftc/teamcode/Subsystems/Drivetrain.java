@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -32,17 +35,17 @@ public class Drivetrain extends SubsystemBase {
     private final BNO055IMU IMU;
 
     private final PIDController drivePID = new PIDController(
-            Constants.DrivetrainConstants.drivingPID.driveP
-            , Constants.DrivetrainConstants.drivingPID.driveI
-            , Constants.DrivetrainConstants.drivingPID.driveD);
+            Constants.DrivetrainConstants.drivePID.kPdrive
+            , 0.0
+            , 0.0);
     private final PIDController strafePID = new PIDController(
-            Constants.DrivetrainConstants.drivingPID.strafeP
-            , Constants.DrivetrainConstants.drivingPID.strafeI
-            , Constants.DrivetrainConstants.drivingPID.strafeD);
+            Constants.DrivetrainConstants.drivePID.kPstrafe
+            , 0.0
+            , 0.0);
     private final PIDController turnPID = new PIDController(
-            Constants.DrivetrainConstants.drivingPID.turnP
-            , Constants.DrivetrainConstants.drivingPID.turnI
-            , Constants.DrivetrainConstants.drivingPID.turnD);
+            Constants.DrivetrainConstants.drivePID.kPturn
+            , 0.0
+            , 0.0);
 
 
     private double yawOffset;
@@ -72,8 +75,6 @@ public class Drivetrain extends SubsystemBase {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         IMU.initialize(parameters);
-
-        yawOffset = IMU.getAngularOrientation().firstAngle - Constants.DrivetrainConstants.controlHubOffset;
 
         this.telemetry = telemetry;
     }
@@ -105,7 +106,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getRawHeading() {
-        Orientation angles = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES);
         return angles.firstAngle;
     }
     public double getHeading() {
@@ -141,7 +142,6 @@ public class Drivetrain extends SubsystemBase {
         azimuth = getHeading();
     }
 
-    @Override
     public void periodic() {
         telemetry.addData("DRIVE: Heading: ", getHeading());
 //        m_telemetry.addData("DRIVE: Front Left Power: ", frontLeft.getPower());

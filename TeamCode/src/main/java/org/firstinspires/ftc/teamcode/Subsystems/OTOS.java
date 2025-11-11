@@ -88,14 +88,18 @@ public class OTOS extends SubsystemBase {
         return pos.h;
     }
 
+    public void setPose(SparkFunOTOS.Pose2D newPose) {
+        pos = newPose;
+    }
+
     public void resetOTOS() { otos.resetTracking(); }
+
     public SparkFunOTOS.Pose2D getPose() {
         return otos.getPosition();
     }
 
-    @Override
     public void periodic() {
-        pos = otos.getPosition();
+        pos = getPose();
         telemetry.addData("OTOS X", pos.x);
         telemetry.addData("OTOS Y", pos.y);
         telemetry.addData("OTOS HEADING", pos.h);
