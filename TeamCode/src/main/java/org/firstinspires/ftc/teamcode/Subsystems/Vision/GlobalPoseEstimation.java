@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 
 
 public class GlobalPoseEstimation extends SubsystemBase {
-    private OTOS s_otos;
-    private AprilVision s_vision;
-    private Turret s_turret;
+    private final OTOS s_otos;
+    private final AprilVision s_vision;
+    private final Turret s_turret;
 
     private SparkFunOTOS.Pose2D pose;
     private double x;

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystems.Intake;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -9,11 +10,11 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 public class MiddleStage extends SubsystemBase {
 
-    private final DcMotor motor;
+    private final DcMotorEx motor;
     private DcMotorSimple.Direction direction;
 
     public MiddleStage(HardwareMap hardwareMap) {
-        motor = hardwareMap.get(DcMotor.class, Constants.IntakeConstants.intakeMotor);
+        motor = hardwareMap.get(DcMotorEx.class, Constants.IntakeConstants.intakeMotor);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }

@@ -50,6 +50,8 @@ public class Constants {
         public static final String intakeMotor = "intakeMotor";
 
         public static final double maxSpeed = 1.0;
+
+        public static boolean isFull;
     }
     public static final class shooterConstants {
 

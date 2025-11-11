@@ -19,8 +19,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
 import org.firstinspires.ftc.teamcode.VisionStates;
+import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 
-@TeleOp(name="SuperDuperDelta", group="Teleop")
+@TeleOp(name="Delta", group="Teleop")
 public class Teleop extends LinearOpMode {
 
     GamepadEx driverGamepad;
@@ -37,6 +38,7 @@ public class Teleop extends LinearOpMode {
     GlobalPoseEstimation poseEstimation;
 
     VisionStates visionState;
+    distanceSensor s_ds;
 
     GamepadKeys.Trigger intakeTrigger;
     GamepadKeys.Trigger outtakeTrigger;
@@ -108,7 +110,7 @@ public class Teleop extends LinearOpMode {
                 s_drivetrain.resetYaw();
             }
 
-            if (opGamepad.getTrigger(intakeTrigger) > 0.001) {
+            if (opGamepad.getTrigger(intakeTrigger) > 0.001 && !Constants.IntakeConstants.isFull) {
                 s_intake.runIntake(opGamepad.getTrigger(intakeTrigger));
                 s_middleStage.runIntake(opGamepad.getTrigger(intakeTrigger));
             } else if (opGamepad.getTrigger(outtakeTrigger) > 0.001) {
@@ -122,6 +124,13 @@ public class Teleop extends LinearOpMode {
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
                 s_otos.resetOTOS();
             }
+//            if(opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+//                if(s_intake.getPower() > 0.001) {
+//                    s_intake.stop();
+//                } else {
+//                    s_intake.run();
+//                }
+//            }
 
             if (opGamepad.isDown(shooterButton)) {
                 s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
@@ -133,3 +142,4 @@ public class Teleop extends LinearOpMode {
         }
     }
 }
+//merge commit
