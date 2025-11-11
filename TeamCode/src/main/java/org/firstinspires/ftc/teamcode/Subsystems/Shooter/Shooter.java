@@ -65,6 +65,7 @@ public class Shooter extends SubsystemBase {
 
     public void runShooter(double desiredVelocity) {
         currentVelocity = getRPM();
+
         shooterMotor.setPower(Math.min((shooterController.calculate(currentVelocity, desiredVelocity)
                         + shooterFeedforward.calculate(currentVelocity, desiredVelocity)),
                 Constants.shooterConstants.shooterConfigs.maxSpeed));
@@ -110,5 +111,6 @@ public class Shooter extends SubsystemBase {
         }
 
         telemetry.addData("Shooter RPM: ", getRPM());
+        telemetry.addData("Shooter Current: ", getShooterCurrent());
     }
 }

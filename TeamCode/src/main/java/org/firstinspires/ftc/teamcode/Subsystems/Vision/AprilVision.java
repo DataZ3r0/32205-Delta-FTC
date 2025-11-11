@@ -29,12 +29,12 @@ import java.util.Arrays;
 import java.util.List;
 public class AprilVision extends SubsystemBase {
 
-    private MultipleTelemetry telemetry;
+    private final MultipleTelemetry telemetry;
     private int[] desiredTagID;
-    private AprilTagProcessor aprilTag;
+    private final AprilTagProcessor aprilTag;
     private final VisionPortal visionPortal;
     private final CameraStreamProcessor s_Processor;
-    private VisionStates visionStates;
+    private final VisionStates visionStates;
     public AprilTagPoseFtc ftcPose;
     public static AprilTagDetection desiredTag;
 
@@ -128,6 +128,7 @@ public class AprilVision extends SubsystemBase {
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 m_telemetry.addData("Tag ID: ", detection.id);
+                refreshDesiredID();
                 if (checkDesiredTagID(detection.id)) {
                     desiredTag = detection;
 
@@ -142,6 +143,10 @@ public class AprilVision extends SubsystemBase {
 
             }
         }
+    }
+
+    public void setVisionState(VisionStates.VisionState state) {
+        visionStates.setState(state);
     }
     public void setTargetYaw(double yaw) {
         targetYaw = yaw;
