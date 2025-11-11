@@ -58,7 +58,7 @@ public class Constants {
         public static final double ticksPerRev = 28;
         public static final double goalHeight = 0.0;
         public static final double ballTolerance = 2.5;
-        public static final double shooterHeight = 0.1;
+        public static final double shooterHeight = 0.2;
         public static final double shooterAngle = 50.0; //potentially 60.0
 
 
