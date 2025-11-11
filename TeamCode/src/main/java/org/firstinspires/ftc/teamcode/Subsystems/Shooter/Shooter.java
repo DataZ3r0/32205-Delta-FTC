@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
 import static java.lang.Math.min;
 
+import android.content.res.ColorStateList;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.Constants;
 
 public class Shooter extends SubsystemBase {
@@ -20,6 +23,7 @@ public class Shooter extends SubsystemBase {
     private MultipleTelemetry telemetry;
 
     private final PIDController shooterController;
+    private final SimpleMotorFeedforward shooterFeedforward;
 
     private double currentVelocity;
     private double setpoint;
@@ -30,9 +34,14 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         shooterController = new PIDController(
-                Constants.shooterConstants.shooterPID.shooterkP,
-                Constants.shooterConstants.shooterPID.shooterkI,
-                Constants.shooterConstants.shooterPID.shooterkD);
+                Constants.shooterConstants.shooterConfigs.shooterkP,
+                Constants.shooterConstants.shooterConfigs.shooterkI,
+                Constants.shooterConstants.shooterConfigs.shooterkD);
+
+        shooterFeedforward = new SimpleMotorFeedforward(
+                Constants.shooterConstants.shooterConfigs.shooterkS,
+                Constants.shooterConstants.shooterConfigs.shooterkV
+        );
 
         this.telemetry = telemetry;
     }
@@ -49,10 +58,11 @@ public class Shooter extends SubsystemBase {
         return (getVelocity()/Constants.shooterConstants.ticksPerRev*60);
     }
 
-    public void runShooter(double desiredSpeed) {
-//        currentVelocity = getRPM();
-//        shooterMotor.setVelocity(Math.min(shooterController.calculate(currentVelocity, desiredVelocity), Constants.shooterConstants.shooterPID.maxSpeed));
-        shooterMotor.setPower(desiredSpeed);
+    public void runShooter(double desiredVelocity) {
+        currentVelocity = getRPM();
+        shooterMotor.setPower(Math.min((shooterController.calculate(currentVelocity, desiredVelocity)
+                        + shooterFeedforward.calculate(currentVelocity, desiredVelocity)),
+                Constants.shooterConstants.shooterConfigs.maxSpeed));
     }
 
     public void setSetpoint(double newSetpoint) {

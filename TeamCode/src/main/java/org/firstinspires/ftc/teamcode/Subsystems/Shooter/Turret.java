@@ -22,12 +22,10 @@ public class Turret extends SubsystemBase {
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         turretController = new PIDController(
-                Constants.turretConstants.turretPID.turretkP,
-                Constants.turretConstants.turretPID.turretkI,
-                Constants.turretConstants.turretPID.turretkD);
+                Constants.turretConstants.turretConfigs.turretkP,
+                Constants.turretConstants.turretConfigs.turretkI,
+                Constants.turretConstants.turretConfigs.turretkD);
     }
-
-
 
     public double getTurretPosition() {
         return (double) turretMotor.getCurrentPosition();
@@ -40,10 +38,15 @@ public class Turret extends SubsystemBase {
 
     public void setTurretAngle(double desiredAngle) {
         if (getTurretAngle() < Math.abs(135)) {
-            turretController.calculate(getTurretAngle(), desiredAngle);
+            turretMotor.setPower(Math.max(Math.min(turretController.calculate(getTurretAngle(), desiredAngle),
+                            Constants.turretConstants.turretConfigs.maxSpeed),
+                            -Constants.turretConstants.turretConfigs.maxSpeed));
         } else {
-            turretController.calculate(getTurretAngle(), 0);
+            turretMotor.setPower(Math.max(Math.min(turretController.calculate(getTurretAngle(), 0),
+                            Constants.turretConstants.turretConfigs.maxSpeed),
+                            -Constants.turretConstants.turretConfigs.maxSpeed));
         }
+
     }
 
     public void setSetpoint(double newSetpoint) {

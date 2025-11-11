@@ -185,9 +185,7 @@ public class AprilVision extends SubsystemBase {
 //        return robotRange;
 //    }
     public void periodic() {
-        try {
             refreshDesiredID();
             getAprilTagData(telemetry);
-        } catch (RuntimeException ignored) {}
     }
 }

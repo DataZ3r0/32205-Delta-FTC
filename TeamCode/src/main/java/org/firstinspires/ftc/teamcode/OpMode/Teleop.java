@@ -4,20 +4,14 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
-import org.firstinspires.ftc.teamcode.Commands.AlignToTagCommand;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
@@ -61,7 +55,7 @@ public class Teleop extends LinearOpMode {
         s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
         s_intake = new Intake(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry);
-//        s_turret = new Turret(hardwareMap);
+        s_turret = new Turret(hardwareMap);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
         poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
@@ -73,6 +67,8 @@ public class Teleop extends LinearOpMode {
 
         intakeReversed = false;
 
+        visionState.setState(VisionStates.VisionState.SHOOT);
+
         CommandScheduler.getInstance().run();
 
         waitForStart();
@@ -82,7 +78,7 @@ public class Teleop extends LinearOpMode {
             s_drivetrain.periodic();
             s_otos.periodic();
             s_shooter.periodic();
-//            s_turret.periodic();
+            s_turret.periodic();
             s_aprilVision.periodic();
             poseEstimation.periodic();
 
@@ -96,11 +92,11 @@ public class Teleop extends LinearOpMode {
                 s_otos.setPose(poseEstimation.getPose());
             }
 
-//            new RunCommand(() -> {
-//                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
-//                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
-//                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
-//            }, s_turret, poseEstimation);
+            new RunCommand(() -> {
+                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
+                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
+                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
+            }, s_turret, poseEstimation);
 
             driverGamepad.readButtons();
             opGamepad.readButtons();
@@ -122,7 +118,7 @@ public class Teleop extends LinearOpMode {
             }
 
             if (opGamepad.isDown(shooterButton)) {
-                s_shooter.setSetpoint(1);
+                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
             } else {
                 s_shooter.setSetpoint(0);
             }
