@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,10 +24,10 @@ import org.firstinspires.ftc.teamcode.Constants;
 public class Drivetrain extends SubsystemBase {
 
     private MultipleTelemetry telemetry;
-    private final DcMotor frontLeft;
-    private final DcMotor frontRight;
-    private final DcMotor backLeft;
-    private final DcMotor backRight;
+    private final DcMotorEx frontLeft;
+    private final DcMotorEx frontRight;
+    private final DcMotorEx backLeft;
+    private final DcMotorEx backRight;
 
     private final BNO055IMU IMU;
 
@@ -47,10 +48,10 @@ public class Drivetrain extends SubsystemBase {
     private double yawOffset;
     private double azimuth;
     public Drivetrain(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
-        frontLeft = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.frontLeftMotor);
-        frontRight = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.frontRightMotor);
-        backLeft = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.backLeftMotor);
-        backRight = hardwaremap.get(DcMotor.class, Constants.DrivetrainConstants.backRightMotor);
+        frontLeft = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontLeftMotor);
+        frontRight = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontRightMotor);
+        backLeft = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.backLeftMotor);
+        backRight = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.backRightMotor);
 
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);

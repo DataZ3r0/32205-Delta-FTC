@@ -15,11 +15,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Commands.AlignToTagCommand;
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 
 @TeleOp(name="Delta", group="Teleop")
 public class Teleop extends LinearOpMode {
@@ -33,6 +34,7 @@ public class Teleop extends LinearOpMode {
     Intake s_intake;
     Shooter s_shooter;
     OTOS s_otos;
+    distanceSensor s_ds;
 
     GamepadKeys.Trigger intakeTrigger;
     GamepadKeys.Trigger outtakeTrigger;
@@ -83,23 +85,17 @@ public class Teleop extends LinearOpMode {
                 s_drivetrain.resetYaw();
             }
 
-            if (opGamepad.getTrigger(intakeTrigger) > 0.001) {
+            if (opGamepad.getTrigger(intakeTrigger) > 0.001 && !Constants.IntakeConstants.isFull) {
                 s_intake.runIntake(opGamepad.getTrigger(intakeTrigger));
             } else if (opGamepad.getTrigger(outtakeTrigger) > 0.001) {
                 s_intake.runOuttake(opGamepad.getTrigger(outtakeTrigger));
             } else {
                 s_intake.stop();
             }
+
             if(driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
                 s_otos.resetOTOS();
             }
-//            if(opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-//                if(s_intake.getPower() > 0.001) {
-//                    s_intake.stop();
-//                } else {
-//                    s_intake.run();
-//                }
-//            }
 
             if (opGamepad.isDown(shooterButton)) {
                 s_shooter.runShooter(1.0);

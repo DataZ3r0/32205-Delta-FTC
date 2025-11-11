@@ -5,21 +5,27 @@ import static java.lang.Math.min;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 
 public class Shooter extends SubsystemBase {
 
-    private final DcMotor shooterMotor;
+    private final DcMotorEx shooterMotor;
 
     private final PIDController shooterController;
+
+    private double shootingCurrentThresh;
+
+    private boolean lastState, currState;
 
     private double currentSpeed;
     private double setpoint;
     public Shooter(HardwareMap hardwaremap) {
-        shooterMotor = hardwaremap.get(DcMotor.class, Constants.shooterConstants.shooterMotor);
+        shooterMotor = hardwaremap.get(DcMotorEx.class, Constants.shooterConstants.shooterMotor);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -49,12 +55,30 @@ public class Shooter extends SubsystemBase {
     public boolean atSetpoint() {
         return getSetpoint() - getPower() < Math.abs(0.01);
     }
+
+    public double getShooterCurrent(){
+        return shooterMotor.getCurrent(CurrentUnit.AMPS);
+    }
+
+    public boolean isShooting() {
+        return getShooterCurrent() < shootingCurrentThresh;
+    }
+
+    public void readVal() {
+        lastState = currState;
+        currState = isShooting();
+    }
+
+    public boolean wasBallShot() {
+        return (lastState && !currState);
+    }
     public void stop() {
         shooterMotor.setPower(0);
     }
 
     @Override
     public void periodic() {
+        readVal();
         runShooter(setpoint);
     }
 }
