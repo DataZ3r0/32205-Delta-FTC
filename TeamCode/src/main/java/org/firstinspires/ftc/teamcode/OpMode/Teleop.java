@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
@@ -29,6 +30,7 @@ public class Teleop extends LinearOpMode {
     Drivetrain s_drivetrain;
     AprilVision s_aprilVision;
     Intake s_intake;
+    MiddleStage s_middleStage;
     Shooter s_shooter;
     Turret s_turret;
     OTOS s_otos;
@@ -54,6 +56,7 @@ public class Teleop extends LinearOpMode {
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
         s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
         s_intake = new Intake(hardwareMap);
+        s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry);
         s_turret = new Turret(hardwareMap);
 
@@ -107,10 +110,13 @@ public class Teleop extends LinearOpMode {
 
             if (opGamepad.getTrigger(intakeTrigger) > 0.001) {
                 s_intake.runIntake(opGamepad.getTrigger(intakeTrigger));
+                s_middleStage.runIntake(opGamepad.getTrigger(intakeTrigger));
             } else if (opGamepad.getTrigger(outtakeTrigger) > 0.001) {
                 s_intake.runOuttake(opGamepad.getTrigger(outtakeTrigger));
+                s_middleStage.runOuttake(opGamepad.getTrigger(outtakeTrigger));
             } else {
                 s_intake.stop();
+                s_middleStage.stop();
             }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
