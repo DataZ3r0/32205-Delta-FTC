@@ -42,7 +42,4 @@ public class Intake extends SubsystemBase {
     public void stop() {
         intakeMotor.setPower(0);
     }
-
-    @Override
-    public void periodic() {}
 }

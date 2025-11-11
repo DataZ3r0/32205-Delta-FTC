@@ -46,7 +46,6 @@ public class GlobalPoseEstimation extends SubsystemBase {
         return pose;
     }
 
-    @Override
     public void periodic() {
         estimatePose();
     }

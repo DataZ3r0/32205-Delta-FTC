@@ -78,31 +78,9 @@ public class AprilVision extends SubsystemBase {
 
         this.telemetry = telemetry;
         this.visionStates = visionState;
-
         refreshDesiredID();
     }
 
-    public void getAprilTagData(MultipleTelemetry m_telemetry) {
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-        m_telemetry.addData("# AprilTags Detected", currentDetections.size());
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                m_telemetry.addData("Tag ID: ", detection.id);
-                if (checkDesiredTagID(detection.id)) {
-                    desiredTag = detection;
-
-                    String[] keys = {" Tag X", "Tag Y", "Tag Yaw", "Tag Range", "Tag Bearing"};
-                    double[] tagInfo = {detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.yaw,
-                            detection.ftcPose.range, detection.ftcPose.bearing};
-
-                    for (int x = 0; x < keys.length; x++) {
-                        m_telemetry.addData(keys[x], tagInfo[x]);
-                    }
-                }
-
-            }
-        }
-    }
 
     public void refreshDesiredID() {
         if (visionStates.getState() == VisionStates.VisionState.MOTIF) {
@@ -142,6 +120,28 @@ public class AprilVision extends SubsystemBase {
             }
         }
         return targetFound;
+    }
+
+    public void getAprilTagData(MultipleTelemetry m_telemetry) {
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        m_telemetry.addData("# AprilTags Detected", currentDetections.size());
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                m_telemetry.addData("Tag ID: ", detection.id);
+                if (checkDesiredTagID(detection.id)) {
+                    desiredTag = detection;
+
+                    String[] keys = {" Tag X", "Tag Y", "Tag Yaw", "Tag Range", "Tag Bearing"};
+                    double[] tagInfo = {detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.yaw,
+                            detection.ftcPose.range, detection.ftcPose.bearing};
+
+                    for (int x = 0; x < keys.length; x++) {
+                        m_telemetry.addData(keys[x], tagInfo[x]);
+                    }
+                }
+
+            }
+        }
     }
     public void setTargetYaw(double yaw) {
         targetYaw = yaw;
@@ -184,9 +184,10 @@ public class AprilVision extends SubsystemBase {
 //    public static double geRobotRange() {
 //        return robotRange;
 //    }
-    @Override
     public void periodic() {
-        refreshDesiredID();
-        getAprilTagData(telemetry);
+        try {
+            refreshDesiredID();
+            getAprilTagData(telemetry);
+        } catch (RuntimeException ignored) {}
     }
 }

@@ -19,7 +19,7 @@ public class Turret extends SubsystemBase {
     public Turret(HardwareMap hardwaremap) {
         turretMotor = hardwaremap.get(DcMotor.class, Constants.shooterConstants.shooterMotor);
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         turretController = new PIDController(
                 Constants.turretConstants.turretPID.turretkP,
@@ -58,7 +58,6 @@ public class Turret extends SubsystemBase {
         return getSetpoint() - getTurretAngle() < Math.abs(2);
     }
 
-    @Override
     public void periodic() {
         setTurretAngle(setpoint);
     }

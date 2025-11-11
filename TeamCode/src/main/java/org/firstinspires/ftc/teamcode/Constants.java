@@ -55,19 +55,19 @@ public class Constants {
     public static final class shooterConstants {
 
         public static final String shooterMotor = "shooterMotor";
+        public static final double ticksPerRev = 28;
         public static final double goalHeight = 0.0;
         public static final double ballTolerance = 2.5;
         public static final double shooterHeight = 0.0;
         public static final double shooterAngle = 50.0; //potentially 60.0
-        public static final double maxSpeed = 1.0;
+
 
         @Config
         public static final class shooterPID {
-            public static final double shooterkP = 0.0;
-
-            public static final double shooterkI = 0.0;
-
-            public static final double shooterkD = 0.0;
+            public static double maxSpeed = 1.0;
+            public static double shooterkP = 0.0;
+            public static double shooterkI = 0.0;
+            public static double shooterkD = 0.0;
 
         }
     }
@@ -75,9 +75,9 @@ public class Constants {
     public static final class turretConstants {
         @Config
         public static final class turretPID {
-            public static final double turretkP = 0.0;
-            public static final double turretkI = 0.0;
-            public static final double turretkD = 0.0;
+            public static double turretkP = 0.0;
+            public static double turretkI = 0.0;
+            public static double turretkD = 0.0;
         }
     }
 

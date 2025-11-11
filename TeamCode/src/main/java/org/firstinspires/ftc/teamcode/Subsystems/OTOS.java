@@ -98,9 +98,8 @@ public class OTOS extends SubsystemBase {
         return otos.getPosition();
     }
 
-    @Override
     public void periodic() {
-        pos = otos.getPosition();
+        pos = getPose();
         telemetry.addData("OTOS X", pos.x);
         telemetry.addData("OTOS Y", pos.y);
         telemetry.addData("OTOS HEADING", pos.h);

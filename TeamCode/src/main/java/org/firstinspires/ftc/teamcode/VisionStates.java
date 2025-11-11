@@ -6,6 +6,7 @@ public class VisionStates {
     private VisionState lastState;
 
     public void setState(VisionState state) {
+        updateLastState();
         currentState = state;
     }
 
@@ -19,14 +20,6 @@ public class VisionStates {
 
     public void updateLastState() {
         lastState = currentState;
-    }
-
-    public void updateLastState(VisionState newState) {
-        lastState = newState;
-    }
-
-    public boolean hasStateChanged() {
-        return currentState != lastState;
     }
 
     public enum VisionState {
