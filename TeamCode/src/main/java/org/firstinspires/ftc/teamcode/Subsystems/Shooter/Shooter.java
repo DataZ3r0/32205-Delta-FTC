@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.Constants;
 
@@ -27,6 +28,10 @@ public class Shooter extends SubsystemBase {
 
     private double currentVelocity;
     private double setpoint;
+
+    private double shootingCurrentThresh;
+
+    private boolean lastState, currState;
     public Shooter(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
         shooterMotor = hardwaremap.get(DcMotorEx.class, Constants.shooterConstants.shooterMotor);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -71,6 +76,23 @@ public class Shooter extends SubsystemBase {
 
     public double getSetpoint() {
         return setpoint;
+    }
+
+    public double getShooterCurrent(){
+        return shooterMotor.getCurrent(CurrentUnit.AMPS);
+    }
+
+    public boolean isShooting() {
+        return getShooterCurrent() < shootingCurrentThresh;
+    }
+
+    public void readVal() {
+        lastState = currState;
+        currState = isShooting();
+    }
+
+    public boolean wasBallShot() {
+        return (lastState && !currState);
     }
 
     public boolean atSetpoint() {

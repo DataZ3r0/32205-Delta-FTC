@@ -59,11 +59,7 @@ public class AlignToTagCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         if(s_tagDetection.foundTarget()) {
-            if(Math.abs(headingError) < 0.2) {
-                return true;
-            } else {
-                return false;
-            }
+            return Math.abs(headingError) < 0.2;
         } else {
             return true;
         }

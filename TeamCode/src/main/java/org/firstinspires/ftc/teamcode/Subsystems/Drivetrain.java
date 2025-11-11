@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 public class Drivetrain extends SubsystemBase {
 
-    private MultipleTelemetry telemetry;
+    private final MultipleTelemetry telemetry;
     private final DcMotorEx frontLeft;
     private final DcMotorEx frontRight;
     private final DcMotorEx backLeft;
