@@ -14,7 +14,7 @@ public class MiddleStage extends SubsystemBase {
     private DcMotorSimple.Direction direction;
 
     public MiddleStage(HardwareMap hardwareMap) {
-        motor = hardwareMap.get(DcMotorEx.class, Constants.IntakeConstants.intakeMotor);
+        motor = hardwareMap.get(DcMotorEx.class, Constants.IntakeConstants.middleStageMotor);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }

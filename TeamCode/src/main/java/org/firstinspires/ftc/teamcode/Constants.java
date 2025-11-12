@@ -48,6 +48,7 @@ public class Constants {
     public static final class IntakeConstants {
 
         public static final String intakeMotor = "intakeMotor";
+        public static final String middleStageMotor = "midStageMotor";
 
         public static final double maxSpeed = 1.0;
 

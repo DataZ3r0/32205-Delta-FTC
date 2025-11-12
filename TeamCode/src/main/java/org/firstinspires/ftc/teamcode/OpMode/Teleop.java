@@ -83,7 +83,7 @@ public class Teleop extends LinearOpMode {
             s_drivetrain.periodic();
             s_otos.periodic();
             s_shooter.periodic();
-            s_turret.periodic();
+//            s_turret.periodic();
             s_aprilVision.periodic();
             poseEstimation.periodic();
 
@@ -97,11 +97,11 @@ public class Teleop extends LinearOpMode {
                 s_otos.setPose(poseEstimation.getPose());
             }
 
-            new RunCommand(() -> {
-                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
-                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
-                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
-            }, s_turret, poseEstimation);
+//            new RunCommand(() -> {
+//                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
+//                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
+//                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
+//            }, s_turret, poseEstimation);
 
             driverGamepad.readButtons();
             opGamepad.readButtons();
@@ -124,20 +124,13 @@ public class Teleop extends LinearOpMode {
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
                 s_otos.resetOTOS();
             }
-//            if(opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-//                if(s_intake.getPower() > 0.001) {
-//                    s_intake.stop();
-//                } else {
-//                    s_intake.run();
-//                }
-//            }
 
             if (opGamepad.isDown(shooterButton)) {
-                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
+//              s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
+                s_shooter.setPower(1);
             } else {
-                s_shooter.setSetpoint(0);
+              s_shooter.stop();
             }
-
             m_telemetry.update();
         }
     }

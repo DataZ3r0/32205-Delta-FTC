@@ -51,6 +51,10 @@ public class Shooter extends SubsystemBase {
         this.telemetry = telemetry;
     }
 
+
+    public void setPower(double desiredPower) {
+        shooterMotor.setPower(desiredPower);
+    }
     public double getPower() {
         return shooterMotor.getPower();
     }
@@ -66,9 +70,9 @@ public class Shooter extends SubsystemBase {
     public void runShooter(double desiredVelocity) {
         currentVelocity = getRPM();
 
-        shooterMotor.setPower(Math.min((shooterController.calculate(currentVelocity, desiredVelocity)
-                        + shooterFeedforward.calculate(currentVelocity, desiredVelocity)),
-                Constants.shooterConstants.shooterConfigs.maxSpeed));
+        shooterMotor.setPower(Math.max(Math.min((shooterController.calculate(currentVelocity, desiredVelocity)
+                        + shooterFeedforward.calculate(desiredVelocity)),
+                Constants.shooterConstants.shooterConfigs.maxSpeed), 0));
     }
 
     public void setSetpoint(double newSetpoint) {
@@ -97,20 +101,16 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return getSetpoint() - getPower() < Math.abs(0.01);
+        return getSetpoint() - getVelocity() < Math.abs(40);
     }
     public void stop() {
         shooterMotor.setPower(0);
     }
 
     public void periodic() {
-        if (setpoint > 0.01) {
-            runShooter(setpoint);
-        } else {
-            stop();
-        }
-
+//        runShooter(setpoint);
         telemetry.addData("Shooter RPM: ", getRPM());
         telemetry.addData("Shooter Current: ", getShooterCurrent());
+        telemetry.addData("shooter setpoint: ", getSetpoint());
     }
 }

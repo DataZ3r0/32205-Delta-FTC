@@ -186,7 +186,7 @@ public class AprilVision extends SubsystemBase {
 //    public void setRobotRange(double range) {
 //        robotRange = range;
 //    }
-//    public static double geRobotRange() {
+//    public static double getRobotRange() {
 //        return robotRange;
 //    }
     public void periodic() {

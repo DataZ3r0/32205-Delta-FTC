@@ -43,9 +43,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
+import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.CameraStreamProcessor;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
 import org.firstinspires.ftc.teamcode.VisionStates;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -87,12 +93,25 @@ public class CameraCal extends LinearOpMode
     private CameraStreamProcessor s_Processor;
     AprilVision s_aprilVision;
     VisionStates visionState;
+    Intake s_intake;
+    MiddleStage s_middleStage;
+    Turret s_turret;
+    GlobalPoseEstimation poseEstimation;
+    OTOS s_otos;
+
+    Shooter s_shooter;
 
     @Override
     public void runOpMode()
     {
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         visionState = new VisionStates();
+        s_shooter = new Shooter(hardwareMap, m_telemetry);
+        s_intake = new Intake(hardwareMap);
+        s_middleStage = new MiddleStage(hardwareMap);
+        s_turret = new Turret(hardwareMap);
+        s_otos = new OTOS(hardwareMap, m_telemetry);
+        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
         visionState.setState(VisionStates.VisionState.SHOOT);
         s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
@@ -101,6 +120,7 @@ public class CameraCal extends LinearOpMode
 
         while(opModeIsActive()) {
             s_aprilVision.periodic();
+            s_shooter.setPower(1);
             m_telemetry.update();
         }
     }
