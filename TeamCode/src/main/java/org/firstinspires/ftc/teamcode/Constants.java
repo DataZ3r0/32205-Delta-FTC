@@ -68,11 +68,11 @@ public class Constants {
         public static final class shooterConfigs {
             public static double testRPM = 2400;
             public static double maxSpeed = 1;
-            public static double shooterkP = 0.0;
-            public static double shooterkI = 0.0;
+            public static double shooterkP = 0.001;
+            public static double shooterkI = 0.06;
             public static double shooterkD = 0.0;
-            public static double shooterkS = 0.0;
-            public static double shooterkV = 0.0;
+            public static double shooterkS = 0.003;
+            public static double shooterkV = 0.000195;
 
         }
     }

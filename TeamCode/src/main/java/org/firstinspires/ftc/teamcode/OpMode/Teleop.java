@@ -43,6 +43,7 @@ public class Teleop extends LinearOpMode {
     GamepadKeys.Trigger intakeTrigger;
     GamepadKeys.Trigger outtakeTrigger;
     GamepadKeys.Button shooterButton;
+    GamepadKeys.Button shooter2ndtestbutton;
 
     boolean intakeReversed;
 
@@ -58,7 +59,7 @@ public class Teleop extends LinearOpMode {
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
         s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
         s_intake = new Intake(hardwareMap);
-        s_middleStage = new MiddleStage(hardwareMap);
+//        s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry);
         s_turret = new Turret(hardwareMap);
 
@@ -69,6 +70,7 @@ public class Teleop extends LinearOpMode {
         outtakeTrigger = GamepadKeys.Trigger.LEFT_TRIGGER;
 
         shooterButton = GamepadKeys.Button.X;
+        shooter2ndtestbutton = GamepadKeys.Button.Y;
 
         intakeReversed = false;
 
@@ -112,13 +114,13 @@ public class Teleop extends LinearOpMode {
 
             if (opGamepad.getTrigger(intakeTrigger) > 0.001 && !Constants.IntakeConstants.isFull) {
                 s_intake.runIntake(opGamepad.getTrigger(intakeTrigger));
-                s_middleStage.runIntake(opGamepad.getTrigger(intakeTrigger));
+//                s_middleStage.runIntake(opGamepad.getTrigger(intakeTrigger));
             } else if (opGamepad.getTrigger(outtakeTrigger) > 0.001) {
                 s_intake.runOuttake(opGamepad.getTrigger(outtakeTrigger));
-                s_middleStage.runOuttake(opGamepad.getTrigger(outtakeTrigger));
+//                s_middleStage.runOuttake(opGamepad.getTrigger(outtakeTrigger));
             } else {
                 s_intake.stop();
-                s_middleStage.stop();
+//                s_middleStage.stop();
             }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
@@ -126,10 +128,11 @@ public class Teleop extends LinearOpMode {
             }
 
             if (opGamepad.isDown(shooterButton)) {
-//              s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
-                s_shooter.setPower(0.91);
+              s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
+            } else if (opGamepad.isDown(shooter2ndtestbutton)) {
+                s_shooter.setSetpoint(3500);
             } else {
-              s_shooter.stop();
+              s_shooter.setSetpoint(0);
             }
             m_telemetry.update();
         }
