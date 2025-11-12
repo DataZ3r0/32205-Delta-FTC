@@ -32,6 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import android.annotation.SuppressLint;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
@@ -64,6 +66,7 @@ public class distanceSensor extends SubsystemBase {
         this.telemetry = telemetry;
     }
 
+    @SuppressLint("DefaultLocale")
     public void readDistance() {
         Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor) sensorDistance;
 

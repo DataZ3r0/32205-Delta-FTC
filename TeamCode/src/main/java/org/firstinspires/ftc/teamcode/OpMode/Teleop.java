@@ -126,8 +126,9 @@ public class Teleop extends LinearOpMode {
             }
 
             if (opGamepad.isDown(shooterButton)) {
-//              s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
+//                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
                 s_shooter.setPower(0.91);
+//                s_middleStage.runIntake(0.5);
             } else {
               s_shooter.stop();
             }

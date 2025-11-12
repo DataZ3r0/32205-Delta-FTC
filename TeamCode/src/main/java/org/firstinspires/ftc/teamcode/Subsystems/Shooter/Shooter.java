@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
+import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,16 +21,14 @@ import org.firstinspires.ftc.teamcode.Constants;
 public class Shooter extends SubsystemBase {
 
     private final DcMotorEx shooterMotor;
+    private final ServoEx loadingServo;
 
-    private MultipleTelemetry telemetry;
+    private final MultipleTelemetry telemetry;
 
     private final PIDController shooterController;
     private final SimpleMotorFeedforward shooterFeedforward;
 
-    private double currentVelocity;
     private double setpoint;
-
-    private double shootingCurrentThresh;
 
     private boolean lastState, currState;
     public Shooter(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
@@ -37,6 +36,8 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        loadingServo = hardwaremap.get(ServoEx.class, Constants.shooterConstants.loadingServo);
+        loadingServo.setInverted(Constants.shooterConstants.loadingServoRev);
 
         shooterController = new PIDController(
                 Constants.shooterConstants.shooterConfigs.shooterkP,
@@ -68,11 +69,15 @@ public class Shooter extends SubsystemBase {
     }
 
     public void runShooter(double desiredVelocity) {
-        currentVelocity = getRPM();
+        double currentVelocity = getRPM();
 
         shooterMotor.setPower(Math.max(Math.min((shooterController.calculate(currentVelocity, desiredVelocity)
                         + shooterFeedforward.calculate(desiredVelocity)),
                 Constants.shooterConstants.shooterConfigs.maxSpeed), 0));
+    }
+
+    public void runLoader() {
+        loadingServo.rotateBy(Constants.shooterConstants.loadingServoSpeed);
     }
 
     public void setSetpoint(double newSetpoint) {
@@ -88,7 +93,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isShooting() {
-        return getShooterCurrent() < shootingCurrentThresh;
+        double shootingCurrentThresh = 3;
+        return getShooterCurrent() > shootingCurrentThresh;
     }
 
     public void readVal() {
