@@ -115,6 +115,7 @@ public class Shooter extends SubsystemBase {
 
     public void periodic() {
 //        runShooter(setpoint);
+        readVal();
         telemetry.addData("Shooter RPM: ", getRPM());
         telemetry.addData("Shooter Current: ", getShooterCurrent());
         telemetry.addData("shooter setpoint: ", getSetpoint());
