@@ -97,14 +97,20 @@ public class Teleop extends LinearOpMode {
                 s_otos.setPose(poseEstimation.getPose());
             }
 
-//            new RunCommand(() -> {
+            driverGamepad.readButtons();
+            opGamepad.readButtons();
+
+            if(!Constants.toggles.manTurret) {
+//                new RunCommand(() -> {
 //                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
 //                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
 //                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
 //            }, s_turret, poseEstimation);
-
-            driverGamepad.readButtons();
-            opGamepad.readButtons();
+            } else {
+                s_turret.manuelTurret(
+                        opGamepad.getRightX(), opGamepad.getRightY()
+                );
+            }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){
                 s_drivetrain.resetYaw();

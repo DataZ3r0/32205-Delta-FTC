@@ -4,11 +4,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 public class Constants {
-
+    @Config
     public static final class toggles{
-        public static final boolean compMode = false;
-        public static final boolean toggleCamStream = true;
-        public static final boolean blueTeam = true;
+        public static boolean compMode = false;
+        public static boolean toggleCamStream = true;
+        public static boolean blueTeam = true;
+        public static boolean manTurret = true;
     }
 
     public static final class FieldConstants {
