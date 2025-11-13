@@ -9,6 +9,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Commands.JoystickTurret;
+import org.firstinspires.ftc.teamcode.Commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
@@ -66,6 +68,7 @@ public class Teleop extends LinearOpMode {
         s_otos = new OTOS(hardwareMap, m_telemetry);
         poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
+
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
         outtakeTrigger = GamepadKeys.Trigger.LEFT_TRIGGER;
 
@@ -108,6 +111,14 @@ public class Teleop extends LinearOpMode {
             driverGamepad.readButtons();
             opGamepad.readButtons();
 
+            s_shooter.setDefaultCommand(
+                    new ShooterCommand(s_shooter, s_aprilVision, () -> opGamepad.isDown(shooterButton))
+            );
+
+//            s_turret.setDefaultCommand(
+//                    new JoystickTurret(s_turret, () -> opGamepad.getRightX(), ()-> opGamepad.getRightY())
+//            );
+
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){
                 s_drivetrain.resetYaw();
             }
@@ -127,13 +138,6 @@ public class Teleop extends LinearOpMode {
                 s_otos.resetOTOS();
             }
 
-            if (opGamepad.isDown(shooterButton)) {
-              s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
-            } else if (opGamepad.isDown(shooter2ndtestbutton)) {
-                s_shooter.setSetpoint(3500);
-            } else {
-              s_shooter.setSetpoint(0);
-            }
             m_telemetry.update();
         }
     }

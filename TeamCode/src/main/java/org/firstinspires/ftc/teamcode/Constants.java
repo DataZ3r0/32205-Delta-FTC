@@ -58,6 +58,7 @@ public class Constants {
 
         public static final String shooterMotor = "shooterMotor";
         public static final double ticksPerRev = 28;
+        public static final double shooterRPMTolerance = 50;
         public static final double goalHeight = 0.0;
         public static final double ballTolerance = 2.5;
         public static final double shooterHeight = 0.1;

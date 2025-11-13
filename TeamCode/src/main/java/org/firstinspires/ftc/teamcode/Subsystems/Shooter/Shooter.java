@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 
 public class Shooter extends SubsystemBase {
 
@@ -101,7 +102,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return getSetpoint() - getVelocity() < Math.abs(40);
+        return getSetpoint() - getRPM() < Math.abs(Constants.shooterConstants.shooterRPMTolerance);
     }
     public void stop() {
         shooterMotor.setPower(0);
@@ -112,5 +113,6 @@ public class Shooter extends SubsystemBase {
         telemetry.addData("Shooter RPM: ", getRPM());
         telemetry.addData("Shooter Current: ", getShooterCurrent());
         telemetry.addData("shooter setpoint: ", getSetpoint());
+        telemetry.addData("shooter at setpoint?", atSetpoint());
     }
 }

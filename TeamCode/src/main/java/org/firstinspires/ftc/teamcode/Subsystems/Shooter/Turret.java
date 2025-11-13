@@ -33,10 +33,12 @@ public class Turret extends SubsystemBase {
     }
 
     public double getTurretAngle() {
-        double rev = getTurretPosition()/(1464*5);
+        double rev = getTurretPosition()/(6*5); //6 is ticks per rev, 5 is the gear ratio
         return rev * 360;
     }
 
+    // if the turret has a setpoint within the given range of 270 (135 to -135) then turn the turret to the setpoint
+    // else turn the turret to 0 degrees
     public void setTurretAngle(double desiredAngle) {
         if (getTurretAngle() < Math.abs(135)) {
             turretMotor.setPower(Math.max(Math.min(turretController.calculate(getTurretAngle(), desiredAngle),
