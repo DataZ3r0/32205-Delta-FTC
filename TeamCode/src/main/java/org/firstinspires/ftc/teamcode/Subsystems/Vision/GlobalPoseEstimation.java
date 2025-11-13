@@ -15,11 +15,6 @@ public class GlobalPoseEstimation extends SubsystemBase {
     private final Turret s_turret;
 
     private SparkFunOTOS.Pose2D pose;
-    private double x;
-    private double y;
-    private double r;
-    private double deltaX;
-    private double deltaY;
 
     public GlobalPoseEstimation(OTOS s_otos, AprilVision s_vision, Turret s_turret) {
         this.s_otos = s_otos;
@@ -28,9 +23,12 @@ public class GlobalPoseEstimation extends SubsystemBase {
     }
 
     public void estimatePose() {
+        double r;
+        double y;
+        double x;
         if (s_vision.foundTarget()) {
-            deltaX = s_vision.getTargetRange() * Math.cos(Math.toRadians(s_turret.getTurretAngle() - s_otos.getH()));
-            deltaY = s_vision.getTargetRange() * Math.sin(Math.toRadians(s_turret.getTurretAngle() - s_otos.getH()));
+            double deltaX = s_vision.getTargetRange() * Math.cos(Math.toRadians(s_turret.getTurretAngle() - s_otos.getH()));
+            double deltaY = s_vision.getTargetRange() * Math.sin(Math.toRadians(s_turret.getTurretAngle() - s_otos.getH()));
             x = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - deltaX : Constants.FieldConstants.redGoal.x - deltaX;
             y = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - deltaY : Constants.FieldConstants.redGoal.y - deltaY;
             r = s_otos.getH() + s_turret.getTurretAngle() - s_vision.getTargetYaw();
@@ -39,7 +37,7 @@ public class GlobalPoseEstimation extends SubsystemBase {
             y = s_otos.getY();
             r = s_otos.getH();
         }
-        pose = new SparkFunOTOS.Pose2D(x,y,r);
+        pose = new SparkFunOTOS.Pose2D(x, y, r);
     }
 
     public SparkFunOTOS.Pose2D getPose() {

@@ -45,7 +45,6 @@ public class Teleop extends LinearOpMode {
     GamepadKeys.Trigger intakeTrigger;
     GamepadKeys.Trigger outtakeTrigger;
     GamepadKeys.Button shooterButton;
-    GamepadKeys.Button shooter2ndtestbutton;
 
     boolean intakeReversed;
 
@@ -67,7 +66,6 @@ public class Teleop extends LinearOpMode {
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
         poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
-
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
         outtakeTrigger = GamepadKeys.Trigger.LEFT_TRIGGER;
@@ -102,14 +100,20 @@ public class Teleop extends LinearOpMode {
                 s_otos.setPose(poseEstimation.getPose());
             }
 
-//            new RunCommand(() -> {
+            driverGamepad.readButtons();
+            opGamepad.readButtons();
+
+            if(!Constants.toggles.manTurret) {
+//                new RunCommand(() -> {
 //                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
 //                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
 //                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
 //            }, s_turret, poseEstimation);
-
-            driverGamepad.readButtons();
-            opGamepad.readButtons();
+            } else {
+                s_turret.manuelTurret(
+                        opGamepad.getRightX(), opGamepad.getRightY()
+                );
+            }
 
             s_shooter.setDefaultCommand(
                     new ShooterCommand(s_shooter, s_aprilVision, () -> opGamepad.isDown(shooterButton))
@@ -138,6 +142,13 @@ public class Teleop extends LinearOpMode {
                 s_otos.resetOTOS();
             }
 
+            if (opGamepad.isDown(shooterButton)) {
+//                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
+                s_shooter.setPower(0.91);
+//                s_middleStage.runIntake(0.5);
+            } else {
+              s_shooter.stop();
+            }
             m_telemetry.update();
         }
     }

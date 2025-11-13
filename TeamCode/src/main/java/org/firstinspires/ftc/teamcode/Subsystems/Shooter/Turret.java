@@ -28,6 +28,11 @@ public class Turret extends SubsystemBase {
                 Constants.turretConstants.turretConfigs.turretkD);
     }
 
+    public void manuelTurret(double rightStickX, double rightStickY) {
+        double ratio = rightStickX / rightStickY;
+        setTurretAngle(ratio);
+    }
+
     public double getTurretPosition() {
         return (double) turretMotor.getCurrentPosition();
     }

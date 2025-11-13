@@ -49,7 +49,6 @@ public class Drivetrain extends SubsystemBase {
 
 
     private double yawOffset;
-    private double azimuth;
     public Drivetrain(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
         frontLeft = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontLeftMotor);
         frontRight = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontRightMotor);
@@ -136,10 +135,6 @@ public class Drivetrain extends SubsystemBase {
         backRight.setPower(0);
 
 //        drive(yPow, xPow, hPow);
-    }
-
-    public void resetAzimuth() {
-        azimuth = getHeading();
     }
 
     public void periodic() {
