@@ -32,7 +32,7 @@ public class Drivetrain extends SubsystemBase {
     private final DcMotorEx backLeft;
     private final DcMotorEx backRight;
 
-    private final BNO055IMU IMU;
+    private final IMU IMU;
 
     private final PIDController drivePID = new PIDController(
             Constants.DrivetrainConstants.drivePID.kPdrive
@@ -49,16 +49,18 @@ public class Drivetrain extends SubsystemBase {
 
 
     private double yawOffset;
+
+//    private Constants.DrivetrainConstants.rotatingDirections rotationDirection;
     public Drivetrain(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
         frontLeft = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontLeftMotor);
         frontRight = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontRightMotor);
         backLeft = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.backLeftMotor);
         backRight = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.backRightMotor);
 
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -70,9 +72,10 @@ public class Drivetrain extends SubsystemBase {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        IMU = hardwaremap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        IMU = hardwaremap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
         IMU.initialize(parameters);
 
         this.telemetry = telemetry;
@@ -86,8 +89,8 @@ public class Drivetrain extends SubsystemBase {
         double sin =  Math.sin(-headingRadians);
         double cos =  Math.cos(-headingRadians);
 
-        double fieldOrientedX = driveY * cos - driveX * sin;
-        double fieldOrientedY = driveY * sin + driveX * cos;
+        double fieldOrientedX = driveX * cos - driveY * sin;
+        double fieldOrientedY = driveX * sin + driveY * cos;
 
         fieldOrientedX *= Constants.DrivetrainConstants.strafingBalancer;
 
@@ -102,14 +105,23 @@ public class Drivetrain extends SubsystemBase {
         frontRight.setPower(frontRightPower);
         backLeft.setPower(backLeftPower);
         backRight.setPower(backRightPower);
+
+
+//        if (rotation < -0.01) {
+//            rotationDirection = Constants.DrivetrainConstants.rotatingDirections.CLOCKWISE;
+//        }
     }
 
-    public double getRawHeading() {
-        Orientation angles = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES);
-        return angles.firstAngle;
-    }
+//    public rotationDirections getRotatingDirection() {
+//        return rotatingClockwise;
+//    }
+
+//    public double getRawHeading() {
+//        Orientation angles = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        return angles.firstAngle;
+//    }
     public double getHeading() {
-        double heading = getRawHeading() - yawOffset;
+        double heading = IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);;
 
         if(heading > 180) {
             heading -= 360;
@@ -121,7 +133,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetYaw() {
-        yawOffset = getRawHeading() - Constants.DrivetrainConstants.controlHubOffset;
+        IMU.resetYaw();
     }
 
     public void stop(OTOS otos) {
@@ -139,6 +151,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void periodic() {
         telemetry.addData("DRIVE: Heading: ", getHeading());
+//        telemetry.addData("DRIVE: Clockwise?", getRotatingDirection());
 //        m_telemetry.addData("DRIVE: Front Left Power: ", frontLeft.getPower());
 //        m_telemetry.addData("DRIVE: Front Right Power: ", frontRight.getPower());
 //        m_telemetry.addData("DRIVE: Back Left Power: ", backLeft.getPower());

@@ -32,17 +32,15 @@ package org.firstinspires.ftc.teamcode.OpMode;
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import android.util.Size;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Commands.JoystickTurret;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
@@ -50,13 +48,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.CameraStreamProcessor;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
 import org.firstinspires.ftc.teamcode.VisionStates;
-import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import java.util.Locale;
 
 /*
  * This OpMode helps calibrate a webcam or RC phone camera, useful for AprilTag pose estimation
@@ -72,55 +66,85 @@ import java.util.Locale;
  * In OnBot Java, use "Add File" to add this OpMode from the list of Samples.
  */
 
-@TeleOp(name = "Utility: Camera Frame Capture", group = "Utility")
+@TeleOp(name = "testOpModeDelta", group = "Utility")
 
-public class CameraCal extends LinearOpMode
+public class testOpMode extends LinearOpMode
 {
     /*
      * EDIT THESE PARAMETERS AS NEEDED
      */
-    final boolean USING_WEBCAM = true;
-    final BuiltinCameraDirection INTERNAL_CAM_DIR = BuiltinCameraDirection.BACK;
-    final int RESOLUTION_WIDTH = 1280;
-    final int RESOLUTION_HEIGHT = 800;
+//    final boolean USING_WEBCAM = true;
+//    final BuiltinCameraDirection INTERNAL_CAM_DIR = BuiltinCameraDirection.BACK;
+//    final int RESOLUTION_WIDTH = 1280;
+//    final int RESOLUTION_HEIGHT = 800;
     MultipleTelemetry m_telemetry;
 
     // Internal state
-    boolean lastX;
-    int frameCount;
-    long capReqTime;
-    private AprilTagProcessor aprilTag;
-    private CameraStreamProcessor s_Processor;
-    AprilVision s_aprilVision;
-    VisionStates visionState;
-    Intake s_intake;
-    MiddleStage s_middleStage;
+//    boolean lastX;
+//    int frameCount;
+//    long capReqTime;
+//    private AprilTagProcessor aprilTag;
+//    private CameraStreamProcessor s_Processor;
+    GamepadEx opGamepad;
+//    AprilVision s_aprilVision;
+//    VisionStates visionState;
+//    Intake s_intake;
+//    MiddleStage s_middleStage;
     Turret s_turret;
-    GlobalPoseEstimation poseEstimation;
-    OTOS s_otos;
-
-    Shooter s_shooter;
+//    GlobalPoseEstimation poseEstimation;
+//    OTOS s_otos;
+//
+//
+//
+//    Shooter s_shooter;
 
     @Override
     public void runOpMode()
     {
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        visionState = new VisionStates();
-        s_shooter = new Shooter(hardwareMap, m_telemetry);
-        s_intake = new Intake(hardwareMap);
-        s_middleStage = new MiddleStage(hardwareMap);
-        s_turret = new Turret(hardwareMap);
-        s_otos = new OTOS(hardwareMap, m_telemetry);
-        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
+        opGamepad = new GamepadEx(gamepad1);
+//        visionState = new VisionStates();
+//        s_shooter = new Shooter(hardwareMap, m_telemetry);
+//        s_intake = new Intake(hardwareMap);
+//        s_middleStage = new MiddleStage(hardwareMap);
+//        s_turret = new Turret(hardwareMap, s_dr m_telemetry);
+//        s_otos = new OTOS(hardwareMap, m_telemetry);
+//        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
-        visionState.setState(VisionStates.VisionState.SHOOT);
-        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
+//        visionState.setState(VisionStates.VisionState.SHOOT);
+//        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
+        CommandScheduler.getInstance().run();
 
         waitForStart();
 
         while(opModeIsActive()) {
-            s_aprilVision.periodic();
-            s_shooter.setPower(1);
+            if(!Constants.toggles.manTurret) {
+//                new RunCommand(() -> {
+//                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
+//                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
+//                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
+//            }, s_turret, poseEstimation);
+            } else {
+//                if(Math.abs(opGamepad.getRightX()) >= 0.5 || Math.abs(opGamepad.getRightY()) >= 0.5 && false;) {
+//                    s_turret.manuelTurret(
+//                            opGamepad.getRightX(), opGamepad.getRightY()
+//                    );
+//                }
+//                else {
+//                    s_turret.manuelTurret(0,0);
+//                }
+            }
+
+//            s_turret.setDefaultCommand(
+//                    new JoystickTurret(s_turret, () -> opGamepad.getRightX(), ()-> opGamepad.getRightY())
+//            );
+
+//            s_aprilVision.periodic();
+            m_telemetry.addData("right stick x", opGamepad.getRightX());
+            m_telemetry.addData("right stick y", opGamepad.getRightY());
+            m_telemetry.addData("right stick angle", s_turret.getJoystickAngle(opGamepad.getRightX(), opGamepad.getRightY()));
+
+            s_turret.periodic();
             m_telemetry.update();
         }
     }

@@ -33,7 +33,7 @@ public class AprilVision extends SubsystemBase {
     private int[] desiredTagID;
     private final AprilTagProcessor aprilTag;
     private final VisionPortal visionPortal;
-    private final CameraStreamProcessor s_Processor;
+    private CameraStreamProcessor s_Processor;
     private final VisionStates visionStates;
     public AprilTagPoseFtc ftcPose;
     public static AprilTagDetection desiredTag;

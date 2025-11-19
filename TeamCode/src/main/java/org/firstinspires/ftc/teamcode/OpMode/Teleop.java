@@ -3,14 +3,11 @@ package org.firstinspires.ftc.teamcode.OpMode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.JoystickTurret;
-import org.firstinspires.ftc.teamcode.Commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
@@ -43,8 +40,11 @@ public class Teleop extends LinearOpMode {
     distanceSensor s_ds;
 
     GamepadKeys.Trigger intakeTrigger;
+    boolean intakeTriggerPressed;
     GamepadKeys.Trigger outtakeTrigger;
+    boolean outtakeTriggerPressed;
     GamepadKeys.Button shooterButton;
+    GamepadKeys.Button shooterTestButtonTwo;
 
     boolean intakeReversed;
 
@@ -58,26 +58,29 @@ public class Teleop extends LinearOpMode {
         visionState = new VisionStates();
 
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
-        s_intake = new Intake(hardwareMap);
-//        s_middleStage = new MiddleStage(hardwareMap);
-        s_shooter = new Shooter(hardwareMap, m_telemetry);
-        s_turret = new Turret(hardwareMap);
+//        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
+//        s_intake = new Intake(hardwareMap);
+        s_middleStage = new MiddleStage(hardwareMap);
+//        s_shooter = new Shooter(hardwareMap, m_telemetry);
+        s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
-        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
+//        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
         outtakeTrigger = GamepadKeys.Trigger.LEFT_TRIGGER;
 
         shooterButton = GamepadKeys.Button.X;
-        shooter2ndtestbutton = GamepadKeys.Button.Y;
+        shooterTestButtonTwo = GamepadKeys.Button.Y;
 
         intakeReversed = false;
 
         visionState.setState(VisionStates.VisionState.SHOOT);
 
         CommandScheduler.getInstance().run();
+        s_turret.stopTurret();
+        s_drivetrain.resetYaw();
+
 
         waitForStart();
 
@@ -85,20 +88,20 @@ public class Teleop extends LinearOpMode {
 
             s_drivetrain.periodic();
             s_otos.periodic();
-            s_shooter.periodic();
-//            s_turret.periodic();
-            s_aprilVision.periodic();
-            poseEstimation.periodic();
+//            s_shooter.periodic();
+            s_turret.periodic();
+//            s_aprilVision.periodic();
+//            poseEstimation.periodic();
 
             s_drivetrain.drive(
                     driverGamepad.getLeftY(),
-                    -driverGamepad.getLeftX(),
-                    -driverGamepad.getRightX()
+                    driverGamepad.getLeftX(),
+                    driverGamepad.getRightX()
             );
 
-            if (s_aprilVision.foundTarget()) {
-                s_otos.setPose(poseEstimation.getPose());
-            }
+//            if (s_aprilVision.foundTarget()) {
+//                s_otos.setPose(poseEstimation.getPose());
+//            }
 
             driverGamepad.readButtons();
             opGamepad.readButtons();
@@ -110,47 +113,65 @@ public class Teleop extends LinearOpMode {
 //                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
 //            }, s_turret, poseEstimation);
             } else {
-                s_turret.manuelTurret(
-                        opGamepad.getRightX(), opGamepad.getRightY()
-                );
+                if(Math.abs(opGamepad.getRightX()) > 0.5 || Math.abs(opGamepad.getRightY()) > 0.5) {
+                    s_turret.manuelTurret(
+                            opGamepad.getRightX(), opGamepad.getRightY()
+                    );
+                }
             }
 
-            s_shooter.setDefaultCommand(
-                    new ShooterCommand(s_shooter, s_aprilVision, () -> opGamepad.isDown(shooterButton))
-            );
+//            if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
+//                s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
+//                s_middleStage.runIntake(0.5);
+//            } else {
+//                s_shooter.setDesiredVelocity(0);
+//            }
 
-//            s_turret.setDefaultCommand(
-//                    new JoystickTurret(s_turret, () -> opGamepad.getRightX(), ()-> opGamepad.getRightY())
-//            );
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){
                 s_drivetrain.resetYaw();
             }
-
-            if (opGamepad.getTrigger(intakeTrigger) > 0.001 && !Constants.IntakeConstants.isFull) {
-                s_intake.runIntake(opGamepad.getTrigger(intakeTrigger));
-//                s_middleStage.runIntake(opGamepad.getTrigger(intakeTrigger));
-            } else if (opGamepad.getTrigger(outtakeTrigger) > 0.001) {
-                s_intake.runOuttake(opGamepad.getTrigger(outtakeTrigger));
-//                s_middleStage.runOuttake(opGamepad.getTrigger(outtakeTrigger));
-            } else {
-                s_intake.stop();
+//
+//            if (driverGamepad.isDown(shooterTestButtonTwo)) {
+//            s_intake.runIntake(1);
+//            } else {
+//                s_intake.stop();
+//            }
+//
+//            if(!triggerDown(driverGamepad, intakeTrigger)
+//                    && !triggerDown(driverGamepad, outtakeTrigger)
+//                    && !driverGamepad.isDown(shooterTestButtonTwo)) {
 //                s_middleStage.stop();
-            }
+//            }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
                 s_otos.resetOTOS();
             }
 
-            if (opGamepad.isDown(shooterButton)) {
+//            if (triggerDown(driverGamepad, intakeTrigger)) {
+//                s_intake.runIntake(driverGamepad.getTrigger(intakeTrigger));
+//                s_middleStage.runIntake(driverGamepad.getTrigger(intakeTrigger));
+//            } else if (triggerDown(driverGamepad, outtakeTrigger)) {
+//                s_intake.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
+//                s_middleStage.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
+//            } else {
+//              s_intake.stop();
+//            }
+
+//            if (opGamepad.isDown(GamepadKeys.Button.A)) {
 //                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
-                s_shooter.setPower(0.91);
-//                s_middleStage.runIntake(0.5);
-            } else {
-              s_shooter.stop();
-            }
+//            } else {
+//                s_shooter.stop();
+//            }
+
+
+            m_telemetry.addData("a pressed", driverGamepad.isDown(GamepadKeys.Button.A));
             m_telemetry.update();
         }
+    }
+
+    public boolean triggerDown(GamepadEx gamepad, GamepadKeys.Trigger trigger) {
+        return gamepad.getTrigger(trigger) > 0.001;
     }
 }
 //merge commit

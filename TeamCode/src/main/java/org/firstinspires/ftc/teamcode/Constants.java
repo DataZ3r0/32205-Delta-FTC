@@ -32,12 +32,17 @@ public class Constants {
 
         public static final double strafingBalancer = 1.0;
 
-        public static final double controlHubOffset = 90;
+        public static final double controlHubOffset = 180;
 
         public static final double maxDrive = 0.5;
         public static final double maxStrafe = 0.5;
         public static final double maxTurn = 0.5;
 
+//        public static enum rotatingDirections{
+//            CLOCKWISE,
+//            COUNTER_CLOCKWISE,
+//            NONE
+//        }
         @Config
         public static final class drivePID {
             public static double kPdrive = 0.02;
@@ -83,12 +88,15 @@ public class Constants {
     }
 
     public static final class turretConstants {
+        public static final String turretMotor = "turretMotor";
         @Config
         public static final class turretConfigs {
-            public static double maxSpeed = 0.5;
-            public static double turretkP = 0.0;
-            public static double turretkI = 0.0;
-            public static double turretkD = 0.0;
+            public static double maxSpeed = 1.0;
+            public static double turretkP = 0.05;
+            public static double turretkI = 0.002;
+            public static double turretkD = 0.0001;
+
+            public static double turretSetPoint = 0;
         }
     }
 

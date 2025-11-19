@@ -31,18 +31,18 @@ public class SmartIntake extends CommandBase {
 
     @Override
     public void execute() {
-        if(s_ds.getDistance() < pieceCheckThreshold) {
-            ballCount++;
-        }
-        if(s_shooter.wasBallShot()){
-            ballCount--;
-        }
-        Constants.IntakeConstants.isFull = ballCount >= 3;
+//        if(s_ds.getDistance() < pieceCheckThreshold) {
+//            ballCount++;
+//        }
+//        if(s_shooter.wasBallShot()){
+//            ballCount--;
+//        }
+//        Constants.IntakeConstants.isFull = ballCount >= 3;
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 
     @Override

@@ -78,6 +78,7 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setPower(Math.max(Math.min((shooterController.calculate(currentVelocity, desiredVelocity)
                         + shooterFeedforward.calculate(desiredVelocity)),
                 Constants.shooterConstants.shooterConfigs.maxSpeed), 0));
+
     }
 
     public void runLoader() {
@@ -96,20 +97,25 @@ public class Shooter extends SubsystemBase {
         return shooterMotor.getCurrent(CurrentUnit.AMPS);
     }
 
-    public boolean isShooting() {
-        double shootingCurrentThresh = 3;
-        return getShooterCurrent() > shootingCurrentThresh;
-    }
+//    public boolean isShooting() {
+//        double shootingCurrentThresh = 3;
+//        return getShooterCurrent() > shootingCurrentThresh;
+//    }
 
-    public void readVal() {
-        lastState = currState;
-        currState = isShooting();
-    }
+//    public void readVal() {
+//        lastState = currState;
+//        currState = isShooting();
+//    }
 
-    public boolean wasBallShot() {
-        return (lastState && !currState);
-    }
+//    public boolean wasBallShot() {
+//        return (lastState && !currState);
+//    }
 
+    public void setDesiredVelocity(double targetRange) {
+        double tagDistanceMetres = targetRange * 0.0254;
+        double desiredVelocity = (111.90893 * Math.pow(tagDistanceMetres, 2)) - (85.47869 * tagDistanceMetres) + 2153.35668;
+        setSetpoint(desiredVelocity);
+    }
     public boolean atSetpoint() {
         return getSetpoint() - getRPM() < Math.abs(Constants.shooterConstants.shooterRPMTolerance);
     }
@@ -118,7 +124,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void periodic() {
-        readVal();
+//        readVal();
         runShooter(setpoint);
         telemetry.addData("Shooter RPM: ", getRPM());
         telemetry.addData("Shooter Current: ", getShooterCurrent());

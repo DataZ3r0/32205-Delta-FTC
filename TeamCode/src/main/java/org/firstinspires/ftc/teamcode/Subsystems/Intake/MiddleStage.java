@@ -29,6 +29,7 @@ public class MiddleStage extends SubsystemBase {
     public void runOuttake(double power) {
         motor.setPower(-power);
     }
+
     public void stop() {
         motor.setPower(0);
     }
