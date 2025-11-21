@@ -94,7 +94,7 @@ public class Constants {
             public static double maxSpeed = 1.0;
             public static double turretkP = 0.04;
             public static double turretkI = 0;
-            public static double turretkD = 0;
+            public static double turretkD = 0.0;
 
             public static double turretSetPoint = 0;
         }

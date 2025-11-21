@@ -131,7 +131,7 @@ public class Teleop extends LinearOpMode {
                 s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
                 s_middleStage.runIntake(0.5);
             } else {
-                s_shooter.setDesiredVelocity(0);
+                s_shooter.setSetpoint(0);
             }
 
 
