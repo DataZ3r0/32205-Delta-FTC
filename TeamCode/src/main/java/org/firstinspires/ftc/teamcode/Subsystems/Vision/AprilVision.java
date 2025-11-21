@@ -1,11 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static org.firstinspires.ftc.vision.VisionPortal.*;
-
-import android.util.Size;
-
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -14,22 +8,11 @@ import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.VisionStates;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 public class AprilVision extends SubsystemBase {
 
@@ -44,12 +27,15 @@ public class AprilVision extends SubsystemBase {
 
     private Limelight3A limelight;
 
+    public boolean targetFound;
+
 
     public static double targetRange;
     public static double targetYaw;
     public static double targetBearing;
-    public static double targetY;
-    public static double targetX;
+    public static double tY;
+    public static double tX;
+//    public LLResult result;
     //Fx/Fy = 946.233
     //Cx = 667.521
     //Cy = 464.348
@@ -81,7 +67,7 @@ public class AprilVision extends SubsystemBase {
 //            visionPortal = VisionPortal.easyCreateWithDefaults(
 //                    hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
 //        }
-        limelight = hardwaremap.get(Limelight3A.class, "limelight");
+        limelight = hardwaremap.get(Limelight3A.class, "Limelight");
 
         telemetry.setMsTransmissionInterval(11);
 
@@ -116,51 +102,46 @@ public class AprilVision extends SubsystemBase {
         return false;
     }
 
-    public boolean foundTarget() {
-        boolean targetFound = false;
+    public void getAprilTagData(MultipleTelemetry m_telemetry) {
+        targetFound = false;
         LLResult result = limelight.getLatestResult();
-        List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-        for (LLResultTypes.FiducialResult fr : fiducialResults) {
-            telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                //  Check to see if we want to track towards this tag.
+        if (result.isValid()){
+
+
+            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                m_telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f",
+                        fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
                 refreshDesiredID();
+                m_telemetry.addData("CORRECT TAG ID?", checkDesiredTagID(fr.getFiducialId()));
                 if (checkDesiredTagID(fr.getFiducialId())) {
-                    // Yes, we want to use this tag.
                     targetFound = true;
                     desiredTag = fr;
-                    break;  // don't look any further.
+                    tX = fr.getTargetXDegrees();
+                    tY = fr.getTargetYDegrees();
                 } else {
-                    // This tag is in the library, but we do not want to track it right now.
-                    telemetry.addData("Skipping", "Tag ID %d is not desired", fr.getFiducialId());
+                    m_telemetry.addData("Skipping", "Tag ID %d is not desired", fr.getFiducialId());
                 }
             }
-        return targetFound;
+        }
+
+
     }
 
-    public void getAprilTagData(MultipleTelemetry m_telemetry) {
-        LLResult result = limelight.getLatestResult();
-        List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-        for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                refreshDesiredID();
-                if (checkDesiredTagID(fr.getFiducialId())) {
-                    desiredTag = fr;
-                    telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f",
-                            fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                    }
-                }
-
-            }
+    public boolean foundTarget() {
+        return targetFound;
+    }
 
     public void setVisionState(VisionStates.VisionState state) {
         visionStates.setState(state);
     }
 
-    public double getTargetYaw() {
-        return desiredTag.getTargetXDegrees();
+    public double getTx() {
+        return tX;
     }
 
-    public double getTargetPitch() {
-        return desiredTag.getTargetYDegrees();
+    public double getTy() {
+        return tY;
     }
 
 //    public double getTargetBearing() {
@@ -171,8 +152,10 @@ public class AprilVision extends SubsystemBase {
     // FORMULA: d = (h2-h1) / tan(a1+a2)"
     // Distance = (Tag Height - Camera Height) / tan(Camera Angle of Elevation (From Ground) + Tag Angle of Elevation (From Camera))
     // Height (units in inches)
+    // shooter height 14.491 tag height 29.5
     public double getTargetRange() {
-        return 0;
+        double angleToGoalRadians = Math.toRadians(20 + getTy());
+        return (29.5 - 14.491)/(Math.tan(angleToGoalRadians));
     }
 
 //    public void setTargetY(double y) {
@@ -205,7 +188,13 @@ public class AprilVision extends SubsystemBase {
                 status.getTemp(), status.getCpu(),(int)status.getFps());
         telemetry.addData("Pipeline", "Index: %d, Type: %s",
                 status.getPipelineIndex(), status.getPipelineType());
-
+        telemetry.addData("targetFound", foundTarget());
             getAprilTagData(telemetry);
+
+
+
+        telemetry.addData("TARGET RANGE:", getTargetRange());
+        telemetry.addData("reult", limelight.getLatestResult());
+//            telemetry.addData("is result vaid", result.isValid());
     }
 }

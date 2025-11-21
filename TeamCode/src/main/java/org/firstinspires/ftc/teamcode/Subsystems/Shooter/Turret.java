@@ -46,6 +46,7 @@ public class Turret extends SubsystemBase {
 
     public void manuelTurret(double rightStickX, double rightStickY) {
         turretAngleTan = getJoystickAngle(rightStickX, rightStickY);
+        setSetpoint(wrapAngle(turretAngleTan) + s_drivetrain.getHeading());
 //        setTurretAngle(turretAngleTan);
     }
 
@@ -78,7 +79,7 @@ public class Turret extends SubsystemBase {
     // else turn the turret to 0 degrees
     public void setTurretAngle(double desiredAngle) {
 
-        if (desiredAngle > Math.abs(90.1)) {
+        if (Math.abs(desiredAngle) > Math.abs(90.1) || Math.abs(desiredAngle) == 180) {
             output = Math.max(Math.min(turretController.calculate(getRobotTurretAngle(), 0), Constants.turretConstants.turretConfigs.maxSpeed), -Constants.turretConstants.turretConfigs.maxSpeed);
         } else {
             turretRelSetpoint = Math.max(Math.min(wrapAngle(desiredAngle - s_drivetrain.getHeading()), 90 - s_drivetrain.getHeading()), -90 - s_drivetrain.getHeading());
@@ -148,8 +149,6 @@ public class Turret extends SubsystemBase {
     }
 
     public void periodic() {
-        setSetpoint(wrapAngle(turretAngleTan) + s_drivetrain.getHeading());
-
         m_telemetry.addData("joysitck angle", turretAngleTan);
         m_telemetry.addData("is Safe?: ", isSafe);
         m_telemetry.addData("turret encoder position", getTurretPosition());

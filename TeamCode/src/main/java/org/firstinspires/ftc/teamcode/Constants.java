@@ -92,16 +92,16 @@ public class Constants {
         @Config
         public static final class turretConfigs {
             public static double maxSpeed = 1.0;
-            public static double turretkP = 0.05;
-            public static double turretkI = 0.002;
-            public static double turretkD = 0.0001;
+            public static double turretkP = 0.04;
+            public static double turretkI = 0;
+            public static double turretkD = 0;
 
             public static double turretSetPoint = 0;
         }
     }
 
     public static final class VisionConstants {
-        public static final String webcam = "Webcam 1";
+        public static final String webcam = "Limelight";
     }
 
     public static final class OtosConstants {

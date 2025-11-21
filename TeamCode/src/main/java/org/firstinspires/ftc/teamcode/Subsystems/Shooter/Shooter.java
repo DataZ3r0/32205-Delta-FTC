@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 public class Shooter extends SubsystemBase {
 
     private final DcMotorEx shooterMotor;
-    private final ServoEx loadingServo;
+//    private final ServoEx loadingServo;
 
     private final MultipleTelemetry telemetry;
 
@@ -40,8 +40,8 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        loadingServo = hardwaremap.get(ServoEx.class, Constants.shooterConstants.loadingServo);
-        loadingServo.setInverted(Constants.shooterConstants.loadingServoRev);
+//        loadingServo = hardwaremap.get(ServoEx.class, Constants.shooterConstants.loadingServo);
+//        loadingServo.setInverted(Constants.shooterConstants.loadingServoRev);
 
         shooterController = new PIDController(
                 Constants.shooterConstants.shooterConfigs.shooterkP,
@@ -81,9 +81,9 @@ public class Shooter extends SubsystemBase {
 
     }
 
-    public void runLoader() {
-        loadingServo.rotateBy(Constants.shooterConstants.loadingServoSpeed);
-    }
+//    public void runLoader() {
+//        loadingServo.rotateBy(Constants.shooterConstants.loadingServoSpeed);
+//    }
 
     public void setSetpoint(double newSetpoint) {
         setpoint = newSetpoint;

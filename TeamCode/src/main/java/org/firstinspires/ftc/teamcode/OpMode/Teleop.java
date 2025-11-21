@@ -45,8 +45,9 @@ public class Teleop extends LinearOpMode {
     boolean outtakeTriggerPressed;
     GamepadKeys.Button shooterButton;
     GamepadKeys.Button shooterTestButtonTwo;
-
     boolean intakeReversed;
+
+    boolean isTurretTurning;
 
     @Override
     public void runOpMode() {
@@ -58,10 +59,10 @@ public class Teleop extends LinearOpMode {
         visionState = new VisionStates();
 
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-//        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
-//        s_intake = new Intake(hardwareMap);
+        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
+        s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
-//        s_shooter = new Shooter(hardwareMap, m_telemetry);
+        s_shooter = new Shooter(hardwareMap, m_telemetry);
         s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
@@ -87,10 +88,10 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             s_drivetrain.periodic();
-            s_otos.periodic();
-//            s_shooter.periodic();
+//            s_otos.periodic();
+            s_shooter.periodic();
             s_turret.periodic();
-//            s_aprilVision.periodic();
+            s_aprilVision.periodic();
 //            poseEstimation.periodic();
 
             s_drivetrain.drive(
@@ -106,63 +107,57 @@ public class Teleop extends LinearOpMode {
             driverGamepad.readButtons();
             opGamepad.readButtons();
 
-            if(!Constants.toggles.manTurret) {
+            if(!s_aprilVision.foundTarget()) {
+                if (!Constants.toggles.manTurret) {
 //                new RunCommand(() -> {
 //                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
 //                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
 //                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
 //            }, s_turret, poseEstimation);
-            } else {
-                if(Math.abs(opGamepad.getRightX()) > 0.5 || Math.abs(opGamepad.getRightY()) > 0.5) {
-                    s_turret.manuelTurret(
-                            opGamepad.getRightX(), opGamepad.getRightY()
-                    );
+                } else {
+                    if (Math.abs(opGamepad.getRightX()) > 0.2 || Math.abs(opGamepad.getRightY()) > 0.2) {
+                        s_turret.manuelTurret(
+                                opGamepad.getRightX(), opGamepad.getRightY());
+//                        isTurretTurning = false;
+                    }
                 }
+            } else {
+                s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
+//                isTurretTurning = true;
             }
+            m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
 
-//            if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
-//                s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
-//                s_middleStage.runIntake(0.5);
-//            } else {
-//                s_shooter.setDesiredVelocity(0);
-//            }
+            if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
+                s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
+                s_middleStage.runIntake(0.5);
+            } else {
+                s_shooter.setDesiredVelocity(0);
+            }
 
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){
                 s_drivetrain.resetYaw();
             }
-//
-//            if (driverGamepad.isDown(shooterTestButtonTwo)) {
-//            s_intake.runIntake(1);
-//            } else {
-//                s_intake.stop();
-//            }
-//
-//            if(!triggerDown(driverGamepad, intakeTrigger)
-//                    && !triggerDown(driverGamepad, outtakeTrigger)
-//                    && !driverGamepad.isDown(shooterTestButtonTwo)) {
-//                s_middleStage.stop();
-//            }
+
+            if(!triggerDown(driverGamepad, intakeTrigger)
+                    && !triggerDown(driverGamepad, outtakeTrigger)
+                    && !driverGamepad.isDown(shooterTestButtonTwo)) {
+                s_middleStage.stop();
+            }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
                 s_otos.resetOTOS();
             }
 
-//            if (triggerDown(driverGamepad, intakeTrigger)) {
-//                s_intake.runIntake(driverGamepad.getTrigger(intakeTrigger));
-//                s_middleStage.runIntake(driverGamepad.getTrigger(intakeTrigger));
-//            } else if (triggerDown(driverGamepad, outtakeTrigger)) {
-//                s_intake.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
-//                s_middleStage.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
-//            } else {
-//              s_intake.stop();
-//            }
-
-//            if (opGamepad.isDown(GamepadKeys.Button.A)) {
-//                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
-//            } else {
-//                s_shooter.stop();
-//            }
+            if (triggerDown(driverGamepad, intakeTrigger)) {
+                s_intake.runIntake(driverGamepad.getTrigger(intakeTrigger));
+                s_middleStage.runIntake(driverGamepad.getTrigger(intakeTrigger));
+            } else if (triggerDown(driverGamepad, outtakeTrigger)) {
+                s_intake.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
+                s_middleStage.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
+            } else {
+              s_intake.stop();
+            }
 
 
             m_telemetry.addData("a pressed", driverGamepad.isDown(GamepadKeys.Button.A));

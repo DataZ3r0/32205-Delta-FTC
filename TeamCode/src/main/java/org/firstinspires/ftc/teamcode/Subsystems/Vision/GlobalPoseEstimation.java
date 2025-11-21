@@ -31,7 +31,7 @@ public class GlobalPoseEstimation extends SubsystemBase {
             double deltaY = s_vision.getTargetRange() * Math.sin(Math.toRadians(s_turret.getRobotTurretAngle() - s_otos.getH()));
             x = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - deltaX : Constants.FieldConstants.redGoal.x - deltaX;
             y = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - deltaY : Constants.FieldConstants.redGoal.y - deltaY;
-            r = s_otos.getH() + s_turret.getRobotTurretAngle() - s_vision.getTargetYaw();
+            r = s_otos.getH() + s_turret.getRobotTurretAngle() - s_vision.getTy();
         } else {
             x = s_otos.getX();
             y = s_otos.getY();
