@@ -71,7 +71,12 @@ public class AprilVision extends SubsystemBase {
 
         telemetry.setMsTransmissionInterval(11);
 
-        limelight.pipelineSwitch(0);
+        if (Constants.toggles.blueTeam) {
+            limelight.pipelineSwitch(0);
+        } else {
+            limelight.pipelineSwitch(1);
+        }
+
 
         /*
          * Starts polling for data.  If you neglect to call start(), getLatestResult() will return null.
