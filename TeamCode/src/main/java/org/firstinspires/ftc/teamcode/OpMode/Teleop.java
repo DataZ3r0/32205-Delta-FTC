@@ -49,6 +49,8 @@ public class Teleop extends LinearOpMode {
 
     boolean isTurretTurning;
 
+    double shooterTimestamp;
+
     @Override
     public void runOpMode() {
 
@@ -65,7 +67,7 @@ public class Teleop extends LinearOpMode {
         s_shooter = new Shooter(hardwareMap, m_telemetry);
         s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
-        s_otos = new OTOS(hardwareMap, m_telemetry);
+//        s_otos = new OTOS(hardwareMap, m_telemetry);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
@@ -81,6 +83,8 @@ public class Teleop extends LinearOpMode {
         CommandScheduler.getInstance().run();
         s_turret.stopTurret();
         s_drivetrain.resetYaw();
+
+        s_shooter.setSetpoint(0);
 
 
         waitForStart();
@@ -130,9 +134,17 @@ public class Teleop extends LinearOpMode {
             if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
                 s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
                 s_middleStage.runIntake(0.5);
-            } else {
+                shooterTimestamp = getRuntime();
+            } else if (getRuntime() > (shooterTimestamp + 2)) {
                 s_shooter.setSetpoint(0);
             }
+
+            //Shooter Tuning Mode
+//            if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+//                s_shooter.setSetpoint(s_shooter.getSetpoint() + 5);
+//            } else if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+//                s_shooter.setSetpoint(s_shooter.getSetpoint() - 5);
+//            }
 
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){

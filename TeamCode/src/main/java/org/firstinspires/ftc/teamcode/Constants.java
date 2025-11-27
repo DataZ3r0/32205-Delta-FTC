@@ -53,8 +53,8 @@ public class Constants {
 
     public static final class IntakeConstants {
 
-        public static final String intakeMotor = "intakeMotor";
-        public static final String middleStageMotor = "midStageMotor";
+        public static final String intakeMotor = "intakeMotor0";
+        public static final String middleStageMotor = "midStageMotor2";
 
         public static final double maxSpeed = 1.0;
 
@@ -62,7 +62,7 @@ public class Constants {
     }
     public static final class shooterConstants {
 
-        public static final String shooterMotor = "shooterMotor";
+        public static final String shooterMotor = "shooterMotor3";
         public static final String loadingServo = "loadingServo";
         public static boolean loadingServoRev = false;
         public static double loadingServoSpeed = 0.1;
@@ -88,7 +88,7 @@ public class Constants {
     }
 
     public static final class turretConstants {
-        public static final String turretMotor = "turretMotor";
+        public static final String turretMotor = "turretMotor1";
         @Config
         public static final class turretConfigs {
             public static double maxSpeed = 1.0;
