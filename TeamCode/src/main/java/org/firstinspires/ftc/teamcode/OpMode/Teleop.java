@@ -132,9 +132,14 @@ public class Teleop extends LinearOpMode {
 //                s_shooter.setDesiredVelocity(Constants.shooterConstants.shooterConfigs.testRPM);
 
 //                s_middleStage.runIntake(1);
-                s_shooter.runLoader();
+                if (s_shooter.atSetpoint()) {
+                    s_shooter.runLoader();
+                } else {
+                    s_shooter.stopLoader();
+                }
             } else {
                 s_shooter.setSetpoint(0);
+                s_shooter.stopLoader();
             }
 
 

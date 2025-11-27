@@ -55,18 +55,18 @@ public class Turret extends SubsystemBase {
     }
 
     public double getRawTurretAngle() {
-        double revI = getTurretPosition()/(28*19.2*5); //28 TPR * 19.2 motor * GR 5 belt * GR
+        double revI = getTurretPosition()/(28*19.2032085561 *5); //28 TPR * 19.2 motor * GR 5 belt * GR
         return revI * 360;
     }
 
     public double getFieldTurretAngle() {
-        double revI = getTurretPosition()/(28*19.2*5); //28 TPR * 19.2 motor * GR 5 belt * GR
+        double revI = getTurretPosition()/(28*19.2032085561*5); //28 TPR * 19.2 motor * GR 5 belt * GR
         double revF = revI * 360;
         return wrapAngle(revF - s_drivetrain.getHeading());
 //        return wrapAngle(revF);
     }
     public double getRobotTurretAngle() {
-        double revI = getTurretPosition()/(28*19.2*5); //28 TPR * 19.2 motor * GR 5 belt * GR
+        double revI = getTurretPosition()/(28*19.2032085561*5); //28 TPR * 19.2 motor * GR 5 belt * GR
         double revF = revI * 360;
         return wrapAngle(revF);
     }
