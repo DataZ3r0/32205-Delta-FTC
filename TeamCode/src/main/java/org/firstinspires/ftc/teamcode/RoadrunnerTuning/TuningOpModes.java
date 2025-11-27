@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
-import org.firstinspires.ftc.teamcode.Subsystems.Drivetrains.AutoMecanum;
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrains.DeltaAuto;
 import org.firstinspires.ftc.teamcode.Odometry.OTOSLocalizer;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class TuningOpModes {
-    public static final Class<?> DRIVE_CLASS = AutoMecanum.class;
+    public static final Class<?> DRIVE_CLASS = DeltaAuto.class;
     public static final String GROUP = "quickstart";
     public static final boolean DISABLED = false;
 
@@ -58,16 +58,16 @@ public final class TuningOpModes {
         if (DISABLED) return;
 
         DriveViewFactory dvf;
-        if (DRIVE_CLASS.equals(AutoMecanum.class)) {
+        if (DRIVE_CLASS.equals(DeltaAuto.class)) {
             dvf = hardwareMap -> {
-                AutoMecanum md = new AutoMecanum(hardwareMap, new Pose2d(0, 0, 0));
+                DeltaAuto md = new DeltaAuto(hardwareMap, new Pose2d(0, 0, 0));
                 LazyImu lazyImu = md.lazyImu;
 
                 List<EncoderGroup> encoderGroups = new ArrayList<>();
                 List<EncoderRef> leftEncs = new ArrayList<>(), rightEncs = new ArrayList<>();
                 List<EncoderRef> parEncs = new ArrayList<>(), perpEncs = new ArrayList<>();
-                if (md.localizer instanceof AutoMecanum.DriveLocalizer) {
-                    AutoMecanum.DriveLocalizer dl = (AutoMecanum.DriveLocalizer) md.localizer;
+                if (md.localizer instanceof DeltaAuto.DriveLocalizer) {
+                    DeltaAuto.DriveLocalizer dl = (DeltaAuto.DriveLocalizer) md.localizer;
                     encoderGroups.add(new LynxQuadratureEncoderGroup(
                             hardwareMap.getAll(LynxModule.class),
                             Arrays.asList(dl.leftFront, dl.leftBack, dl.rightFront, dl.rightBack)
@@ -88,10 +88,10 @@ public final class TuningOpModes {
 
                 return new DriveView(
                     DriveType.MECANUM,
-                        AutoMecanum.PARAMS.inPerTick,
-                        AutoMecanum.PARAMS.maxWheelVel,
-                        AutoMecanum.PARAMS.minProfileAccel,
-                        AutoMecanum.PARAMS.maxProfileAccel,
+                        DeltaAuto.PARAMS.inPerTick,
+                        DeltaAuto.PARAMS.maxWheelVel,
+                        DeltaAuto.PARAMS.minProfileAccel,
+                        DeltaAuto.PARAMS.maxProfileAccel,
                         encoderGroups,
                         Arrays.
                                 asList(
@@ -108,9 +108,9 @@ public final class TuningOpModes {
                         perpEncs,
                         lazyImu,
                         md.voltageSensor,
-                        () -> new MotorFeedforward(AutoMecanum.PARAMS.kS,
-                                AutoMecanum.PARAMS.kV / AutoMecanum.PARAMS.inPerTick,
-                                AutoMecanum.PARAMS.kA / AutoMecanum.PARAMS.inPerTick),
+                        () -> new MotorFeedforward(DeltaAuto.PARAMS.kS,
+                                DeltaAuto.PARAMS.kV / DeltaAuto.PARAMS.inPerTick,
+                                DeltaAuto.PARAMS.kA / DeltaAuto.PARAMS.inPerTick),
                         0
                 );
             };

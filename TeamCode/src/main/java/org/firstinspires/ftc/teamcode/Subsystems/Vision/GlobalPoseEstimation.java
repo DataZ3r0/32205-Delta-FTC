@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
@@ -14,7 +15,7 @@ public class GlobalPoseEstimation extends SubsystemBase {
     private final AprilVision s_vision;
     private final Turret s_turret;
 
-    private SparkFunOTOS.Pose2D pose;
+    private Pose2d pose;
 
     public GlobalPoseEstimation(OTOS s_otos, AprilVision s_vision, Turret s_turret) {
         this.s_otos = s_otos;
@@ -37,10 +38,10 @@ public class GlobalPoseEstimation extends SubsystemBase {
             y = s_otos.getY();
             r = s_otos.getH();
         }
-        pose = new SparkFunOTOS.Pose2D(x, y, r);
+        pose = new Pose2d(x, y, r);
     }
 
-    public SparkFunOTOS.Pose2D getPose() {
+    public Pose2d getPose() {
         return pose;
     }
 

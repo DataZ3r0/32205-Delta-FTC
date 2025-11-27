@@ -189,8 +189,8 @@ public class AprilVision extends SubsystemBase {
         LLStatus status = limelight.getStatus();
         telemetry.addData("Name", "%s",
                 status.getName());
-        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-                status.getTemp(), status.getCpu(),(int)status.getFps());
+//        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+//                status.getTemp(), status.getCpu(),(int)status.getFps());
         telemetry.addData("Pipeline", "Index: %d, Type: %s",
                 status.getPipelineIndex(), status.getPipelineType());
         telemetry.addData("targetFound", foundTarget());
@@ -199,7 +199,7 @@ public class AprilVision extends SubsystemBase {
 
 
         telemetry.addData("TARGET RANGE:", getTargetRange());
-        telemetry.addData("reult", limelight.getLatestResult());
+//        telemetry.addData("reult", limelight.getLatestResult());
 //            telemetry.addData("is result vaid", result.isValid());
     }
 }

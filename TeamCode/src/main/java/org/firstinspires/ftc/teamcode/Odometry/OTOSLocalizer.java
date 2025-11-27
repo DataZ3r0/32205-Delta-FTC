@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Odometry;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Rotation2d;
@@ -27,6 +28,7 @@ public class OTOSLocalizer implements Localizer {
 
     public final SparkFunOTOS otos;
     private Pose2d currentPose;
+//    private final MultipleTelemetry m_telemetry;
 
     public OTOSLocalizer(HardwareMap hardwareMap, Pose2d initialPose) {
         // TODO: make sure your config has an OTOS device with this name
@@ -53,6 +55,9 @@ public class OTOSLocalizer implements Localizer {
         currentPose = pose;
         otos.setPosition(OTOSKt.toOTOSPose(currentPose));
     }
+
+    public void resetOTOS() { otos.resetTracking(); }
+
 
     @Override
     public PoseVelocity2d update() {

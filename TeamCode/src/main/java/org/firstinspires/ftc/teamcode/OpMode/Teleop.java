@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpMode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -9,10 +10,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Odometry.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
-import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
@@ -33,7 +35,7 @@ public class Teleop extends LinearOpMode {
     MiddleStage s_middleStage;
     Shooter s_shooter;
     Turret s_turret;
-    OTOS s_otos;
+    OTOSLocalizer s_otos;
     GlobalPoseEstimation poseEstimation;
 
 
@@ -65,7 +67,7 @@ public class Teleop extends LinearOpMode {
         s_shooter = new Shooter(hardwareMap, m_telemetry);
         s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
-        s_otos = new OTOS(hardwareMap, m_telemetry);
+        s_otos = new OTOSLocalizer(hardwareMap, new Pose2d(0,0,0));
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
@@ -88,7 +90,6 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             s_drivetrain.periodic();
-            s_otos.periodic();
             s_shooter.periodic();
             s_turret.periodic();
             s_aprilVision.periodic();
@@ -100,9 +101,9 @@ public class Teleop extends LinearOpMode {
                     driverGamepad.getRightX()
             );
 
-//            if (s_aprilVision.foundTarget()) {
-//                s_otos.setPose(poseEstimation.getPose());
-//            }
+            if (s_aprilVision.foundTarget()) {
+                s_otos.setPose(poseEstimation.getPose());
+            }
 
             driverGamepad.readButtons();
             opGamepad.readButtons();
@@ -125,7 +126,7 @@ public class Teleop extends LinearOpMode {
                 s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
 //                isTurretTurning = true;
             }
-            m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
+//            m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
 
             if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
                 s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
@@ -165,7 +166,7 @@ public class Teleop extends LinearOpMode {
             }
 
 
-            m_telemetry.addData("a pressed", driverGamepad.isDown(GamepadKeys.Button.A));
+            m_telemetry.addData("OTOS pose", s_otos.getPose());
             m_telemetry.update();
         }
     }

@@ -1,27 +1,18 @@
-package org.firstinspires.ftc.teamcode.Subsystems;
-import com.acmerobotics.dashboard.FtcDashboard;
+package org.firstinspires.ftc.teamcode.Subsystems.Drivetrains;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Odometry.OTOSLocalizer;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -134,7 +125,7 @@ public class Drivetrain extends SubsystemBase {
         IMU.resetYaw();
     }
 
-    public void stop(OTOS otos) {
+    public void stop(OTOSLocalizer otos) {
 //        double yPow = drivePID.calculate(otos.getY(), otos.getY());
 //        double xPow = strafePID.calculate(otos.getX(), otos.getX());
 //        double hPow = turnPID.calculate(otos.getH(), otos.getH());
