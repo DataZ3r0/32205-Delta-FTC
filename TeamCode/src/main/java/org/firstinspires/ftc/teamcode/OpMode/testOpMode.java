@@ -38,19 +38,8 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.teamcode.Commands.JoystickTurret;
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
+
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.CameraStreamProcessor;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
-import org.firstinspires.ftc.teamcode.VisionStates;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 /*
  * This OpMode helps calibrate a webcam or RC phone camera, useful for AprilTag pose estimation
@@ -96,7 +85,7 @@ public class testOpMode extends LinearOpMode
 //
 //
 //
-//    Shooter s_shooter;
+//    Loader s_loader;
 
     @Override
     public void runOpMode()
@@ -104,7 +93,7 @@ public class testOpMode extends LinearOpMode
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         opGamepad = new GamepadEx(gamepad1);
 //        visionState = new VisionStates();
-//        s_shooter = new Shooter(hardwareMap, m_telemetry);
+//        s_loader = new Loader(hardwareMap, m_telemetry);
 //        s_intake = new Intake(hardwareMap);
 //        s_middleStage = new MiddleStage(hardwareMap);
 //        s_turret = new Turret(hardwareMap, s_dr m_telemetry);
@@ -118,33 +107,11 @@ public class testOpMode extends LinearOpMode
         waitForStart();
 
         while(opModeIsActive()) {
-            if(!Constants.toggles.manTurret) {
-//                new RunCommand(() -> {
-//                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
-//                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
-//                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
-//            }, s_turret, poseEstimation);
-            } else {
-//                if(Math.abs(opGamepad.getRightX()) >= 0.5 || Math.abs(opGamepad.getRightY()) >= 0.5 && false;) {
-//                    s_turret.manuelTurret(
-//                            opGamepad.getRightX(), opGamepad.getRightY()
-//                    );
-//                }
-//                else {
-//                    s_turret.manuelTurret(0,0);
-//                }
-            }
-
-//            s_turret.setDefaultCommand(
-//                    new JoystickTurret(s_turret, () -> opGamepad.getRightX(), ()-> opGamepad.getRightY())
-//            );
-
-//            s_aprilVision.periodic();
-            m_telemetry.addData("right stick x", opGamepad.getRightX());
-            m_telemetry.addData("right stick y", opGamepad.getRightY());
-            m_telemetry.addData("right stick angle", s_turret.getJoystickAngle(opGamepad.getRightX(), opGamepad.getRightY()));
-
-            s_turret.periodic();
+//            s_loader.runLoader();
+//            m_telemetry.addData("right stick x", opGamepad.getRightX());
+//            m_telemetry.addData("right stick y", opGamepad.getRightY());
+//            m_telemetry.addData("right stick angle", s_turret.getJoystickAngle(opGamepad.getRightX(), opGamepad.getRightY()));
+//            s_turret.periodic();
             m_telemetry.update();
         }
     }

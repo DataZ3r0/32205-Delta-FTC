@@ -46,7 +46,6 @@ public class Teleop extends LinearOpMode {
     GamepadKeys.Button shooterButton;
     GamepadKeys.Button shooterTestButtonTwo;
     boolean intakeReversed;
-
     boolean isTurretTurning;
 
     @Override
@@ -88,7 +87,7 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             s_drivetrain.periodic();
-//            s_otos.periodic();
+            s_otos.periodic();
             s_shooter.periodic();
             s_turret.periodic();
             s_aprilVision.periodic();
@@ -129,7 +128,10 @@ public class Teleop extends LinearOpMode {
 
             if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
                 s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
-                s_middleStage.runIntake(0.5);
+//                s_shooter.setDesiredVelocity(Constants.shooterConstants.shooterConfigs.testRPM);
+
+//                s_middleStage.runIntake(1);
+                s_shooter.runLoader();
             } else {
                 s_shooter.setSetpoint(0);
             }
@@ -143,6 +145,7 @@ public class Teleop extends LinearOpMode {
                     && !triggerDown(driverGamepad, outtakeTrigger)
                     && !driverGamepad.isDown(shooterTestButtonTwo)) {
                 s_middleStage.stop();
+                s_shooter.stopLoader();
             }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
@@ -152,8 +155,10 @@ public class Teleop extends LinearOpMode {
             if (triggerDown(driverGamepad, intakeTrigger)) {
                 s_intake.runIntake(driverGamepad.getTrigger(intakeTrigger));
                 s_middleStage.runIntake(driverGamepad.getTrigger(intakeTrigger));
+                s_shooter.runLoader();
             } else if (triggerDown(driverGamepad, outtakeTrigger)) {
                 s_intake.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
+                s_shooter.outtake();
                 s_middleStage.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
             } else {
               s_intake.stop();

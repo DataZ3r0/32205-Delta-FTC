@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 public class Shooter extends SubsystemBase {
 
     private final DcMotorEx shooterMotor;
-//    private final ServoEx loadingServo;
+    private final CRServo loadingServo;
 
     private final MultipleTelemetry telemetry;
 
@@ -40,8 +41,7 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        loadingServo = hardwaremap.get(ServoEx.class, Constants.shooterConstants.loadingServo);
-//        loadingServo.setInverted(Constants.shooterConstants.loadingServoRev);
+        loadingServo = hardwaremap.get(CRServo.class, Constants.shooterConstants.loadingServo);
 
         shooterController = new PIDController(
                 Constants.shooterConstants.shooterConfigs.shooterkP,
@@ -54,6 +54,18 @@ public class Shooter extends SubsystemBase {
         );
 
         this.telemetry = telemetry;
+    }
+
+    public void runLoader() {
+        loadingServo.setDirection(DcMotorSimple.Direction.FORWARD);
+        loadingServo.setPower(0.5);
+    }
+    public void stopLoader() {
+        loadingServo.setPower(0);
+    }
+    public void outtake() {
+        loadingServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        loadingServo.setPower(0.5);
     }
 
 
@@ -80,10 +92,6 @@ public class Shooter extends SubsystemBase {
                 Constants.shooterConstants.shooterConfigs.maxSpeed), 0));
 
     }
-
-//    public void runLoader() {
-//        loadingServo.rotateBy(Constants.shooterConstants.loadingServoSpeed);
-//    }
 
     public void setSetpoint(double newSetpoint) {
         setpoint = newSetpoint;
@@ -113,7 +121,7 @@ public class Shooter extends SubsystemBase {
 
     public void setDesiredVelocity(double targetRange) {
         double tagDistanceMetres = targetRange * 0.0254;
-        double desiredVelocity = (111.90893 * Math.pow(tagDistanceMetres, 2)) - (85.47869 * tagDistanceMetres) + 2153.35668;
+        double desiredVelocity = (52.24037 * Math.pow(tagDistanceMetres, 2)) + (108.26799 * tagDistanceMetres) + 2026.11444;
         setSetpoint(desiredVelocity);
     }
     public boolean atSetpoint() {
@@ -127,6 +135,7 @@ public class Shooter extends SubsystemBase {
 //        readVal();
         runShooter(setpoint);
         telemetry.addData("Shooter RPM: ", getRPM());
+//        runShooter(Constants.shooterConstants.shooterConfigs.testRPM);
         telemetry.addData("Shooter Current: ", getShooterCurrent());
         telemetry.addData("shooter setpoint: ", getSetpoint());
         telemetry.addData("shooter at setpoint?", atSetpoint());
