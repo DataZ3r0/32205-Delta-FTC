@@ -156,7 +156,6 @@ public class Teleop extends LinearOpMode {
             if (triggerDown(driverGamepad, intakeTrigger)) {
                 s_intake.runIntake(driverGamepad.getTrigger(intakeTrigger));
                 s_middleStage.runIntake(driverGamepad.getTrigger(intakeTrigger));
-                s_shooter.runLoader();
             } else if (triggerDown(driverGamepad, outtakeTrigger)) {
                 s_intake.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
                 s_shooter.outtake();
