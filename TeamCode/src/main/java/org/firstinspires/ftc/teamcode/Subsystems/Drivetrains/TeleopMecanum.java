@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -49,8 +48,7 @@ public class Drivetrain extends SubsystemBase {
 
 
     private double yawOffset;
-
-//    private Constants.DrivetrainConstants.rotatingDirections rotationDirection;
+    private double azimuth;
     public Drivetrain(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
         frontLeft = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontLeftMotor);
         frontRight = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontRightMotor);
