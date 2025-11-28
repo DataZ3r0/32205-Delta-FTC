@@ -120,8 +120,8 @@ public class Shooter extends SubsystemBase {
 //    }
 
     public void setDesiredVelocity(double targetRange) {
-        double tagDistanceMetres = targetRange * 0.0254;
-        double desiredVelocity = (52.24037 * Math.pow(tagDistanceMetres, 2)) + (108.26799 * tagDistanceMetres) + 2026.11444;
+//        double tagDistanceMetres = targetRange * 0.0254;
+        double desiredVelocity = (-0.00181926 * Math.pow(targetRange, 2)) + (7.60048 * targetRange) + 1849.78184;
         setSetpoint(desiredVelocity);
     }
     public boolean atSetpoint() {

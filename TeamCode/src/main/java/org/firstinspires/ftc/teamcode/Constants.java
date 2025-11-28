@@ -8,7 +8,7 @@ public class Constants {
     public static final class toggles{
         public static boolean compMode = false;
         public static boolean toggleCamStream = true;
-        public static boolean blueTeam = true;
+        public static boolean blueTeam = false;
         public static boolean manTurret = true;
     }
 
