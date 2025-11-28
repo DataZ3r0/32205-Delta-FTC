@@ -136,7 +136,7 @@ public class Drivetrain extends SubsystemBase {
         IMU.resetYaw();
     }
 
-    public void stop(OTOS otos) {
+    public void stop() {
 //        double yPow = drivePID.calculate(otos.getY(), otos.getY());
 //        double xPow = strafePID.calculate(otos.getX(), otos.getX());
 //        double hPow = turnPID.calculate(otos.getH(), otos.getH());

@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="Delta-Autonomous", group="Auto")
+@Autonomous(name="Delta-Autonomousdbhmhmhmhmh", group="Auto")
 public class Auto extends LinearOpMode {
 
     MultipleTelemetry m_telemetry;

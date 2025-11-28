@@ -36,9 +36,11 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 
 /*
@@ -75,6 +77,7 @@ public class testOpMode extends LinearOpMode
 //    private AprilTagProcessor aprilTag;
 //    private CameraStreamProcessor s_Processor;
     GamepadEx opGamepad;
+    Shooter s_shooter;
 //    AprilVision s_aprilVision;
 //    VisionStates visionState;
 //    Intake s_intake;
@@ -102,7 +105,9 @@ public class testOpMode extends LinearOpMode
 
 //        visionState.setState(VisionStates.VisionState.SHOOT);
 //        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
+        s_shooter = new Shooter(hardwareMap, m_telemetry);
         CommandScheduler.getInstance().run();
+        s_shooter.openStopper();
 
         waitForStart();
 
@@ -112,6 +117,14 @@ public class testOpMode extends LinearOpMode
 //            m_telemetry.addData("right stick y", opGamepad.getRightY());
 //            m_telemetry.addData("right stick angle", s_turret.getJoystickAngle(opGamepad.getRightX(), opGamepad.getRightY()));
 //            s_turret.periodic();
+
+            s_shooter.periodic();
+
+            if (opGamepad.isDown(GamepadKeys.Button.DPAD_DOWN)) {
+                s_shooter.openStopper();
+            } else {
+                s_shooter.closeStopper();
+            }
             m_telemetry.update();
         }
     }

@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.Const;
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 public class Shooter extends SubsystemBase {
 
     private final DcMotorEx shooterMotor;
+    private final Servo stopperServo;
     private final CRServo loadingServo;
 
     private final MultipleTelemetry telemetry;
@@ -42,6 +44,7 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         loadingServo = hardwaremap.get(CRServo.class, Constants.shooterConstants.loadingServo);
+        stopperServo = hardwaremap.get(Servo.class, "stopperServo");
 
         shooterController = new PIDController(
                 Constants.shooterConstants.shooterConfigs.shooterkP,
@@ -66,6 +69,14 @@ public class Shooter extends SubsystemBase {
     public void outtake() {
         loadingServo.setDirection(DcMotorSimple.Direction.REVERSE);
         loadingServo.setPower(0.5);
+    }
+
+    public void openStopper() {
+        stopperServo.setPosition(0.3);
+    }
+
+    public void closeStopper() {
+        stopperServo.setPosition(0.1);
     }
 
 
@@ -134,10 +145,16 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
 //        readVal();
         runShooter(setpoint);
+        if (atSetpoint() && getSetpoint() > 1000) {
+            openStopper();
+        } else {
+            closeStopper();
+        }
         telemetry.addData("Shooter RPM: ", getRPM());
 //        runShooter(Constants.shooterConstants.shooterConfigs.testRPM);
         telemetry.addData("Shooter Current: ", getShooterCurrent());
         telemetry.addData("shooter setpoint: ", getSetpoint());
         telemetry.addData("shooter at setpoint?", atSetpoint());
+        telemetry.addData("stopper pos", stopperServo.getPosition());
     }
 }

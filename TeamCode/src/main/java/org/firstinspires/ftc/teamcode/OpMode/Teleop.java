@@ -138,7 +138,7 @@ public class Teleop extends LinearOpMode {
                     s_shooter.stopLoader();
                 }
             } else {
-                s_shooter.setSetpoint(1000);
+                s_shooter.setSetpoint(0);
                 s_shooter.stopLoader();
             }
 

@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
+
+// RED GOAL X: 57.85399 Y:60.67376
+// BLUE GOAL X: -57.85399 Y:60.67376
 public class Constants {
     @Config
     public static final class toggles{
         public static boolean compMode = false;
         public static boolean toggleCamStream = true;
-        public static boolean blueTeam = false;
+        public static boolean blueTeam = true;
         public static boolean manTurret = true;
     }
 
@@ -67,7 +70,7 @@ public class Constants {
         public static boolean loadingServoRev = false;
         public static double loadingServoSpeed = 1; //degrees
         public static final double ticksPerRev = 28;
-        public static final double shooterRPMTolerance = 50;
+        public static final double shooterRPMTolerance = 100;
         public static final double goalHeight = 0.0;
         public static final double ballTolerance = 2.5;
         public static final double shooterHeight = 0.0;
@@ -92,9 +95,9 @@ public class Constants {
         @Config
         public static final class turretConfigs {
             public static double maxSpeed = 1.0;
-            public static double turretkP = 0.04;
+            public static double turretkP = 0.03;
             public static double turretkI = 0;
-            public static double turretkD = 0.0;
+            public static double turretkD = 0.00000001;
 
             public static double turretSetPoint = 0;
         }
