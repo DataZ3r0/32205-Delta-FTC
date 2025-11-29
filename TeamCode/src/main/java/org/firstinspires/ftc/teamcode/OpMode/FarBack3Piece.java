@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.OpMode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -22,8 +20,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="Delta-3Piece", group="Auto")
-public class TimedBased3Piece extends LinearOpMode {
+@Autonomous(name="Delta-Farback3Piece", group="Auto")
+public class FarBack3Piece extends LinearOpMode {
     MultipleTelemetry m_telemetry;
 
     Drivetrain s_drivetrain;
@@ -48,7 +46,7 @@ public class TimedBased3Piece extends LinearOpMode {
 
     int phase;
 
-    double setpoint;
+    double setpoint, rotsetpoint;
     double timestamp;
     double output;
 
@@ -65,7 +63,7 @@ public class TimedBased3Piece extends LinearOpMode {
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry);
-        s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
+//        s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
@@ -81,7 +79,10 @@ public class TimedBased3Piece extends LinearOpMode {
         s_drivetrain.resetYaw();
 
         phase = 0;
-        setpoint = 30;
+        setpoint = Constants.toggles.blueTeam ? -30 : 30;
+        rotsetpoint = Constants.toggles.blueTeam ? 90 : -90;
+
+        timestamp = getRuntime();
 
 
         waitForStart();
@@ -89,7 +90,7 @@ public class TimedBased3Piece extends LinearOpMode {
         while(opModeIsActive()) {
             s_aprilVision.periodic();
             s_shooter.periodic();
-            s_turret.periodic();
+//            s_turret.periodic();
             s_otos.periodic();
 
             if (s_aprilVision.foundTarget()) {
@@ -98,19 +99,31 @@ public class TimedBased3Piece extends LinearOpMode {
 
             switch (phase) {
                 case 0:
-                    output = driveController.calculate(s_otos.getY(), setpoint);
-                    s_drivetrain.drive(-output, 0, 0);
+                    s_shooter.setSetpoint(3200);
+                    s_intake.runIntake(1);
+                    s_middleStage.runIntake(1);
+                    if(s_shooter.atSetpoint()) {
+                        s_shooter.runLoader();
+                    }
+                    if (getRuntime() > timestamp + 15) {
+                        s_shooter.setSetpoint(0);
+                        phase++;
+                    }
+                case 1:
+                    output = driveController.calculate(s_otos.getX(), setpoint);
+                    s_drivetrain.drive(0, output, 0);
                     if (setpoint - s_otos.getY() < 4) {
                         s_drivetrain.stop();
                         phase++;
                         break;
                     }
-                case 1:
-                    s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
-                    s_intake.runIntake(1);
-                    s_middleStage.runIntake(1);
-                    if(s_shooter.atSetpoint()) {
-                        s_shooter.runLoader();
+                case 2:
+                    output = driveController.calculate(s_otos.getH(), rotsetpoint);
+                    s_drivetrain.drive(0,0, output);
+                    if (setpoint - s_otos.getH() < 4) {
+                        s_drivetrain.stop();
+                        phase++;
+                        break;
                     }
             }
         }

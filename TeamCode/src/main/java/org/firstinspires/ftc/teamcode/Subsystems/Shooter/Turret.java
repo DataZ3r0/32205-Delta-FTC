@@ -78,16 +78,14 @@ public class Turret extends SubsystemBase {
     // if the turret has a setpoint within the given range of 270 (135 to -135) then turn the turret to the setpoint
     // else turn the turret to 0 degrees
     public void setTurretAngle(double desiredAngle) {
-        if (!turretController.atSetpoint())  {
+
             if (Math.abs(desiredAngle) > Math.abs(90.1) || Math.abs(desiredAngle) == 180 || Math.abs(getRobotTurretAngle()) > 90.1) {
                 output = Math.max(Math.min(turretController.calculate(getRobotTurretAngle(), 0), Constants.turretConstants.turretConfigs.maxSpeed), -Constants.turretConstants.turretConfigs.maxSpeed);
             } else {
                 turretRelSetpoint = Math.max(Math.min(wrapAngle(desiredAngle - s_drivetrain.getHeading()), 90 - s_drivetrain.getHeading()), -90 - s_drivetrain.getHeading());
                 output = Math.max(Math.min(turretController.calculate(getFieldTurretAngle(), turretRelSetpoint), Constants.turretConstants.turretConfigs.maxSpeed), -Constants.turretConstants.turretConfigs.maxSpeed);
             }
-        } else {
-            output = 0;
-        }
+
 
         turretMotor.setPower(output);
 //        if (Math.abs(s_drivetrain.getHeading() - getFieldTurretAngle()) > 90 && !s_drivetrain.getRotatingDirection()) {

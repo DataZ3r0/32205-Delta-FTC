@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
 @Autonomous(name="Delta-Autonomousdbhmhmhmhmh", group="Auto")
+@Disabled
 public class Auto extends LinearOpMode {
 
     MultipleTelemetry m_telemetry;
