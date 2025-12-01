@@ -105,7 +105,7 @@ public class testOpMode extends LinearOpMode
 
 //        visionState.setState(VisionStates.VisionState.SHOOT);
 //        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
-        s_shooter = new Shooter(hardwareMap, m_telemetry);
+        s_shooter = new Shooter(hardwareMap, m_telemetry,false);
         CommandScheduler.getInstance().run();
         s_shooter.openStopper();
 

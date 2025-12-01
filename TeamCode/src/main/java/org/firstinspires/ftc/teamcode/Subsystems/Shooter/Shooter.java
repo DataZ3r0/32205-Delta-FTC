@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,8 +38,10 @@ public class Shooter extends SubsystemBase {
 
     private double shootingCurrentThresh;
 
+    private boolean controllerInput;
+
     private boolean lastState, currState;
-    public Shooter(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
+    public Shooter(HardwareMap hardwaremap, MultipleTelemetry telemetry, boolean controllerInput) {
         shooterMotor = hardwaremap.get(DcMotorEx.class, Constants.shooterConstants.shooterMotor);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -56,9 +59,13 @@ public class Shooter extends SubsystemBase {
                 Constants.shooterConstants.shooterConfigs.shooterkV
         );
 
+        this.controllerInput = controllerInput;
         this.telemetry = telemetry;
     }
 
+    public boolean hasControllerInput() {
+        return controllerInput;
+    }
     public void runLoader() {
         loadingServo.setDirection(DcMotorSimple.Direction.FORWARD);
         loadingServo.setPower(0.5);
@@ -144,12 +151,20 @@ public class Shooter extends SubsystemBase {
 
     public void periodic() {
 //        readVal();
-        runShooter(setpoint);
-        if (atSetpoint() && getSetpoint() > 1000) {
-            openStopper();
+
+        if (!hasControllerInput()) {
+            if (atSetpoint() && getSetpoint() > 1000) {
+                openStopper();
+            } else {
+                closeStopper();
+            }
+            runShooter(setpoint);
         } else {
-            closeStopper();
+            openStopper();
+            outtake();
+            shooterMotor.setPower(-1);
         }
+
         telemetry.addData("Shooter RPM: ", getRPM());
 //        runShooter(Constants.shooterConstants.shooterConfigs.testRPM);
         telemetry.addData("Shooter Current: ", getShooterCurrent());

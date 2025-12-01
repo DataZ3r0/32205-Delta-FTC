@@ -62,7 +62,7 @@ public class Teleop extends LinearOpMode {
         s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
-        s_shooter = new Shooter(hardwareMap, m_telemetry);
+        s_shooter = new Shooter(hardwareMap, m_telemetry, opGamepad.isDown(GamepadKeys.Button.A));
         s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);

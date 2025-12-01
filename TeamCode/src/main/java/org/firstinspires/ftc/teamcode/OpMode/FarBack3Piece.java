@@ -62,8 +62,8 @@ public class FarBack3Piece extends LinearOpMode {
         s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
-        s_shooter = new Shooter(hardwareMap, m_telemetry);
-//        s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
+        s_shooter = new Shooter(hardwareMap, m_telemetry, false);
+            s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
@@ -90,7 +90,7 @@ public class FarBack3Piece extends LinearOpMode {
         while(opModeIsActive()) {
             s_aprilVision.periodic();
             s_shooter.periodic();
-//            s_turret.periodic();
+            s_turret.periodic();
             s_otos.periodic();
 
             if (s_aprilVision.foundTarget()) {
@@ -99,17 +99,16 @@ public class FarBack3Piece extends LinearOpMode {
 
             switch (phase) {
                 case 0:
-                    s_shooter.setSetpoint(3200);
+                    s_shooter.setSetpoint(3150);
                     s_intake.runIntake(1);
                     s_middleStage.runIntake(1);
-                    if(s_shooter.atSetpoint()) {
-                        s_shooter.runLoader();
-                    }
+                    s_shooter.runLoader();
                     if (getRuntime() > timestamp + 15) {
                         s_shooter.setSetpoint(0);
                         phase++;
                     }
                 case 1:
+                    s_shooter.stopLoader();
                     output = driveController.calculate(s_otos.getX(), setpoint);
                     s_drivetrain.drive(0, output, 0);
                     if (setpoint - s_otos.getY() < 4) {
@@ -117,14 +116,14 @@ public class FarBack3Piece extends LinearOpMode {
                         phase++;
                         break;
                     }
-                case 2:
-                    output = driveController.calculate(s_otos.getH(), rotsetpoint);
-                    s_drivetrain.drive(0,0, output);
-                    if (setpoint - s_otos.getH() < 4) {
-                        s_drivetrain.stop();
-                        phase++;
-                        break;
-                    }
+//                case 2:
+//                    output = driveController.calculate(s_otos.getH(), rotsetpoint);
+//                    s_drivetrain.drive(0,0, output);
+//                    if (setpoint - s_otos.getH() < 4) {
+//                        s_drivetrain.stop();
+//                        phase++;
+//                        break;
+//                    }
             }
         }
     }

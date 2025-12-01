@@ -64,7 +64,7 @@ public class TimedBased3Piece extends LinearOpMode {
         s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
-        s_shooter = new Shooter(hardwareMap, m_telemetry);
+        s_shooter = new Shooter(hardwareMap, m_telemetry, false);
         s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
@@ -109,7 +109,7 @@ public class TimedBased3Piece extends LinearOpMode {
                     s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
                     s_intake.runIntake(1);
                     s_middleStage.runIntake(1);
-                    if(s_shooter.atSetpoint()) {
+                    if(s_shooter.getSetpoint() - s_shooter.getRPM() < 75) {
                         s_shooter.runLoader();
                     }
             }
