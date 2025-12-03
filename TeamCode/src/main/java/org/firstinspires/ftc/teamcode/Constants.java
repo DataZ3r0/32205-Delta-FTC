@@ -105,6 +105,7 @@ public class Constants {
 
     public static final class VisionConstants {
         public static final String webcam = "Limelight";
+        public static final int listLength = 20;
     }
 
     public static final class OtosConstants {

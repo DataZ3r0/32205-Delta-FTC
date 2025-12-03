@@ -10,10 +10,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.LimitedQueue;
 import org.firstinspires.ftc.teamcode.VisionStates;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 import java.util.List;
+import java.util.Queue;
+
 public class AprilVision extends SubsystemBase {
 
     private final MultipleTelemetry telemetry;
@@ -25,16 +28,19 @@ public class AprilVision extends SubsystemBase {
     public AprilTagPoseFtc ftcPose;
     public LLResultTypes.FiducialResult desiredTag;
 
+    public LimitedQueue<Double> fifo;
+
     private Limelight3A limelight;
 
     public boolean targetFound;
-
 
     public static double targetRange;
     public static double targetYaw;
     public static double targetBearing;
     public static double tY;
     public static double tX;
+
+
 //    public LLResult result;
     //Fx/Fy = 946.233
     //Cx = 667.521
@@ -85,6 +91,7 @@ public class AprilVision extends SubsystemBase {
 
         this.telemetry = telemetry;
         this.visionStates = visionState;
+        fifo = new LimitedQueue<>(Constants.VisionConstants.listLength);
         refreshDesiredID();
     }
 
@@ -163,6 +170,15 @@ public class AprilVision extends SubsystemBase {
         return (29.5 - 14.491)/(Math.tan(angleToGoalRadians));
     }
 
+    public double getRangeAvg() {
+        double totalvalue = 0;
+        for (int i = 0; i < fifo.size(); i++) {
+            totalvalue += fifo.get(i);
+        }
+        return totalvalue/fifo.size();
+    }
+
+
 //    public void setTargetY(double y) {
 //        targetYaw = y;
 //    }
@@ -185,6 +201,7 @@ public class AprilVision extends SubsystemBase {
 //    }
     public void periodic() {
         refreshDesiredID();
+        fifo.add(getTargetRange());
 
         LLStatus status = limelight.getStatus();
         telemetry.addData("Name", "%s",
@@ -198,7 +215,7 @@ public class AprilVision extends SubsystemBase {
 
 
 
-        telemetry.addData("TARGET RANGE:", getTargetRange());
+        telemetry.addData("TARGET RANGE AVG:", getRangeAvg());
         telemetry.addData("reult", limelight.getLatestResult());
 //            telemetry.addData("is result vaid", result.isValid());
     }

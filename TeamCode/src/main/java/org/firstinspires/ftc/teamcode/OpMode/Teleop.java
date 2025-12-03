@@ -49,6 +49,8 @@ public class Teleop extends LinearOpMode {
     boolean intakeReversed;
     boolean isTurretTurning;
 
+    double shooterTimestamp;
+
     @Override
     public void runOpMode() {
 
@@ -128,16 +130,16 @@ public class Teleop extends LinearOpMode {
             m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
 
             if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
-                s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
-//                s_shooter.setDesiredVelocity(Constants.shooterConstants.shooterConfigs.testRPM);
-
+                s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
+//                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
+                shooterTimestamp = getRuntime();
 //                s_middleStage.runIntake(1);
                 if (s_shooter.atSetpoint()) {
                     s_shooter.runLoader();
                 } else {
                     s_shooter.stopLoader();
                 }
-            } else {
+            } else if (getRuntime() > shooterTimestamp + 2){
                 s_shooter.setSetpoint(0);
                 s_shooter.stopLoader();
             }

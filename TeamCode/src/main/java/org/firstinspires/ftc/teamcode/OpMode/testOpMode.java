@@ -120,11 +120,13 @@ public class testOpMode extends LinearOpMode
 
             s_shooter.periodic();
 
-            if (opGamepad.isDown(GamepadKeys.Button.DPAD_DOWN)) {
-                s_shooter.openStopper();
-            } else {
-                s_shooter.closeStopper();
-            }
+//            if (opGamepad.isDown(GamepadKeys.Button.DPAD_DOWN)) {
+//                s_shooter.openStopper();
+//            } else {
+//                s_shooter.closeStopper();
+//            }
+
+            s_shooter.setSetpoint(2400);
             m_telemetry.update();
         }
     }

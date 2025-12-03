@@ -105,6 +105,22 @@ public class TimedBased3Piece extends LinearOpMode {
                         phase++;
                         break;
                     }
+//                case 0:
+//                    output = driveController.calculate(s_otos.getX(), setpoint);
+//                    s_drivetrain.drive(0, -output, 0);
+//                    if (setpoint - s_otos.getX() < 4) {
+//                        s_drivetrain.stop();
+//                        phase++;
+//                        break;
+//                    }
+//                case 0:
+//                    output = driveController.calculate(s_otos.getH(), setpoint);
+//                    s_drivetrain.drive(0, 0, -output);
+//                    if (setpoint - s_otos.getH() < 4) {
+//                        s_drivetrain.stop();
+//                        phase++;
+//                        break;
+//                    }
                 case 1:
                     s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
                     s_intake.runIntake(1);
