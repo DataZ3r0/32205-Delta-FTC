@@ -81,7 +81,7 @@ public class TimedBased3Piece extends LinearOpMode {
         s_drivetrain.resetYaw();
 
         phase = 0;
-        setpoint = 30;
+        setpoint = 31;
 
 
         waitForStart();
