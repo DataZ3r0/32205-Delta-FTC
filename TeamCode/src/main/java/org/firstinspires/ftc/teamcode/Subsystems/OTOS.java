@@ -59,8 +59,8 @@ public class OTOS extends SubsystemBase {
                 Constants.OtosConstants.offsetHeading);
         otos.setOffset(offset);
 
-        otos.setLinearScalar(1.0);
-        otos.setAngularScalar(1.0);
+        otos.setLinearScalar(1.22772277228);
+        otos.setAngularScalar(0.99833610648);
 
         otos.calibrateImu();
         otos.resetTracking();
