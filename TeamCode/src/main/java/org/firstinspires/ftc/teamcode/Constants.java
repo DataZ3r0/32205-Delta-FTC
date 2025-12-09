@@ -41,6 +41,10 @@ public class Constants {
         public static final double maxStrafe = 0.5;
         public static final double maxTurn = 0.5;
 
+        public static final double driveTolerance = 4;
+
+        public static final double rotationTolerance = 2;
+
 //        public static enum rotatingDirections{
 //            CLOCKWISE,
 //            COUNTER_CLOCKWISE,
@@ -111,14 +115,15 @@ public class Constants {
     public static final class OtosConstants {
         public static final int offsetX = 0;
         public static final int offsetY = 0;
-        public static final int offsetHeading = 180;
+        public static final int offsetHeading = 0;
     }
 
     public static final class AutoConstants {
 
         @Config
         public static final class AutoPoints{
-            public static SparkFunOTOS.Pose2D autoOne = new SparkFunOTOS.Pose2D(0, 30, 0);
+            public static SparkFunOTOS.Pose2D startpos = new SparkFunOTOS.Pose2D(0,0, 0);
+            public static SparkFunOTOS.Pose2D autoOne = new SparkFunOTOS.Pose2D(-30, -30, 45);
             public static SparkFunOTOS.Pose2D autoTwo = new SparkFunOTOS.Pose2D(0, 30, 180);
             public static SparkFunOTOS.Pose2D autoThree = new SparkFunOTOS.Pose2D(72, 0, 90);
             public static SparkFunOTOS.Pose2D autoFour = new SparkFunOTOS.Pose2D(0, 0, 0);

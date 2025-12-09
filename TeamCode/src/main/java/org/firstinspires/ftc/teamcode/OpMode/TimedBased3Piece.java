@@ -9,6 +9,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Commands.AutoDrive;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
@@ -21,6 +22,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
 import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
+
+import java.net.ContentHandler;
 
 @Autonomous(name="Delta-3Piece", group="Auto")
 public class TimedBased3Piece extends LinearOpMode {
@@ -53,6 +56,9 @@ public class TimedBased3Piece extends LinearOpMode {
     double output;
 
     PIDController driveController;
+    PIDController rotationController;
+
+    AutoDrive autoDrive;
 
     @Override
     public void runOpMode() {
@@ -75,13 +81,19 @@ public class TimedBased3Piece extends LinearOpMode {
         visionState.setState(VisionStates.VisionState.SHOOT);
 
         driveController = new PIDController(Constants.DrivetrainConstants.drivePID.kPdrive, 0.0, 0.0);
+        rotationController = new PIDController(Constants.DrivetrainConstants.drivePID.kPdrive, 0.0, 0.0);
+
+        autoDrive = new AutoDrive(s_drivetrain, s_otos);
 
         CommandScheduler.getInstance().run();
         s_turret.stopTurret();
         s_drivetrain.resetYaw();
+        autoDrive.init();
+        s_otos.setPose(Constants.AutoConstants.AutoPoints.startpos);
 
+        timestamp = getRuntime();
         phase = 0;
-        setpoint = 31;
+        setpoint = 0;
 
 
         waitForStart();
@@ -94,41 +106,39 @@ public class TimedBased3Piece extends LinearOpMode {
 
             if (s_aprilVision.foundTarget()) {
                 s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
+                s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
+            } else {
+                s_shooter.setSetpoint(0);
+                s_turret.setSetpoint(s_drivetrain.getHeading());
             }
+
+            m_telemetry.update();
 
             switch (phase) {
                 case 0:
-                    output = driveController.calculate(s_otos.getY(), setpoint);
-                    s_drivetrain.drive(-output, 0, 0);
-                    if (setpoint - s_otos.getY() < 4) {
-                        s_drivetrain.stop();
+                    autoDrive.run(new SparkFunOTOS.Pose2D(-30, -30 , 45));
+                    if (autoDrive.isFinished()) {
+                        timestamp = getRuntime();
                         phase++;
                         break;
                     }
-//                case 0:
-//                    output = driveController.calculate(s_otos.getX(), setpoint);
-//                    s_drivetrain.drive(0, -output, 0);
-//                    if (setpoint - s_otos.getX() < 4) {
-//                        s_drivetrain.stop();
-//                        phase++;
-//                        break;
-//                    }
-//                case 0:
-//                    output = driveController.calculate(s_otos.getH(), setpoint);
-//                    s_drivetrain.drive(0, 0, -output);
-//                    if (setpoint - s_otos.getH() < 4) {
-//                        s_drivetrain.stop();
-//                        phase++;
-//                        break;
-//                    }
                 case 1:
-                    s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
                     s_intake.runIntake(1);
                     s_middleStage.runIntake(1);
-                    if(s_shooter.getSetpoint() - s_shooter.getRPM() < 75) {
-                        s_shooter.runLoader();
+                    s_shooter.runLoader();
+                    if (getRuntime() > timestamp + 3) {
+                        phase++;
+                        autoDrive.init();
+                        break;
                     }
-            }
+//                case 2:
+//                    autoDrive.run(Constants.AutoConstants.AutoPoints.autoTwo);
+//                    if (autoDrive.isFinished()) {
+//                        timestamp = getRuntime();
+//                        phase++;
+//                        break;
+//                    }
+                    }
         }
     }
 }

@@ -137,7 +137,9 @@ public class Teleop extends LinearOpMode {
                 if (s_shooter.atSetpoint()) {
                     s_shooter.runLoader();
                 } else {
-                    s_shooter.stopLoader();
+                    if (!triggerDown(driverGamepad, intakeTrigger)) {
+                        s_shooter.stopLoader();
+                    }
                 }
             } else if (getRuntime() > shooterTimestamp + 2){
                 s_shooter.setSetpoint(0);
@@ -163,6 +165,7 @@ public class Teleop extends LinearOpMode {
             if (triggerDown(driverGamepad, intakeTrigger)) {
                 s_intake.runIntake(driverGamepad.getTrigger(intakeTrigger));
                 s_middleStage.runIntake(driverGamepad.getTrigger(intakeTrigger));
+                s_shooter.runLoader();
             } else if (triggerDown(driverGamepad, outtakeTrigger)) {
                 s_intake.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
                 s_shooter.outtake();

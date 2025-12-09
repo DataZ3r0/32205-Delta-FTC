@@ -68,14 +68,14 @@ public class Shooter extends SubsystemBase {
     }
     public void runLoader() {
         loadingServo.setDirection(DcMotorSimple.Direction.FORWARD);
-        loadingServo.setPower(0.5);
+        loadingServo.setPower(1);
     }
     public void stopLoader() {
         loadingServo.setPower(0);
     }
     public void outtake() {
         loadingServo.setDirection(DcMotorSimple.Direction.REVERSE);
-        loadingServo.setPower(0.5);
+        loadingServo.setPower(-1);
     }
 
     public void openStopper() {

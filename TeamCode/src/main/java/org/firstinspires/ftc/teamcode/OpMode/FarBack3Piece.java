@@ -79,7 +79,7 @@ public class FarBack3Piece extends LinearOpMode {
         s_drivetrain.resetYaw();
 
         phase = 0;
-        setpoint = Constants.toggles.blueTeam ? -30 : 30;
+        setpoint = -30;
         rotsetpoint = Constants.toggles.blueTeam ? 90 : -90;
 
         timestamp = getRuntime();
@@ -97,25 +97,29 @@ public class FarBack3Piece extends LinearOpMode {
                 s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
             }
 
+            m_telemetry.update();
+
             switch (phase) {
+//                case 0:
+//                    s_shooter.setSetpoint(3150);
+//                    s_intake.runIntake(1);
+//                    s_middleStage.runIntake(1);
+//                    s_shooter.runLoader();
+//                    if (getRuntime() > timestamp + 15) {
+//                        s_shooter.setSetpoint(0);
+//                        phase++;
+//                    }
                 case 0:
-                    s_shooter.setSetpoint(3150);
-                    s_intake.runIntake(1);
-                    s_middleStage.runIntake(1);
-                    s_shooter.runLoader();
-                    if (getRuntime() > timestamp + 15) {
-                        s_shooter.setSetpoint(0);
-                        phase++;
-                    }
-                case 1:
-                    s_shooter.stopLoader();
-                    output = driveController.calculate(s_otos.getX(), setpoint);
-                    s_drivetrain.drive(0, output, 0);
+//                    s_shooter.stopLoader();
+                    output = driveController.calculate(s_otos.getY(), setpoint);
+                    s_drivetrain.drive(-output, 0, 0);
                     if (setpoint - s_otos.getY() < 4) {
                         s_drivetrain.stop();
                         phase++;
                         break;
                     }
+                case 1:
+                    s_shooter.setSetpoint(3150);
 //                case 2:
 //                    output = driveController.calculate(s_otos.getH(), rotsetpoint);
 //                    s_drivetrain.drive(0,0, output);

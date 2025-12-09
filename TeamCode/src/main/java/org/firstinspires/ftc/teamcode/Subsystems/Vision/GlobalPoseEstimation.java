@@ -5,6 +5,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
 
@@ -13,13 +14,15 @@ public class GlobalPoseEstimation extends SubsystemBase {
     private final OTOS s_otos;
     private final AprilVision s_vision;
     private final Turret s_turret;
+    private final Drivetrain s_drivetrain;
 
     private SparkFunOTOS.Pose2D pose;
 
-    public GlobalPoseEstimation(OTOS s_otos, AprilVision s_vision, Turret s_turret) {
+    public GlobalPoseEstimation(OTOS s_otos, AprilVision s_vision, Turret s_turret, Drivetrain s_drivetrain) {
         this.s_otos = s_otos;
         this.s_vision = s_vision;
         this.s_turret = s_turret;
+        this.s_drivetrain = s_drivetrain;
     }
 
     public void estimatePose() {
@@ -31,11 +34,11 @@ public class GlobalPoseEstimation extends SubsystemBase {
             double deltaY = s_vision.getTargetRange() * Math.sin(Math.toRadians(s_turret.getRobotTurretAngle() - s_otos.getH()));
             x = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - deltaX : Constants.FieldConstants.redGoal.x - deltaX;
             y = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - deltaY : Constants.FieldConstants.redGoal.y - deltaY;
-            r = s_otos.getH() + s_turret.getRobotTurretAngle() - s_vision.getTy();
+            r = s_drivetrain.getHeading() + s_turret.getRobotTurretAngle() - s_vision.getTy();
         } else {
             x = s_otos.getX();
             y = s_otos.getY();
-            r = s_otos.getH();
+            r = s_drivetrain.getHeading();
         }
         pose = new SparkFunOTOS.Pose2D(x, y, r);
     }

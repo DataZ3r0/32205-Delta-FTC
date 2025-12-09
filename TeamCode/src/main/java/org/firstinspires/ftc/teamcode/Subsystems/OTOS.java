@@ -79,13 +79,13 @@ public class OTOS extends SubsystemBase {
     }
 
     public double getX() {
-        return pos.x;
+        return -pos.x;
     }
     public double getY() {
         return pos.y;
     }
     public double getH() {
-        return pos.h;
+        return -pos.h;
     }
 
     public void setPose(SparkFunOTOS.Pose2D newPose) {
