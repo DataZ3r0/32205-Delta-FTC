@@ -79,7 +79,7 @@ public class OTOS extends SubsystemBase {
     }
 
     public double getX() {
-        return -pos.x;
+        return pos.x;
     }
     public double getY() {
         return pos.y;
@@ -100,9 +100,9 @@ public class OTOS extends SubsystemBase {
 
     public void periodic() {
         pos = getPose();
-        telemetry.addData("OTOS X", pos.x);
-        telemetry.addData("OTOS Y", pos.y);
-        telemetry.addData("OTOS HEADING", pos.h);
+        telemetry.addData("OTOS X", getX());
+        telemetry.addData("OTOS Y", getY());
+        telemetry.addData("OTOS HEADING", getH());
     }
 //    public void autoPeriodic(MultipleTelemetry m_telemetry, SparkFunOTOS.Pose2D targetPose) {
 //        m_telemetry.addData("OTOS X", targetPose.x);

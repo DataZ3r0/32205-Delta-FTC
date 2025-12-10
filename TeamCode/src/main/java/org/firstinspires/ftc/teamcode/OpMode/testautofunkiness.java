@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="Delta-Farback3Piece", group="Auto")
-public class FarBack3Piece extends LinearOpMode {
+@Autonomous(name="testAuto", group="Auto")
+public class testautofunkiness extends LinearOpMode {
     MultipleTelemetry m_telemetry;
 
     Drivetrain s_drivetrain;
@@ -46,7 +46,7 @@ public class FarBack3Piece extends LinearOpMode {
 
     int phase;
 
-    double setpoint, rotsetpoint;
+    double setpoint;
     double timestamp;
     double output;
 
@@ -63,7 +63,7 @@ public class FarBack3Piece extends LinearOpMode {
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry, false);
-            s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
+        s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
@@ -80,9 +80,6 @@ public class FarBack3Piece extends LinearOpMode {
 
         phase = 0;
         setpoint = -30;
-        rotsetpoint = Constants.toggles.blueTeam ? 90 : -90;
-
-        timestamp = getRuntime();
 
 
         waitForStart();
@@ -97,36 +94,21 @@ public class FarBack3Piece extends LinearOpMode {
                 s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
             }
 
-            m_telemetry.update();
-
             switch (phase) {
-//                case 0:
-//                    s_shooter.setSetpoint(3150);
-//                    s_intake.runIntake(1);
-//                    s_middleStage.runIntake(1);
-//                    s_shooter.runLoader();
-//                    if (getRuntime() > timestamp + 15) {
-//                        s_shooter.setSetpoint(0);
-//                        phase++;
-//                    }
                 case 0:
-//                    s_shooter.stopLoader();
                     output = driveController.calculate(s_otos.getY(), setpoint);
-                    s_drivetrain.drive(-output, 0, 0);
-                    if (setpoint - s_otos.getY() < 4) {
+                    s_drivetrain.drive(output, 0, 0);
+                    if (Math.abs(setpoint - s_otos.getY()) < 4) {
                         s_drivetrain.stop();
                         phase++;
                         break;
                     }
                 case 1:
-                    s_shooter.setSetpoint(3150);
-//                case 2:
-//                    output = driveController.calculate(s_otos.getH(), rotsetpoint);
-//                    s_drivetrain.drive(0,0, output);
-//                    if (setpoint - s_otos.getH() < 4) {
-//                        s_drivetrain.stop();
-//                        phase++;
-//                        break;
+//                    s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
+                    s_intake.runIntake(1);
+                    s_middleStage.runIntake(1);
+//                    if(s_shooter.getSetpoint() - s_shooter.getRPM() < 75) {
+//                        s_shooter.runLoader();
 //                    }
             }
         }

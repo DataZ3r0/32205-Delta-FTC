@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.OpMode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -23,10 +21,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-import java.net.ContentHandler;
-
 @Autonomous(name="Delta-3Piece", group="Auto")
-public class TimedBased3Piece extends LinearOpMode {
+public class PotentialManAuto extends LinearOpMode {
     MultipleTelemetry m_telemetry;
 
     Drivetrain s_drivetrain;
@@ -109,36 +105,46 @@ public class TimedBased3Piece extends LinearOpMode {
                 s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
             } else {
                 s_shooter.setSetpoint(0);
-                s_turret.setSetpoint(s_drivetrain.getHeading());
+                s_turret.setSetpoint(s_otos.getH());
             }
 
             m_telemetry.update();
 
             switch (phase) {
                 case 0:
-                    autoDrive.run(new SparkFunOTOS.Pose2D(-30, -30 , 45));
+                    autoDrive.run(Constants.AutoConstants.AutoPoints.autoOne, 0.5, 0.2);
                     if (autoDrive.isFinished()) {
                         timestamp = getRuntime();
                         phase++;
                         break;
                     }
-                case 1:
-                    s_intake.runIntake(1);
-                    s_middleStage.runIntake(1);
-                    s_shooter.runLoader();
-                    if (getRuntime() > timestamp + 3) {
-                        phase++;
-                        autoDrive.init();
-                        break;
-                    }
-//                case 2:
-//                    autoDrive.run(Constants.AutoConstants.AutoPoints.autoTwo);
-//                    if (autoDrive.isFinished()) {
-//                        timestamp = getRuntime();
+//                case 1:
+//                    s_intake.runIntake(1);
+//                    s_middleStage.runIntake(1);
+//                    s_shooter.runLoader();
+//                    if (getRuntime() > timestamp + 3) {
+//                        autoDrive.init();
 //                        phase++;
 //                        break;
 //                    }
-                    }
+//                case 2:
+//                    autoDrive.run(Constants.AutoConstants.AutoPoints.autoTwo, 0.5, 0.2);
+//                    if (autoDrive.isFinished()) {
+//                        s_intake.stop();
+//                        s_middleStage.stop();
+//                        s_shooter.stopLoader();
+//                        phase++;
+//                        break;
+//                    }
+//                case 3:
+//                    autoDrive.run(Constants.AutoConstants.AutoPoints.autoThree, 0.5, 0.2);
+//                    if (autoDrive.isFinished()) {
+//                        timestamp = getRuntime();
+//                        s_intake.runIntake(1);
+//                        s_middleStage.runIntake(1);
+//                        s_shooter.runLoader();
+//                    }
+            }
         }
     }
 }

@@ -35,19 +35,35 @@ public class AutoDrive {
         isFinished = false;
         s_otos.setPose(new SparkFunOTOS.Pose2D(0,0, s_drivetrain.getHeading()));
     }
-    public void run(SparkFunOTOS.Pose2D targetPose) {
+    public void run(SparkFunOTOS.Pose2D targetPose, double maxLinearSpeed, double maxRotSpeed) {
+
+        isFinished = false;
+
         xError = targetPose.x - s_otos.getX();
         yError = targetPose.y - s_otos.getY();
         rError = targetPose.h - s_otos.getH();
 
-        xOutput = MathUtil.clamp(xController.calculate(xError), -0.2, 0.2);
-        yOutput = MathUtil.clamp(yController.calculate(xError), -0.2, 0.2);
-        rOutput = MathUtil.clamp(rotationController.calculate(rError), -0.2, 0.2);
+        if (!(Math.abs(xError) < Constants.DrivetrainConstants.driveTolerance)) {
+            xOutput = MathUtil.clamp(xController.calculate(s_otos.getX(), targetPose.x), -maxLinearSpeed, maxLinearSpeed);
+        } else {
+            xOutput = 0;
+        }
+
+        if (!(Math.abs(yError) < Constants.DrivetrainConstants.driveTolerance)) {
+            yOutput = MathUtil.clamp(yController.calculate(s_otos.getY(), targetPose.y), -maxLinearSpeed, maxLinearSpeed);
+        } else {
+            yOutput = 0;
+        }
+
+        if (!(Math.abs(rError) < Constants.DrivetrainConstants.rotationTolerance)) {
+            rOutput = MathUtil.clamp(rotationController.calculate(s_otos.getH(), targetPose.h), -maxRotSpeed, maxRotSpeed);
+        } else {
+            rOutput = 0;
+        }
 
         s_drivetrain.drive(yOutput, xOutput , rOutput);
-        if (xError < Constants.DrivetrainConstants.driveTolerance
-                && yError < Constants.DrivetrainConstants.driveTolerance
-                && rError < Constants.DrivetrainConstants.rotationTolerance) {
+
+        if (xOutput == 0 && yOutput == 0 && rOutput == 0) {
             s_drivetrain.stop();
             isFinished = true;
         }

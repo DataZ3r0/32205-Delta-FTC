@@ -124,8 +124,8 @@ public class Constants {
         public static final class AutoPoints{
             public static SparkFunOTOS.Pose2D startpos = new SparkFunOTOS.Pose2D(0,0, 0);
             public static SparkFunOTOS.Pose2D autoOne = new SparkFunOTOS.Pose2D(-30, -30, 45);
-            public static SparkFunOTOS.Pose2D autoTwo = new SparkFunOTOS.Pose2D(0, 30, 180);
-            public static SparkFunOTOS.Pose2D autoThree = new SparkFunOTOS.Pose2D(72, 0, 90);
+            public static SparkFunOTOS.Pose2D autoTwo = new SparkFunOTOS.Pose2D(0, 27, 0);
+            public static SparkFunOTOS.Pose2D autoThree = new SparkFunOTOS.Pose2D(0, -27, 45);
             public static SparkFunOTOS.Pose2D autoFour = new SparkFunOTOS.Pose2D(0, 0, 0);
         }
     }
