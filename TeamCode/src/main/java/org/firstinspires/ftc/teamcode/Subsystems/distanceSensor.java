@@ -70,9 +70,9 @@ public class distanceSensor extends SubsystemBase {
     public void readDistance() {
         Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor) sensorDistance;
 
-        telemetry.addData("deviceName", sensorDistance.getDeviceName() );
-        telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
-        telemetry.addData("range", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
+//        telemetry.addData("deviceName", sensorDistance.getDeviceName() );
+//        telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("range", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
 
         // Rev2mDistanceSensor specific methods.
 //        telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));

@@ -151,15 +151,15 @@ public class Turret extends SubsystemBase {
     }
 
     public void periodic() {
-        m_telemetry.addData("joysitck angle", turretAngleTan);
-        m_telemetry.addData("is Safe?: ", isSafe);
-        m_telemetry.addData("turret encoder position", getTurretPosition());
+//        m_telemetry.addData("joysitck angle", turretAngleTan);
+//        m_telemetry.addData("is Safe?: ", isSafe);
+//        m_telemetry.addData("turret encoder position", getTurretPosition());
         m_telemetry.addData("robot rel turret angle", wrapAngle(getRobotTurretAngle()));
         m_telemetry.addData("field rel turret angle", wrapAngle(getFieldTurretAngle()));
         m_telemetry.addData("turret setpoint", getSetpoint());
-        m_telemetry.addData("turretPower: ", turretMotor.getPower());
-        m_telemetry.addData("pid error", turretController);
-        m_telemetry.addData("at setpoint?", atSetpoint());
+//        m_telemetry.addData("turretPower: ", turretMotor.getPower());
+//        m_telemetry.addData("pid error", turretController);
+//        m_telemetry.addData("at setpoint?", atSetpoint());
         m_telemetry.addData("turretRelSetpoint", turretRelSetpoint);
         setTurretAngle(setpoint);
 //        setTurretAngle(Constants.turretConstants.turretConfigs.turretSetPoint);

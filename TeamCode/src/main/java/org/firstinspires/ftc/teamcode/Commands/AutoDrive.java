@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.teamcode.Constants;
@@ -26,16 +27,22 @@ public class AutoDrive {
         this.s_drivetrain = s_drivetrain;
         this.s_otos = s_otos;
 
-        xController = new PIDController(Constants.DrivetrainConstants.drivePID.kPdrive, 0.001, 0.0);
-        yController = new PIDController(Constants.DrivetrainConstants.drivePID.kPdrive, 0.001, 0.0);
-        rotationController = new PIDController(Constants.DrivetrainConstants.drivePID.kPdrive, 0.001, 0.0);
+        xController = new PIDController(Constants.DrivetrainConstants.drivePID.drivekP,
+                Constants.DrivetrainConstants.drivePID.drivekI,
+                Constants.DrivetrainConstants.drivePID.drivekD);
+        yController = new PIDController(Constants.DrivetrainConstants.drivePID.drivekP,
+                Constants.DrivetrainConstants.drivePID.drivekI,
+                Constants.DrivetrainConstants.drivePID.drivekD);
+        rotationController = new PIDController(Constants.DrivetrainConstants.drivePID.turnkP,
+                Constants.DrivetrainConstants.drivePID.turnkI,
+                Constants.DrivetrainConstants.drivePID.turnkD);
     }
 
     public void init() {
         isFinished = false;
         s_otos.setPose(new SparkFunOTOS.Pose2D(0,0, s_drivetrain.getHeading()));
     }
-    public void run(SparkFunOTOS.Pose2D targetPose, double maxLinearSpeed, double maxRotSpeed) {
+    public void run(SparkFunOTOS.Pose2D targetPose, double maxLinearSpeed, double maxRotSpeed, MultipleTelemetry m_telemetry) {
 
         isFinished = false;
 
@@ -43,30 +50,23 @@ public class AutoDrive {
         yError = targetPose.y - s_otos.getY();
         rError = targetPose.h - s_otos.getH();
 
-        if (!(Math.abs(xError) < Constants.DrivetrainConstants.driveTolerance)) {
-            xOutput = MathUtil.clamp(xController.calculate(s_otos.getX(), targetPose.x), -maxLinearSpeed, maxLinearSpeed);
-        } else {
-            xOutput = 0;
-        }
+        xOutput = MathUtil.clamp(xController.calculate(s_otos.getX(), targetPose.x), -maxLinearSpeed, maxLinearSpeed);
+        yOutput = MathUtil.clamp(yController.calculate(s_otos.getY(), targetPose.y), -maxLinearSpeed, maxLinearSpeed);
+        rOutput = MathUtil.clamp(rotationController.calculate(s_otos.getH(), targetPose.h), -maxRotSpeed, maxRotSpeed);
 
-        if (!(Math.abs(yError) < Constants.DrivetrainConstants.driveTolerance)) {
-            yOutput = MathUtil.clamp(yController.calculate(s_otos.getY(), targetPose.y), -maxLinearSpeed, maxLinearSpeed);
-        } else {
-            yOutput = 0;
-        }
-
-        if (!(Math.abs(rError) < Constants.DrivetrainConstants.rotationTolerance)) {
-            rOutput = MathUtil.clamp(rotationController.calculate(s_otos.getH(), targetPose.h), -maxRotSpeed, maxRotSpeed);
-        } else {
-            rOutput = 0;
-        }
 
         s_drivetrain.drive(yOutput, xOutput , rOutput);
 
-        if (xOutput == 0 && yOutput == 0 && rOutput == 0) {
+        if (Math.abs(xError) < Constants.DrivetrainConstants.driveTolerance &&
+                Math.abs(yError) < Constants.DrivetrainConstants.driveTolerance &&
+                Math.abs(rError) < Constants.DrivetrainConstants.rotationTolerance) {
             s_drivetrain.stop();
             isFinished = true;
         }
+
+        m_telemetry.addData("xOutput", xOutput);
+        m_telemetry.addData("yOutput", yOutput);
+        m_telemetry.addData("rOutput", rOutput);
     }
 
     public boolean isFinished() {

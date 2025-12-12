@@ -66,9 +66,9 @@ public class Auto extends LinearOpMode {
 //            double hError = angleError.getRadians();
 //            double hError = targetPose.h - currentPose.h;
 //
-//            double xPower = xError * Constants.DrivetrainConstants.drivePID.kPdrive;
+//            double xPower = xError * Constants.DrivetrainConstants.drivePID.drivekP;
 //            double yPower = yError * Constants.DrivetrainConstants.drivePID.kPstrafe;
-//            double hPower = hError * Constants.DrivetrainConstants.drivePID.kPturn;
+//            double hPower = hError * Constants.DrivetrainConstants.drivePID.turnkP;
 //
 //            a_drivetrain.drive(yPower, xPower, hPower);
 //

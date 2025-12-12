@@ -42,6 +42,9 @@ public class OTOS extends SubsystemBase {
 
         otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
 
+        otos.setLinearScalar(1.22772277228);
+        otos.setAngularScalar(0.99833610648);
+
         this.telemetry = telemetry;
         configureOtos(telemetry);
     }
@@ -58,9 +61,6 @@ public class OTOS extends SubsystemBase {
                 Constants.OtosConstants.offsetY,
                 Constants.OtosConstants.offsetHeading);
         otos.setOffset(offset);
-
-        otos.setLinearScalar(1.22772277228);
-        otos.setAngularScalar(0.99833610648);
 
         otos.calibrateImu();
         otos.resetTracking();
@@ -79,17 +79,15 @@ public class OTOS extends SubsystemBase {
     }
 
     public double getX() {
-        return pos.x;
+        return pos.x * 2.22772277228;
     }
-    public double getY() {
-        return pos.y;
-    }
+    public double getY() { return pos.y * 2.22772277228; }
     public double getH() {
-        return -pos.h;
+        return -pos.h * 0.99833610648;
     }
 
     public void setPose(SparkFunOTOS.Pose2D newPose) {
-        pos = newPose;
+        otos.setPosition(newPose);
     }
 
     public void resetOTOS() { otos.resetTracking(); }

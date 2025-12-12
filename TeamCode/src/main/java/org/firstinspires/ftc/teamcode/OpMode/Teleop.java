@@ -50,6 +50,11 @@ public class Teleop extends LinearOpMode {
     boolean isTurretTurning;
 
     double shooterTimestamp;
+    double turretTimestamp;
+
+    double tagTurretSetpoint;
+
+    double givenRPM;
 
     @Override
     public void runOpMode() {
@@ -84,6 +89,8 @@ public class Teleop extends LinearOpMode {
         s_turret.stopTurret();
         s_drivetrain.resetYaw();
 
+        givenRPM = 2400;
+
 
         waitForStart();
 
@@ -109,32 +116,39 @@ public class Teleop extends LinearOpMode {
             driverGamepad.readButtons();
             opGamepad.readButtons();
 
-            if(!s_aprilVision.foundTarget()) {
-                if (!Constants.toggles.manTurret) {
-//                new RunCommand(() -> {
-//                double deltaX = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.x - poseEstimation.getPose().x : Constants.FieldConstants.redGoal.x - poseEstimation.getPose().x;
-//                double deltaY = Constants.toggles.blueTeam ? Constants.FieldConstants.blueGoal.y - poseEstimation.getPose().y : Constants.FieldConstants.redGoal.y - poseEstimation.getPose().y;
-//                s_turret.setSetpoint(Math.toDegrees(Math.tan(deltaY/deltaX)));
-//            }, s_turret, poseEstimation);
-                } else {
-                    if (Math.abs(opGamepad.getRightX()) > 0.2 || Math.abs(opGamepad.getRightY()) > 0.2) {
+            if(!(s_aprilVision.foundTarget()) && getRuntime() > turretTimestamp + 2) {
+                    if (Math.abs(opGamepad.getRightX()) > 0.01 || Math.abs(opGamepad.getRightY()) > 0.01) {
                         s_turret.manuelTurret(
                                 opGamepad.getRightX(), opGamepad.getRightY());
 //                        isTurretTurning = false;
-                    }
                 }
             } else {
-                s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
+                tagTurretSetpoint = (s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
+                s_turret.setSetpoint(tagTurretSetpoint);
+                turretTimestamp = getRuntime();
+
+
 //                isTurretTurning = true;
             }
-            m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
+//            m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
 
-            if (driverGamepad.isDown(shooterTestButtonTwo) && s_aprilVision.foundTarget()) {
-                s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
+            if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                givenRPM = 2200;
+            } else if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                givenRPM = 2450;
+            } else if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                givenRPM = 3150;
+            }
+
+            if (driverGamepad.isDown(shooterTestButtonTwo)) {
+                if (s_aprilVision.foundTarget()) {
+                    s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
+                } else {
+                    s_shooter.setSetpoint(givenRPM);
+                }
 //                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
                 shooterTimestamp = getRuntime();
-//                s_middleStage.runIntake(1);
-                if (s_shooter.atSetpoint()) {
+                if (s_shooter.atSetpoint() && !triggerDown(driverGamepad, outtakeTrigger)) {
                     s_shooter.runLoader();
                 } else {
                     if (!triggerDown(driverGamepad, intakeTrigger)) {
@@ -145,6 +159,8 @@ public class Teleop extends LinearOpMode {
                 s_shooter.setSetpoint(0);
                 s_shooter.stopLoader();
             }
+
+            s_shooter.stopperPeriodic(opGamepad, GamepadKeys.Button.Y);
 
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){

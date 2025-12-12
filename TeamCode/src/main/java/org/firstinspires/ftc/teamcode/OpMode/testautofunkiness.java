@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Commands.AutoDrive;
+import org.firstinspires.ftc.teamcode.Commands.AutoIntakeCommand;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
@@ -20,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="testAuto", group="Auto")
+@Autonomous(name="testautofunk", group="Auto")
 public class testautofunkiness extends LinearOpMode {
     MultipleTelemetry m_telemetry;
 
@@ -51,6 +53,13 @@ public class testautofunkiness extends LinearOpMode {
     double output;
 
     PIDController driveController;
+    PIDController rotationController;
+
+    AutoIntakeCommand intakeCommand;
+
+    AutoDrive autoDrive1;
+    AutoDrive autoDrive2;
+    AutoDrive autoDrive3;
 
     @Override
     public void runOpMode() {
@@ -67,50 +76,87 @@ public class testautofunkiness extends LinearOpMode {
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
-
         intakeReversed = false;
 
         visionState.setState(VisionStates.VisionState.SHOOT);
 
-        driveController = new PIDController(Constants.DrivetrainConstants.drivePID.kPdrive, 0.0, 0.0);
+        intakeCommand = new AutoIntakeCommand(s_intake, s_middleStage, s_shooter);
 
-        CommandScheduler.getInstance().run();
+//        driveController = new PIDController(Constants.DrivetrainConstants.drivePID.drivekP, 0.0, 0.0);
+//        rotationController = new PIDController(Constants.DrivetrainConstants.drivePID.drivekP, 0.0, 0.0);
+
+//        CommandScheduler.getInstance().run();
         s_turret.stopTurret();
-        s_drivetrain.resetYaw();
-
+//        s_drivetrain.resetYaw();
+        intakeCommand.disable();
+//        autoDrive.init();
+//        s_otos.setPose(Constants.AutoConstants.AutoPoints.startpos);
+//
+        timestamp = getRuntime();
         phase = 0;
-        setpoint = -30;
+//        setpoint = 0;
 
 
         waitForStart();
 
         while(opModeIsActive()) {
-            s_aprilVision.periodic();
-            s_shooter.periodic();
-            s_turret.periodic();
+            s_drivetrain.periodic();
+//            s_aprilVision.periodic();
+//            s_shooter.periodic();
+//            s_turret.periodic();
             s_otos.periodic();
 
-            if (s_aprilVision.foundTarget()) {
-                s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
-            }
+            intakeCommand.periodic();
+
+//            if (s_aprilVision.foundTarget()) {
+//                s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
+//                s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
+//            } else {
+//                s_shooter.setSetpoint(0);
+//                s_turret.setSetpoint(s_drivetrain.getHeading());
+//            }
+
+//            s_shooter.stopperPeriodic(null, null);
 
             switch (phase) {
                 case 0:
-                    output = driveController.calculate(s_otos.getY(), setpoint);
-                    s_drivetrain.drive(output, 0, 0);
-                    if (Math.abs(setpoint - s_otos.getY()) < 4) {
-                        s_drivetrain.stop();
+                    if (autoDrive1 == null) {
+                        autoDrive1 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive1.init();
+                    } else {
+                        autoDrive1.run(Constants.AutoConstants.AutoPoints.autoOne, 1.0, 1.0, m_telemetry);
+                        intakeCommand.disable();
+                        timestamp = getRuntime();
+                        if (autoDrive1.isFinished()) {
+                            autoDrive1 = null;
+                            phase++;
+                            break;
+                        }
+                    }
+                    break;
+                case 1:
+                    if (getRuntime() > timestamp + 3) {
                         phase++;
                         break;
                     }
-                case 1:
-//                    s_shooter.setDesiredVelocity(s_aprilVision.getTargetRange());
-                    s_intake.runIntake(1);
-                    s_middleStage.runIntake(1);
-//                    if(s_shooter.getSetpoint() - s_shooter.getRPM() < 75) {
-//                        s_shooter.runLoader();
-//                    }
+                    break;
+                case 2:
+                    if (autoDrive2 == null) {
+                        autoDrive2 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive2.init();
+                    } else {
+                        autoDrive2.run(Constants.AutoConstants.AutoPoints.autoTwo, 1.0, 1.0, m_telemetry);
+                        if (autoDrive2.isFinished()) {
+                            autoDrive2 = null;
+                            phase = 0;
+                            break;
+                        }
+                    }
+                    break;
             }
+
+            m_telemetry.addData("AUTO PHASE:", phase);
+            m_telemetry.update();
         }
     }
 }

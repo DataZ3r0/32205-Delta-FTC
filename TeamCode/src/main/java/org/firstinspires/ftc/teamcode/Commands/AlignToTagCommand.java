@@ -1,15 +1,6 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPdrive;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPstrafe;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.drivePID.kPturn;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxDrive;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxStrafe;
-import static org.firstinspires.ftc.teamcode.Constants.DrivetrainConstants.maxTurn;
-
 import com.arcrobotics.ftclib.command.CommandBase;
-
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
@@ -47,9 +38,9 @@ public class AlignToTagCommand extends CommandBase {
 //        yawError = s_tagDetection.getTargetYaw();
 //        headingError = AprilVision.getTargetBearing();
 //
-//        driveY = Range.clip(rangeError * kPdrive, -maxDrive, maxDrive);
+//        driveY = Range.clip(rangeError * drivekP, -maxDrive, maxDrive);
 //        driveX = Range.clip(yawError * kPstrafe, -maxStrafe, maxStrafe);
-//        rotation = Range.clip(headingError * kPturn, -maxTurn, maxTurn);
+//        rotation = Range.clip(headingError * turnkP, -maxTurn, maxTurn);
 //
 ////        s_drivetrain.drive(2, 2, 2);
 //        s_drivetrain.drive(0, 0, -rotation);

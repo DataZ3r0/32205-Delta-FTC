@@ -1,27 +1,16 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Constants;
 
 public class Drivetrain extends SubsystemBase {
@@ -35,15 +24,15 @@ public class Drivetrain extends SubsystemBase {
     private final IMU IMU;
 
     private final PIDController drivePID = new PIDController(
-            Constants.DrivetrainConstants.drivePID.kPdrive
+            Constants.DrivetrainConstants.drivePID.drivekP
             , 0.0
             , 0.0);
     private final PIDController strafePID = new PIDController(
-            Constants.DrivetrainConstants.drivePID.kPstrafe
+            Constants.DrivetrainConstants.drivePID.drivekP
             , 0.0
             , 0.0);
     private final PIDController turnPID = new PIDController(
-            Constants.DrivetrainConstants.drivePID.kPturn
+            Constants.DrivetrainConstants.drivePID.turnkP
             , 0.0
             , 0.0);
 

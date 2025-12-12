@@ -167,7 +167,7 @@ public class AprilVision extends SubsystemBase {
     // shooter height 14.491 tag height 29.5
     public double getTargetRange() {
         double angleToGoalRadians = Math.toRadians(20 + getTy());
-        return (29.5 - 14.491)/(Math.tan(angleToGoalRadians));
+        return (29.5 - 14.241)/(Math.tan(angleToGoalRadians));
     }
 
     public double getRangeAvg() {
@@ -204,19 +204,19 @@ public class AprilVision extends SubsystemBase {
         fifo.add(getTargetRange());
 
         LLStatus status = limelight.getStatus();
-        telemetry.addData("Name", "%s",
-                status.getName());
-        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-                status.getTemp(), status.getCpu(),(int)status.getFps());
-        telemetry.addData("Pipeline", "Index: %d, Type: %s",
-                status.getPipelineIndex(), status.getPipelineType());
+//        telemetry.addData("Name", "%s",
+//                status.getName());
+//        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+//                status.getTemp(), status.getCpu(),(int)status.getFps());
+//        telemetry.addData("Pipeline", "Index: %d, Type: %s",
+//                status.getPipelineIndex(), status.getPipelineType());
         telemetry.addData("targetFound", foundTarget());
             getAprilTagData(telemetry);
 
 
 
         telemetry.addData("TARGET RANGE AVG:", getRangeAvg());
-        telemetry.addData("reult", limelight.getLatestResult());
+//        telemetry.addData("reult", limelight.getLatestResult());
 //            telemetry.addData("is result vaid", result.isValid());
     }
 }

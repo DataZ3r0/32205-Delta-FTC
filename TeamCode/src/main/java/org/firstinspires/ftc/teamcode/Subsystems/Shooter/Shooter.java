@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -79,11 +80,24 @@ public class Shooter extends SubsystemBase {
     }
 
     public void openStopper() {
-        stopperServo.setPosition(0.3);
+        stopperServo.setPosition(0.7);
     }
 
     public void closeStopper() {
-        stopperServo.setPosition(0.1);
+        stopperServo.setPosition(0.35);
+    }
+
+    public void stopperPeriodic(GamepadEx op, GamepadKeys.Button button) {
+        if (op == null || !op.isDown(button))  {
+            if (atSetpoint() && getSetpoint() > 1000) {
+                openStopper();
+            } else {
+                closeStopper();
+            }
+        } else {
+            openStopper();
+            outtake();
+        }
     }
 
 
@@ -140,7 +154,8 @@ public class Shooter extends SubsystemBase {
 //-0.0116909x^{2}+10.43324x+1822.88718
     public void setDesiredVelocity(double targetRange) {
 //        double tagDistanceMetres = targetRange * 0.0254;
-        double desiredVelocity = (-0.0116909 * Math.pow(targetRange, 2)) + (10.43324 * targetRange) + 1822.88718;
+        //-0.0036901x^{2}+7.60414x+2032.12807
+        double desiredVelocity = (-0.0036901 * Math.pow(targetRange, 2)) + (7.60414 * targetRange) + 2032.12807;
         setSetpoint(desiredVelocity);
     }
     public boolean atSetpoint() {
@@ -153,24 +168,13 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
 //        readVal();
 
-        if (!hasControllerInput()) {
-            if (atSetpoint() && getSetpoint() > 1000) {
-                openStopper();
-            } else {
-                closeStopper();
-            }
-            runShooter(setpoint);
-        } else {
-            openStopper();
-            outtake();
-            shooterMotor.setPower(-1);
-        }
+        runShooter(setpoint);
 
         telemetry.addData("Shooter RPM: ", getRPM());
 //        runShooter(Constants.shooterConstants.shooterConfigs.testRPM);
-        telemetry.addData("Shooter Current: ", getShooterCurrent());
+//        telemetry.addData("Shooter Current: ", getShooterCurrent());
         telemetry.addData("shooter setpoint: ", getSetpoint());
-        telemetry.addData("shooter at setpoint?", atSetpoint());
-        telemetry.addData("stopper pos", stopperServo.getPosition());
+//        telemetry.addData("shooter at setpoint?", atSetpoint());
+//        telemetry.addData("stopper pos", stopperServo.getPosition());
     }
 }
