@@ -74,22 +74,21 @@ public class Shooter extends SubsystemBase {
     public void stopLoader() {
         loadingServo.setPower(0);
     }
-    public void outtake() {
-        loadingServo.setDirection(DcMotorSimple.Direction.REVERSE);
+    public void outtake() {;
         loadingServo.setPower(-1);
     }
 
     public void openStopper() {
-        stopperServo.setPosition(0.7);
+        stopperServo.setPosition(0.9);
     }
 
     public void closeStopper() {
-        stopperServo.setPosition(0.35);
+        stopperServo.setPosition(0.6);
     }
 
-    public void stopperPeriodic(GamepadEx op, GamepadKeys.Button button) {
+    public void stopperPeriodic(GamepadEx op, GamepadKeys.Button button, boolean allowShoot) {
         if (op == null || !op.isDown(button))  {
-            if (atSetpoint() && getSetpoint() > 1000) {
+            if (atSetpoint() && getSetpoint() > 1500 && allowShoot) {
                 openStopper();
             } else {
                 closeStopper();
@@ -156,7 +155,7 @@ public class Shooter extends SubsystemBase {
 //        double tagDistanceMetres = targetRange * 0.0254;
         //-0.0036901x^{2}+7.60414x+2032.12807
         double desiredVelocity = (-0.0036901 * Math.pow(targetRange, 2)) + (7.60414 * targetRange) + 2032.12807;
-        setSetpoint(desiredVelocity);
+        setSetpoint(desiredVelocity * Constants.shooterConstants.shooterConfigs.kShoot);
     }
     public boolean atSetpoint() {
         return getSetpoint() - getRPM() < Math.abs(Constants.shooterConstants.shooterRPMTolerance);

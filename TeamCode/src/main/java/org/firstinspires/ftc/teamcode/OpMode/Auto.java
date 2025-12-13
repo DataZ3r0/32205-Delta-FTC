@@ -42,7 +42,7 @@ public class Auto extends LinearOpMode {
         m_telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         a_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        a_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
+        a_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState,24);
 //       a_intake = new Intake(hardwareMap);
 //        s_shooter = new Shooter(hardwareMap);
     a_otos = new OTOS(hardwareMap, m_telemetry);

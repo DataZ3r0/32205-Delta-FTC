@@ -79,9 +79,9 @@ public class OTOS extends SubsystemBase {
     }
 
     public double getX() {
-        return pos.x * 2.22772277228;
+        return pos.x * 1.52772277228;
     }
-    public double getY() { return pos.y * 2.22772277228; }
+    public double getY() { return pos.y * 1.52772277228; }
     public double getH() {
         return -pos.h * 0.99833610648;
     }

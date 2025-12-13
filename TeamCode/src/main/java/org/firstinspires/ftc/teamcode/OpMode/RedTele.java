@@ -8,20 +8,19 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
-import org.firstinspires.ftc.teamcode.VisionStates;
 import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
+import org.firstinspires.ftc.teamcode.VisionStates;
 
-@TeleOp(name="DeltaBlue", group="Teleop")
-public class Teleop extends LinearOpMode {
+@TeleOp(name="DeltaRed", group="Teleop")
+public class RedTele extends LinearOpMode {
 
     GamepadEx driverGamepad;
     GamepadEx opGamepad;
@@ -53,9 +52,9 @@ public class Teleop extends LinearOpMode {
     double turretTimestamp;
 
     double tagTurretSetpoint;
-    boolean manualShootAllowed;
 
     double givenRPM;
+    boolean manualShootAllowed;
 
     @Override
     public void runOpMode() {
@@ -67,7 +66,7 @@ public class Teleop extends LinearOpMode {
         visionState = new VisionStates();
 
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState, 20);
+        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState, 24);
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry, opGamepad.isDown(GamepadKeys.Button.A));
@@ -117,20 +116,21 @@ public class Teleop extends LinearOpMode {
             driverGamepad.readButtons();
             opGamepad.readButtons();
 
-            if (s_aprilVision.foundTarget()) {
+            if(!(s_aprilVision.foundTarget()) && getRuntime() > turretTimestamp + 2) {
+                    if (Math.abs(opGamepad.getRightX()) > 0.01 || Math.abs(opGamepad.getRightY()) > 0.01) {
+                        s_turret.manuelTurret(
+                                opGamepad.getRightX(), opGamepad.getRightY());
+//                        isTurretTurning = false;
+                }
+            } else {
                 tagTurretSetpoint = (s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
                 s_turret.setSetpoint(tagTurretSetpoint);
                 turretTimestamp = getRuntime();
-            } else if (getRuntime() > turretTimestamp + 2) {
-                if (Math.abs(opGamepad.getRightX()) > 0.01 || Math.abs(opGamepad.getRightY()) > 0.01) {
-                    s_turret.manuelTurret(
-                            opGamepad.getRightX(), opGamepad.getRightY());
-                    } else {
-                    s_turret.setSetpoint(0);
-                }
-            } else {
-                s_turret.setSetpoint(tagTurretSetpoint);
+
+
+//                isTurretTurning = true;
             }
+//            m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
 
             if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
                 givenRPM = 2200;
@@ -165,6 +165,7 @@ public class Teleop extends LinearOpMode {
             } else {
                 manualShootAllowed = false;
             }
+
             s_shooter.stopperPeriodic(opGamepad, GamepadKeys.Button.Y, manualShootAllowed);
 
 

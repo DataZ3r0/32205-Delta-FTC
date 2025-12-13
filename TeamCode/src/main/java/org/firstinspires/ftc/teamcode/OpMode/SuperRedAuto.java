@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpMode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -23,8 +22,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="Delta-12PieceBLUE", group="Auto")
-public class PotentialManAuto extends LinearOpMode {
+@Autonomous(name="Delta-12PieceRED", group="Auto")
+public class SuperRedAuto extends LinearOpMode {
     MultipleTelemetry m_telemetry;
 
     Drivetrain s_drivetrain;
@@ -78,7 +77,7 @@ public class PotentialManAuto extends LinearOpMode {
         visionState = new VisionStates();
 
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState, 20);
+        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState, 24);
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry, false);
@@ -134,7 +133,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive1 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive1.init();
                     } else {
-                        autoDrive1.run(Constants.AutoConstants.AutoPoints.autoOne, 0.3, 0.5, m_telemetry);
+                        autoDrive1.run(Constants.AutoConstants.AutoPoints.redautoOne, 0.3, 0.5, m_telemetry);
                         intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive1.isFinished()) {
@@ -148,7 +147,7 @@ public class PotentialManAuto extends LinearOpMode {
                     if (s_shooter.atSetpoint()) {
                         intakeCommand.enable();
                     }
-                    if (getRuntime() > timestamp + 4) {
+                    if (getRuntime() > timestamp + 3) {
                         phase++;
                         break;
                     }
@@ -158,7 +157,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive2 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive2.init();
                     } else {
-                        autoDrive2.run(Constants.AutoConstants.AutoPoints.autoTwo, 0.4, 0.5, m_telemetry);
+                        autoDrive2.run(Constants.AutoConstants.AutoPoints.redautoTwo, 0.3, 0.5, m_telemetry);
                         if (autoDrive2.isFinished()) {
                             autoDrive2 = null;
                             phase++;
@@ -171,7 +170,8 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive3 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive3.init();
                     } else {
-                        autoDrive3.run(Constants.AutoConstants.AutoPoints.autoThree, 0.4, 0.5, m_telemetry);
+                        autoDrive3.run(Constants.AutoConstants.AutoPoints.redautoThree, 0.3, 0.5, m_telemetry);
+                        intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive3.isFinished()) {
                             autoDrive3 = null;
@@ -185,11 +185,9 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive4 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive4.init();
                     } else {
-                        autoDrive4.run(Constants.AutoConstants.AutoPoints.autoFour, 0.4, 0.5, m_telemetry);
+                        autoDrive4.run(Constants.AutoConstants.AutoPoints.redautoFour, 0.3, 0.5, m_telemetry);
                         if (s_shooter.atSetpoint()) {
                             intakeCommand.enable();
-                        } else {
-                            intakeCommand.disable();
                         }
                         if (autoDrive4.isFinished() && getRuntime() > timestamp + 5) {
                             autoDrive4 = null;
@@ -203,7 +201,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive5 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive5.init();
                     } else {
-                        autoDrive5.run(Constants.AutoConstants.AutoPoints.autoFive, 0.4, 0.5, m_telemetry);
+                        autoDrive5.run(Constants.AutoConstants.AutoPoints.redautoFive, 0.3, 0.5, m_telemetry);
                         intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive5.isFinished()) {
@@ -218,7 +216,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive6 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive6.init();
                     } else {
-                        autoDrive6.run(Constants.AutoConstants.AutoPoints.autoSix, 0.4, 0.5, m_telemetry);
+                        autoDrive6.run(Constants.AutoConstants.AutoPoints.redautoSix, 0.3, 0.5, m_telemetry);
                         intakeCommand.enable();
                         if (autoDrive6.isFinished()) {
                             autoDrive6 = null;
@@ -232,7 +230,8 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive7 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive7.init();
                     } else {
-                        autoDrive7.run(Constants.AutoConstants.AutoPoints.autoSeven, 0.4, 0.5, m_telemetry);
+                        autoDrive7.run(Constants.AutoConstants.AutoPoints.redautoSeven, 0.3, 0.5, m_telemetry);
+                        intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive7.isFinished()) {
                             autoDrive7 = null;
@@ -246,11 +245,9 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive8 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive8.init();
                     } else {
-                        autoDrive8.run(Constants.AutoConstants.AutoPoints.autoEight, 0.4, 0.5, m_telemetry);
+                        autoDrive8.run(Constants.AutoConstants.AutoPoints.redautoEight, 0.3, 0.5, m_telemetry);
                         if (s_shooter.atSetpoint()) {
                             intakeCommand.enable();
-                        } else {
-                            intakeCommand.disable();
                         }
                         if (autoDrive8.isFinished() && getRuntime() > timestamp + 5) {
                             autoDrive8 = null;
@@ -264,7 +261,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive9 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive9.init();
                     } else {
-                        autoDrive9.run(Constants.AutoConstants.AutoPoints.autoNine, 0.4, 0.5, m_telemetry);
+                        autoDrive9.run(Constants.AutoConstants.AutoPoints.redautoNine, 0.3, 0.5, m_telemetry);
                         intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive9.isFinished()) {
@@ -279,7 +276,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive10 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive10.init();
                     } else {
-                        autoDrive10.run(Constants.AutoConstants.AutoPoints.autoTen, 0.4, 0.5, m_telemetry);
+                        autoDrive10.run(Constants.AutoConstants.AutoPoints.redautoTen, 0.3, 0.5, m_telemetry);
                         intakeCommand.enable();
                         if (autoDrive10.isFinished()) {
                             autoDrive10 = null;
@@ -293,7 +290,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive11 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive11.init();
                     } else {
-                        autoDrive11.run(Constants.AutoConstants.AutoPoints.autoEleven, 0.4, 0.5, m_telemetry);
+                        autoDrive11.run(Constants.AutoConstants.AutoPoints.redautoEleven, 0.3, 0.5, m_telemetry);
                         intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive11.isFinished()) {
@@ -308,7 +305,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive12 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive12.init();
                     } else {
-                        autoDrive12.run(Constants.AutoConstants.AutoPoints.autoTwelve, 0.4, 0.5, m_telemetry);
+                        autoDrive12.run(Constants.AutoConstants.AutoPoints.redautoTwelve, 0.3, 0.5, m_telemetry);
                         if (s_shooter.atSetpoint()) {
                             intakeCommand.enable();
                         }

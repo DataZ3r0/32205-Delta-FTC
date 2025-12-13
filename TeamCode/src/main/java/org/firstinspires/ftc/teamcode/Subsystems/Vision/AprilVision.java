@@ -40,6 +40,8 @@ public class AprilVision extends SubsystemBase {
     public static double tY;
     public static double tX;
 
+    public int goodTagID;
+
 
 //    public LLResult result;
     //Fx/Fy = 946.233
@@ -51,7 +53,7 @@ public class AprilVision extends SubsystemBase {
 //            Skew: 0
     //Mean Square Reprojection Error: 0.433367 pixels
 
-    public AprilVision(HardwareMap hardwaremap, MultipleTelemetry telemetry, VisionStates visionState) {
+    public AprilVision(HardwareMap hardwaremap, MultipleTelemetry telemetry, VisionStates visionState, int goodTagID) {
 //        aprilTag = new AprilTagProcessor.Builder()
 //                .setDrawAxes(true)
 //                .setDrawCubeProjection(true)
@@ -77,11 +79,13 @@ public class AprilVision extends SubsystemBase {
 
         telemetry.setMsTransmissionInterval(11);
 
-        if (Constants.toggles.blueTeam) {
+        if (goodTagID == 20) {
             limelight.pipelineSwitch(0);
-        } else {
+        } else if (goodTagID == 24){
             limelight.pipelineSwitch(1);
         }
+
+        this.goodTagID = goodTagID;
 
 
         /*
@@ -91,6 +95,7 @@ public class AprilVision extends SubsystemBase {
 
         this.telemetry = telemetry;
         this.visionStates = visionState;
+        this.goodTagID = goodTagID;
         fifo = new LimitedQueue<>(Constants.VisionConstants.listLength);
         refreshDesiredID();
     }
@@ -106,12 +111,11 @@ public class AprilVision extends SubsystemBase {
     }
 
     public boolean checkDesiredTagID(int tagID) {
-        for (int i : desiredTagID) {
-            if (tagID == i) {
-                return true;
-            }
+        if (tagID == goodTagID) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public void getAprilTagData(MultipleTelemetry m_telemetry) {
@@ -126,7 +130,7 @@ public class AprilVision extends SubsystemBase {
                         fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
                 refreshDesiredID();
                 m_telemetry.addData("CORRECT TAG ID?", checkDesiredTagID(fr.getFiducialId()));
-                if (checkDesiredTagID(fr.getFiducialId())) {
+                if (checkDesiredTagID(goodTagID)) {
                     targetFound = true;
                     desiredTag = fr;
                     tX = fr.getTargetXDegrees();

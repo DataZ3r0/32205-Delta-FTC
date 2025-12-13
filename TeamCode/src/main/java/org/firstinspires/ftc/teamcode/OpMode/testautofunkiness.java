@@ -68,7 +68,7 @@ public class testautofunkiness extends LinearOpMode {
         visionState = new VisionStates();
 
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState);
+        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState,20);
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry, false);

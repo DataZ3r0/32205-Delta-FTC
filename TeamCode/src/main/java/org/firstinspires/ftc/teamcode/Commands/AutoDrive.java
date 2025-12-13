@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import static java.lang.Runtime.getRuntime;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
@@ -22,6 +24,7 @@ public class AutoDrive {
     double yOutput;
     double rOutput;
     boolean isFinished;
+    double timestamp;
 
     public AutoDrive(Drivetrain s_drivetrain, OTOS s_otos){
         this.s_drivetrain = s_drivetrain;
@@ -41,6 +44,7 @@ public class AutoDrive {
     public void init() {
         isFinished = false;
         s_otos.setPose(new SparkFunOTOS.Pose2D(0,0, s_drivetrain.getHeading()));
+        timestamp = System.nanoTime();
     }
     public void run(SparkFunOTOS.Pose2D targetPose, double maxLinearSpeed, double maxRotSpeed, MultipleTelemetry m_telemetry) {
 
@@ -62,6 +66,9 @@ public class AutoDrive {
                 Math.abs(rError) < Constants.DrivetrainConstants.rotationTolerance) {
             s_drivetrain.stop();
             isFinished = true;
+        } else if (System.nanoTime() > timestamp + (5 * Math.pow(10, 9))) {
+            isFinished = true;
+            s_drivetrain.stop();
         }
 
         m_telemetry.addData("xOutput", xOutput);
