@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="Delta-12PieceRED", group="Auto")
-public class SuperRedAuto extends LinearOpMode {
+@Autonomous(name="Delta-GateRED", group="Auto")
+public class GateRedquto extends LinearOpMode {
     MultipleTelemetry m_telemetry;
 
     Drivetrain s_drivetrain;
@@ -69,6 +69,8 @@ public class SuperRedAuto extends LinearOpMode {
     AutoDrive autoDrive10;
     AutoDrive autoDrive11;
     AutoDrive autoDrive12;
+    AutoDrive gate1;
+    AutoDrive gate2;
 
     @Override
     public void runOpMode() {
@@ -225,6 +227,31 @@ public class SuperRedAuto extends LinearOpMode {
                     }
                     break;
                 case 7:
+                    if (gate1 == null) {
+                        gate1 = new AutoDrive(s_drivetrain,s_otos);
+                        gate1.init();
+                    } else {
+                        gate1.run(Constants.AutoConstants.AutoPoints.redgateautoOne, 0.4, 0.5, m_telemetry);
+                        if (gate1.isFinished()) {
+                            gate1 = null;
+                            phase++;
+//                            break;
+                        }
+                    }
+                    break;
+                case 8:
+                    if (gate2 == null) {
+                        gate2 = new AutoDrive(s_drivetrain,s_otos);
+                        gate2.init();
+                    } else {
+                        gate2.run(Constants.AutoConstants.AutoPoints.redgateautoTwo, 0.7, 0.5, m_telemetry);
+                        if (gate2.isFinished()) {
+                            gate2 = null;
+                            phase++;
+//                            break;
+                        }
+                    }
+                case 9:
                     if (autoDrive7 == null) {
                         autoDrive7 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive7.init();
@@ -238,7 +265,7 @@ public class SuperRedAuto extends LinearOpMode {
                         }
                     }
                     break;
-                case 8:
+                case 10:
                     if (autoDrive8 == null) {
                         autoDrive8 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive8.init();
@@ -256,7 +283,7 @@ public class SuperRedAuto extends LinearOpMode {
                         }
                     }
                     break;
-                case 9:
+                case 11:
                     if (autoDrive9 == null) {
                         autoDrive9 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive9.init();
@@ -271,7 +298,7 @@ public class SuperRedAuto extends LinearOpMode {
                         }
                     }
                     break;
-                case 10:
+                case 12:
                     if (autoDrive10 == null) {
                         autoDrive10 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive10.init();
@@ -285,7 +312,7 @@ public class SuperRedAuto extends LinearOpMode {
                         }
                     }
                     break;
-                case 11:
+                case 13:
                     if (autoDrive11 == null) {
                         autoDrive11 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive11.init();
@@ -300,7 +327,7 @@ public class SuperRedAuto extends LinearOpMode {
                         }
                     }
                     break;
-                case 12:
+                case 14:
                     if (autoDrive12 == null) {
                         autoDrive12 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive12.init();
@@ -316,7 +343,7 @@ public class SuperRedAuto extends LinearOpMode {
                         }
                     }
                     break;
-                case 13:
+                case 15:
                     s_drivetrain.stop();
                     intakeCommand.disable();
                     break;

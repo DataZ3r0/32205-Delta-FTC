@@ -154,7 +154,7 @@ public class Shooter extends SubsystemBase {
     public void setDesiredVelocity(double targetRange) {
 //        double tagDistanceMetres = targetRange * 0.0254;
         //-0.0036901x^{2}+7.60414x+2032.12807
-        double desiredVelocity = (-0.0036901 * Math.pow(targetRange, 2)) + (7.60414 * targetRange) + 2032.12807;
+        double desiredVelocity = (-0.0036901 * Math.pow(targetRange, 2)) + (7.60414 * targetRange) + 1982.12807;
         setSetpoint(desiredVelocity * Constants.shooterConstants.shooterConfigs.kShoot);
     }
     public boolean atSetpoint() {

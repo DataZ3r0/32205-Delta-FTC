@@ -116,21 +116,21 @@ public class RedTele extends LinearOpMode {
             driverGamepad.readButtons();
             opGamepad.readButtons();
 
-            if(!(s_aprilVision.foundTarget()) && getRuntime() > turretTimestamp + 2) {
-                    if (Math.abs(opGamepad.getRightX()) > 0.01 || Math.abs(opGamepad.getRightY()) > 0.01) {
-                        s_turret.manuelTurret(
-                                opGamepad.getRightX(), opGamepad.getRightY());
-//                        isTurretTurning = false;
-                }
-            } else {
+            if (s_aprilVision.foundTarget()) {
                 tagTurretSetpoint = (s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
                 s_turret.setSetpoint(tagTurretSetpoint);
                 turretTimestamp = getRuntime();
-
-
-//                isTurretTurning = true;
+            } else if (getRuntime() > turretTimestamp + 2) {
+                if (Math.abs(opGamepad.getRightX()) > 0.01 || Math.abs(opGamepad.getRightY()) > 0.01) {
+                    s_turret.manuelTurret(
+                            opGamepad.getRightX(), opGamepad.getRightY());
+                } else {
+                    s_turret.setSetpoint(0);
+                }
+            } else {
+                s_turret.setSetpoint(tagTurretSetpoint);
             }
-//            m_telemetry.addData("TURRET PLACEHOLDER TURN", isTurretTurning);
+
 
             if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
                 givenRPM = 2200;

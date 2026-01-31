@@ -66,7 +66,7 @@ public class AutoDrive {
                 Math.abs(rError) < Constants.DrivetrainConstants.rotationTolerance) {
             s_drivetrain.stop();
             isFinished = true;
-        } else if (System.nanoTime() > timestamp + (5 * Math.pow(10, 9))) {
+        } else if (System.nanoTime() > timestamp + (3 * Math.pow(10, 9))) {
             isFinished = true;
             s_drivetrain.stop();
         }

@@ -123,7 +123,7 @@ public class PotentialManAuto extends LinearOpMode {
                 s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
             } else {
                 s_shooter.setSetpoint(1000);
-                s_turret.setSetpoint(0);
+                s_turret.setSetpoint(5);
             }
 
             s_shooter.stopperPeriodic(null, null, true);
@@ -134,7 +134,7 @@ public class PotentialManAuto extends LinearOpMode {
                         autoDrive1 = new AutoDrive(s_drivetrain,s_otos);
                         autoDrive1.init();
                     } else {
-                        autoDrive1.run(Constants.AutoConstants.AutoPoints.autoOne, 0.3, 0.5, m_telemetry);
+                        autoDrive1.run(Constants.AutoConstants.AutoPoints.autoOne, 0.4, 0.5, m_telemetry);
                         intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive1.isFinished()) {
@@ -148,7 +148,7 @@ public class PotentialManAuto extends LinearOpMode {
                     if (s_shooter.atSetpoint()) {
                         intakeCommand.enable();
                     }
-                    if (getRuntime() > timestamp + 4) {
+                    if (getRuntime() > timestamp + 5) {
                         phase++;
                         break;
                     }
@@ -191,7 +191,7 @@ public class PotentialManAuto extends LinearOpMode {
                         } else {
                             intakeCommand.disable();
                         }
-                        if (autoDrive4.isFinished() && getRuntime() > timestamp + 5) {
+                        if (autoDrive4.isFinished() && getRuntime() > timestamp + 6) {
                             autoDrive4 = null;
                             phase++;
                             break;

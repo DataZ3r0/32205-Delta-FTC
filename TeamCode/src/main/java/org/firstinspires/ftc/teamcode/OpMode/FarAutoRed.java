@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.VisionStates;
 
-@Autonomous(name="Delta-12PieceRED", group="Auto")
-public class SuperRedAuto extends LinearOpMode {
+@Autonomous(name="Delta-FarRED", group="Auto")
+public class FarAutoRed extends LinearOpMode {
     MultipleTelemetry m_telemetry;
 
     Drivetrain s_drivetrain;
@@ -77,7 +77,7 @@ public class SuperRedAuto extends LinearOpMode {
         visionState = new VisionStates();
 
         s_drivetrain = new Drivetrain(hardwareMap, m_telemetry);
-        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState, 24);
+        s_aprilVision = new AprilVision(hardwareMap, m_telemetry, visionState, 20);
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry, false);
@@ -119,10 +119,10 @@ public class SuperRedAuto extends LinearOpMode {
 
             if (s_aprilVision.foundTarget()) {
                 s_turret.setSetpoint(s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
-                s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
+                s_shooter.setDesiredVelocity(3150);
             } else {
                 s_shooter.setSetpoint(1000);
-                s_turret.setSetpoint(-5);
+                s_turret.setSetpoint(0);
             }
 
             s_shooter.stopperPeriodic(null, null, true);
@@ -130,10 +130,10 @@ public class SuperRedAuto extends LinearOpMode {
             switch (phase) {
                 case 0:
                     if (autoDrive1 == null) {
-                        autoDrive1 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive1 = new AutoDrive(s_drivetrain, s_otos);
                         autoDrive1.init();
                     } else {
-                        autoDrive1.run(Constants.AutoConstants.AutoPoints.redautoOne, 0.4, 0.5, m_telemetry);
+                        autoDrive1.run(Constants.AutoConstants.AutoPoints.redfarautoOne, 0.4, 0.5, m_telemetry);
                         intakeCommand.disable();
                         timestamp = getRuntime();
                         if (autoDrive1.isFinished()) {
@@ -146,18 +146,20 @@ public class SuperRedAuto extends LinearOpMode {
                 case 1:
                     if (s_shooter.atSetpoint()) {
                         intakeCommand.enable();
+                    } else {
+                        intakeCommand.enable();
                     }
-                    if (getRuntime() > timestamp + 5) {
+                    if (getRuntime() > timestamp + 7) {
                         phase++;
                         break;
                     }
                     break;
                 case 2:
                     if (autoDrive2 == null) {
-                        autoDrive2 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive2 = new AutoDrive(s_drivetrain, s_otos);
                         autoDrive2.init();
                     } else {
-                        autoDrive2.run(Constants.AutoConstants.AutoPoints.redautoTwo, 0.4, 0.5, m_telemetry);
+                        autoDrive2.run(Constants.AutoConstants.AutoPoints.redfarautoTwo, 0.4, 0.5, m_telemetry);
                         if (autoDrive2.isFinished()) {
                             autoDrive2 = null;
                             phase++;
@@ -167,10 +169,11 @@ public class SuperRedAuto extends LinearOpMode {
                     break;
                 case 3:
                     if (autoDrive3 == null) {
-                        autoDrive3 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive3 = new AutoDrive(s_drivetrain, s_otos);
                         autoDrive3.init();
                     } else {
-                        autoDrive3.run(Constants.AutoConstants.AutoPoints.redautoThree, 0.4, 0.5, m_telemetry);
+                        autoDrive3.run(Constants.AutoConstants.AutoPoints.redfarautoThree, 0.4, 0.5, m_telemetry);
+                        intakeCommand.enable();
                         timestamp = getRuntime();
                         if (autoDrive3.isFinished()) {
                             autoDrive3 = null;
@@ -181,14 +184,12 @@ public class SuperRedAuto extends LinearOpMode {
                     break;
                 case 4:
                     if (autoDrive4 == null) {
-                        autoDrive4 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive4 = new AutoDrive(s_drivetrain, s_otos);
                         autoDrive4.init();
                     } else {
-                        autoDrive4.run(Constants.AutoConstants.AutoPoints.redautoFour, 0.4, 0.5, m_telemetry);
-                        if (s_shooter.atSetpoint()) {
-                            intakeCommand.enable();
-                        }
-                        if (autoDrive4.isFinished() && getRuntime() > timestamp + 6) {
+                        autoDrive4.run(Constants.AutoConstants.AutoPoints.redfarautoFour, 0.4, 0.5, m_telemetry);
+                        timestamp = getRuntime();
+                        if (autoDrive4.isFinished()) {
                             autoDrive4 = null;
                             phase++;
                             break;
@@ -197,13 +198,16 @@ public class SuperRedAuto extends LinearOpMode {
                     break;
                 case 5:
                     if (autoDrive5 == null) {
-                        autoDrive5 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive5 = new AutoDrive(s_drivetrain, s_otos);
                         autoDrive5.init();
                     } else {
-                        autoDrive5.run(Constants.AutoConstants.AutoPoints.redautoFive, 0.4, 0.5, m_telemetry);
-                        intakeCommand.disable();
-                        timestamp = getRuntime();
-                        if (autoDrive5.isFinished()) {
+                        autoDrive5.run(Constants.AutoConstants.AutoPoints.redfarautoFive, 0.4, 0.5, m_telemetry);
+                        if (s_shooter.atSetpoint()) {
+                            intakeCommand.enable();
+                        } else {
+                            intakeCommand.disable();
+                        }
+                        if (autoDrive5.isFinished() && getRuntime() > timestamp + 7) {
                             autoDrive5 = null;
                             phase++;
                             break;
@@ -212,10 +216,10 @@ public class SuperRedAuto extends LinearOpMode {
                     break;
                 case 6:
                     if (autoDrive6 == null) {
-                        autoDrive6 = new AutoDrive(s_drivetrain,s_otos);
+                        autoDrive6 = new AutoDrive(s_drivetrain, s_otos);
                         autoDrive6.init();
                     } else {
-                        autoDrive6.run(Constants.AutoConstants.AutoPoints.redautoSix, 0.4, 0.5, m_telemetry);
+                        autoDrive6.run(Constants.AutoConstants.AutoPoints.redfarautoSix, 0.4, 0.5, m_telemetry);
                         intakeCommand.enable();
                         if (autoDrive6.isFinished()) {
                             autoDrive6 = null;
@@ -225,98 +229,6 @@ public class SuperRedAuto extends LinearOpMode {
                     }
                     break;
                 case 7:
-                    if (autoDrive7 == null) {
-                        autoDrive7 = new AutoDrive(s_drivetrain,s_otos);
-                        autoDrive7.init();
-                    } else {
-                        autoDrive7.run(Constants.AutoConstants.AutoPoints.redautoSeven, 0.4, 0.5, m_telemetry);
-                        timestamp = getRuntime();
-                        if (autoDrive7.isFinished()) {
-                            autoDrive7 = null;
-                            phase++;
-                            break;
-                        }
-                    }
-                    break;
-                case 8:
-                    if (autoDrive8 == null) {
-                        autoDrive8 = new AutoDrive(s_drivetrain,s_otos);
-                        autoDrive8.init();
-                    } else {
-                        autoDrive8.run(Constants.AutoConstants.AutoPoints.redautoEight, 0.4, 0.5, m_telemetry);
-                        if (s_shooter.atSetpoint()) {
-                            intakeCommand.enable();
-                        } else {
-                            intakeCommand.disable();
-                        }
-                        if (autoDrive8.isFinished() && getRuntime() > timestamp + 5) {
-                            autoDrive8 = null;
-                            phase++;
-                            break;
-                        }
-                    }
-                    break;
-                case 9:
-                    if (autoDrive9 == null) {
-                        autoDrive9 = new AutoDrive(s_drivetrain,s_otos);
-                        autoDrive9.init();
-                    } else {
-                        autoDrive9.run(Constants.AutoConstants.AutoPoints.redautoNine, 0.4, 0.5, m_telemetry);
-                        intakeCommand.disable();
-                        timestamp = getRuntime();
-                        if (autoDrive9.isFinished()) {
-                            autoDrive9 = null;
-                            phase++;
-                            break;
-                        }
-                    }
-                    break;
-                case 10:
-                    if (autoDrive10 == null) {
-                        autoDrive10 = new AutoDrive(s_drivetrain,s_otos);
-                        autoDrive10.init();
-                    } else {
-                        autoDrive10.run(Constants.AutoConstants.AutoPoints.redautoTen, 0.4, 0.5, m_telemetry);
-                        intakeCommand.enable();
-                        if (autoDrive10.isFinished()) {
-                            autoDrive10 = null;
-                            phase++;
-                            break;
-                        }
-                    }
-                    break;
-                case 11:
-                    if (autoDrive11 == null) {
-                        autoDrive11 = new AutoDrive(s_drivetrain,s_otos);
-                        autoDrive11.init();
-                    } else {
-                        autoDrive11.run(Constants.AutoConstants.AutoPoints.redautoEleven, 0.4, 0.5, m_telemetry);
-                        intakeCommand.disable();
-                        timestamp = getRuntime();
-                        if (autoDrive11.isFinished()) {
-                            autoDrive11 = null;
-                            phase++;
-                            break;
-                        }
-                    }
-                    break;
-                case 12:
-                    if (autoDrive12 == null) {
-                        autoDrive12 = new AutoDrive(s_drivetrain,s_otos);
-                        autoDrive12.init();
-                    } else {
-                        autoDrive12.run(Constants.AutoConstants.AutoPoints.redautoTwelve, 0.4, 0.5, m_telemetry);
-                        if (s_shooter.atSetpoint()) {
-                            intakeCommand.enable();
-                        }
-                        if (autoDrive12.isFinished() && getRuntime() > timestamp + 5) {
-                            autoDrive12 = null;
-                            phase++;
-                            break;
-                        }
-                    }
-                    break;
-                case 13:
                     s_drivetrain.stop();
                     intakeCommand.disable();
                     break;

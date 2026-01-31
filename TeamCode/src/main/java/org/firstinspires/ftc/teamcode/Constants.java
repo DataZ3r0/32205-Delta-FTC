@@ -41,7 +41,7 @@ public class Constants {
         public static final double maxStrafe = 0.5;
         public static final double maxTurn = 0.5;
 
-        public static final double driveTolerance = 4;
+        public static final double driveTolerance = 5;
 
         public static final double rotationTolerance = 3;
 
@@ -129,31 +129,56 @@ public class Constants {
             public static SparkFunOTOS.Pose2D testPoint1 = new SparkFunOTOS.Pose2D(30,30, 45);
             public static SparkFunOTOS.Pose2D testPoint2 = new SparkFunOTOS.Pose2D(0,0, 0);
             public static SparkFunOTOS.Pose2D startpos = new SparkFunOTOS.Pose2D(0,0, 0);
-            public static SparkFunOTOS.Pose2D autoOne = new SparkFunOTOS.Pose2D(-45, -47, 35);
+            public static SparkFunOTOS.Pose2D autoOne = new SparkFunOTOS.Pose2D(-39, -47, 35);
             public static SparkFunOTOS.Pose2D autoTwo = new SparkFunOTOS.Pose2D(0, 53, 0);
             public static SparkFunOTOS.Pose2D autoThree = new SparkFunOTOS.Pose2D(0, -53, 0);
             public static SparkFunOTOS.Pose2D autoFour = new SparkFunOTOS.Pose2D(0, 0, 45);
             public static SparkFunOTOS.Pose2D autoFive = new SparkFunOTOS.Pose2D(-32, -5, 80);
-            public static SparkFunOTOS.Pose2D autoSix = new SparkFunOTOS.Pose2D(0, 60, 0);
-            public static SparkFunOTOS.Pose2D autoSeven = new SparkFunOTOS.Pose2D(36, -55, -55);
+            public static SparkFunOTOS.Pose2D autoSix = new SparkFunOTOS.Pose2D(0, 63, 0);
+            public static SparkFunOTOS.Pose2D autoSeven = new SparkFunOTOS.Pose2D(42, -60, -30);
             public static SparkFunOTOS.Pose2D autoEight = new SparkFunOTOS.Pose2D(0, 0, 45);
             public static SparkFunOTOS.Pose2D autoNine = new SparkFunOTOS.Pose2D(-70, 0, 90);
             public static SparkFunOTOS.Pose2D autoTen = new SparkFunOTOS.Pose2D(0, 49, 0);
             public static SparkFunOTOS.Pose2D autoEleven = new SparkFunOTOS.Pose2D(70, -49, -55);
             public static SparkFunOTOS.Pose2D autoTwelve = new SparkFunOTOS.Pose2D(0, 0, 45);
 
-            public static SparkFunOTOS.Pose2D redautoOne = new SparkFunOTOS.Pose2D(40, -45, -35);
-            public static SparkFunOTOS.Pose2D redautoTwo = new SparkFunOTOS.Pose2D(0, 60, 0);
-            public static SparkFunOTOS.Pose2D redautoThree = new SparkFunOTOS.Pose2D(0, -60, 0);
+            public static SparkFunOTOS.Pose2D redautoOne = new SparkFunOTOS.Pose2D(39, -47, -35);
+            public static SparkFunOTOS.Pose2D redautoTwo = new SparkFunOTOS.Pose2D(0, 53, 0);
+            public static SparkFunOTOS.Pose2D redautoThree = new SparkFunOTOS.Pose2D(0, -53, 0);
             public static SparkFunOTOS.Pose2D redautoFour = new SparkFunOTOS.Pose2D(0, 0, -45);
-            public static SparkFunOTOS.Pose2D redautoFive = new SparkFunOTOS.Pose2D(40, 0, -90);
-            public static SparkFunOTOS.Pose2D redautoSix = new SparkFunOTOS.Pose2D(0, 60, 0);
-            public static SparkFunOTOS.Pose2D redautoSeven = new SparkFunOTOS.Pose2D(-40, -60, 55);
+            public static SparkFunOTOS.Pose2D redautoFive = new SparkFunOTOS.Pose2D(32, -5, -80);
+            public static SparkFunOTOS.Pose2D redautoSix = new SparkFunOTOS.Pose2D(0, 63, 0);
+            public static SparkFunOTOS.Pose2D redautoSeven = new SparkFunOTOS.Pose2D(-42, -60, 45);
             public static SparkFunOTOS.Pose2D redautoEight = new SparkFunOTOS.Pose2D(0, 0, -45);
             public static SparkFunOTOS.Pose2D redautoNine = new SparkFunOTOS.Pose2D(70, 0, -90);
-            public static SparkFunOTOS.Pose2D redautoTen = new SparkFunOTOS.Pose2D(0, 60, 0);
-            public static SparkFunOTOS.Pose2D redautoEleven = new SparkFunOTOS.Pose2D(-70, -60, 45);
+            public static SparkFunOTOS.Pose2D redautoTen = new SparkFunOTOS.Pose2D(0, 49, 0);
+            public static SparkFunOTOS.Pose2D redautoEleven = new SparkFunOTOS.Pose2D(-70, -49, 55);
             public static SparkFunOTOS.Pose2D redautoTwelve = new SparkFunOTOS.Pose2D(0, 0, -45);
+
+            public static SparkFunOTOS.Pose2D farautoOne = new SparkFunOTOS.Pose2D(-10, 10, -15);
+            public static SparkFunOTOS.Pose2D farautoTwo = new SparkFunOTOS.Pose2D(0, 28, 0);
+            public static SparkFunOTOS.Pose2D farautoThree = new SparkFunOTOS.Pose2D(-56, 0, -90);
+            public static SparkFunOTOS.Pose2D farautoFour = new SparkFunOTOS.Pose2D(56, -28, -45);
+            public static SparkFunOTOS.Pose2D farautoFive = new SparkFunOTOS.Pose2D(0, 0, -15);
+            public static SparkFunOTOS.Pose2D farautoSix = new SparkFunOTOS.Pose2D(-53, 0, -90);
+
+            public static SparkFunOTOS.Pose2D redfarautoOne = new SparkFunOTOS.Pose2D(10, 10, 15);
+            public static SparkFunOTOS.Pose2D redfarautoTwo = new SparkFunOTOS.Pose2D(0, 28, 0);
+            public static SparkFunOTOS.Pose2D redfarautoThree = new SparkFunOTOS.Pose2D(56, 0, 90);
+            public static SparkFunOTOS.Pose2D redfarautoFour = new SparkFunOTOS.Pose2D(-56, -28, 45);
+            public static SparkFunOTOS.Pose2D redfarautoFive = new SparkFunOTOS.Pose2D(0, 0, 15);
+            public static SparkFunOTOS.Pose2D redfarautoSix = new SparkFunOTOS.Pose2D(53, 0, 90);
+
+            public static SparkFunOTOS.Pose2D gateautoOne = new SparkFunOTOS.Pose2D(0, -25, 90);
+            public static SparkFunOTOS.Pose2D gateautoTwo = new SparkFunOTOS.Pose2D(0, -25, 90);
+
+
+            public static SparkFunOTOS.Pose2D redgateautoOne = new SparkFunOTOS.Pose2D(0, -25, -90);
+            public static SparkFunOTOS.Pose2D redgateautoTwo = new SparkFunOTOS.Pose2D(0, -25, -90);
+
+
+
+            
         }
     }
 }
