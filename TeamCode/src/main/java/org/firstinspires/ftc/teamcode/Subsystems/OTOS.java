@@ -40,10 +40,10 @@ public class OTOS extends SubsystemBase {
 
     public OTOS(HardwareMap hardwareMap, MultipleTelemetry telemetry) {
 
-        otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
+        otos = hardwareMap.get(SparkFunOTOS.class, "otos");
 
-        otos.setLinearScalar(1.22772277228);
-        otos.setAngularScalar(0.99833610648);
+        otos.setLinearScalar(1.0862);
+        otos.setAngularScalar(0.9971);
 
         this.telemetry = telemetry;
         configureOtos(telemetry);

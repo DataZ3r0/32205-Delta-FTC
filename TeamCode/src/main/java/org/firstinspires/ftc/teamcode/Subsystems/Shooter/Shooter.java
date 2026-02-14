@@ -86,19 +86,15 @@ public class Shooter extends SubsystemBase {
         stopperServo.setPosition(0.6);
     }
 
-    public void stopperPeriodic(GamepadEx op, GamepadKeys.Button button, boolean allowShoot) {
-        if (op == null || !op.isDown(button))  {
-            if (atSetpoint() && getSetpoint() > 1500 && allowShoot) {
-                openStopper();
-            } else {
-                closeStopper();
-            }
-        } else {
+    public void stopperPeriodic(GamepadEx op, GamepadKeys.Button button, boolean turretAtSetpoint) {
+        if (op.isDown(button) && atSetpoint()) {
             openStopper();
-            outtake();
+        } else {
+            closeStopper();
         }
     }
 
+// op.isDown(button) && turretAtSetpoint
 
     public void setPower(double desiredPower) {
         shooterMotor.setPower(desiredPower);

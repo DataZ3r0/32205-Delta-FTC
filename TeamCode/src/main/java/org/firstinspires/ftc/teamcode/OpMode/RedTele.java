@@ -2,22 +2,23 @@ package org.firstinspires.ftc.teamcode.OpMode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Commands.TurretCalculator;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter.NewTurret;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Turret;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
-import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 import org.firstinspires.ftc.teamcode.VisionStates;
+import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
 
 @TeleOp(name="DeltaRed", group="Teleop")
 public class RedTele extends LinearOpMode {
@@ -31,9 +32,10 @@ public class RedTele extends LinearOpMode {
     Intake s_intake;
     MiddleStage s_middleStage;
     Shooter s_shooter;
-    Turret s_turret;
+    NewTurret s_turret;
     OTOS s_otos;
     GlobalPoseEstimation poseEstimation;
+    TurretCalculator turretCalculator;
 
 
     VisionStates visionState;
@@ -52,9 +54,9 @@ public class RedTele extends LinearOpMode {
     double turretTimestamp;
 
     double tagTurretSetpoint;
+    boolean manualShootAllowed;
 
     double givenRPM;
-    boolean manualShootAllowed;
 
     @Override
     public void runOpMode() {
@@ -70,22 +72,24 @@ public class RedTele extends LinearOpMode {
         s_intake = new Intake(hardwareMap);
         s_middleStage = new MiddleStage(hardwareMap);
         s_shooter = new Shooter(hardwareMap, m_telemetry, opGamepad.isDown(GamepadKeys.Button.A));
-        s_turret = new Turret(hardwareMap, s_drivetrain, m_telemetry);
+        s_turret = new NewTurret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
+
+        turretCalculator = new TurretCalculator(s_otos, s_aprilVision, s_turret);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
         outtakeTrigger = GamepadKeys.Trigger.LEFT_TRIGGER;
 
-        shooterButton = GamepadKeys.Button.X;
+//        shooterButton = GamepadKeys.Button.X;
         shooterTestButtonTwo = GamepadKeys.Button.Y;
 
         intakeReversed = false;
 
         visionState.setState(VisionStates.VisionState.SHOOT);
 
-        CommandScheduler.getInstance().run();
+//        CommandScheduler.getInstance().run();
         s_turret.stopTurret();
         s_drivetrain.resetYaw();
 
@@ -116,72 +120,32 @@ public class RedTele extends LinearOpMode {
             driverGamepad.readButtons();
             opGamepad.readButtons();
 
+
             if (s_aprilVision.foundTarget()) {
-                tagTurretSetpoint = (s_turret.getRobotTurretAngle() + s_aprilVision.getTx());
-                s_turret.setSetpoint(tagTurretSetpoint);
-                turretTimestamp = getRuntime();
-            } else if (getRuntime() > turretTimestamp + 2) {
-                if (Math.abs(opGamepad.getRightX()) > 0.01 || Math.abs(opGamepad.getRightY()) > 0.01) {
-                    s_turret.manuelTurret(
-                            opGamepad.getRightX(), opGamepad.getRightY());
-                } else {
-                    s_turret.setSetpoint(0);
-                }
+                turretCalculator.correctOTOS();
+                s_turret.setSetpoint(s_turret.getFieldTurretAngle() + s_aprilVision.getTx());
             } else {
-                s_turret.setSetpoint(tagTurretSetpoint);
+                s_turret.setSetpoint(turretCalculator.getTurretSetpointRed(new SparkFunOTOS.Pose2D(72, 72, 0)));
             }
 
-
-            if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                givenRPM = 2200;
-            } else if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                givenRPM = 2450;
-            } else if (opGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-                givenRPM = 3150;
-            }
-
-            if (driverGamepad.isDown(shooterTestButtonTwo)) {
-                if (s_aprilVision.foundTarget()) {
-                    s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
-                } else {
-                    s_shooter.setSetpoint(givenRPM);
-                }
-//                s_shooter.setSetpoint(Constants.shooterConstants.shooterConfigs.testRPM);
-                shooterTimestamp = getRuntime();
-                if (s_shooter.atSetpoint() && !triggerDown(driverGamepad, outtakeTrigger)) {
-                    s_shooter.runLoader();
-                } else {
-                    if (!triggerDown(driverGamepad, intakeTrigger)) {
-                        s_shooter.stopLoader();
-                    }
-                }
-            } else if (getRuntime() > shooterTimestamp + 2){
-                s_shooter.setSetpoint(0);
-                s_shooter.stopLoader();
-            }
-
-            if (s_aprilVision.foundTarget() || opGamepad.isDown(GamepadKeys.Button.Y)) {
-                manualShootAllowed = true;
+            if (s_aprilVision.foundTarget()) {
+                s_shooter.setDesiredVelocity(s_aprilVision.getRangeAvg());
             } else {
-                manualShootAllowed = false;
+                s_shooter.setSetpoint(turretCalculator.getDistanceFromTarget(
+                        turretCalculator.getOTOSPoseRed(),
+                        new SparkFunOTOS.Pose2D(72, 72 ,0)));
             }
 
-            s_shooter.stopperPeriodic(opGamepad, GamepadKeys.Button.Y, manualShootAllowed);
+            s_shooter.stopperPeriodic(opGamepad, GamepadKeys.Button.Y, s_turret.atSetpoint());
 
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){
                 s_drivetrain.resetYaw();
-            }
-
-            if(!triggerDown(driverGamepad, intakeTrigger)
-                    && !triggerDown(driverGamepad, outtakeTrigger)
-                    && !driverGamepad.isDown(shooterTestButtonTwo)) {
-                s_middleStage.stop();
-                s_shooter.stopLoader();
+                s_otos.resetOTOS();
             }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
-                s_otos.resetOTOS();
+                s_otos.setPose(new SparkFunOTOS.Pose2D(0 ,0, s_otos.getH()));
             }
 
             if (triggerDown(driverGamepad, intakeTrigger)) {
@@ -193,7 +157,9 @@ public class RedTele extends LinearOpMode {
                 s_shooter.outtake();
                 s_middleStage.runOuttake(driverGamepad.getTrigger(outtakeTrigger));
             } else {
-              s_intake.stop();
+                s_intake.stop();
+                s_shooter.stopLoader();
+                s_middleStage.stop();
             }
 
 

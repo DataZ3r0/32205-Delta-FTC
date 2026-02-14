@@ -39,6 +39,9 @@ public class AprilVision extends SubsystemBase {
     public static double targetBearing;
     public static double tY;
     public static double tX;
+    public static double yaw;
+
+    public static Pose3D robotPose;
 
     public int goodTagID;
 
@@ -135,6 +138,8 @@ public class AprilVision extends SubsystemBase {
                     desiredTag = fr;
                     tX = fr.getTargetXDegrees();
                     tY = fr.getTargetYDegrees();
+                    robotPose = fr.getRobotPoseFieldSpace();
+
                 } else {
                     m_telemetry.addData("Skipping", "Tag ID %d is not desired", fr.getFiducialId());
                 }
@@ -182,6 +187,10 @@ public class AprilVision extends SubsystemBase {
         return totalvalue/fifo.size();
     }
 
+    public Pose3D getRobotPose() {
+        return robotPose;
+    }
+
 
 //    public void setTargetY(double y) {
 //        targetYaw = y;
@@ -220,6 +229,7 @@ public class AprilVision extends SubsystemBase {
 
 
         telemetry.addData("TARGET RANGE AVG:", getRangeAvg());
+        telemetry.addData("ROBOT POSE: ", robotPose);
 //        telemetry.addData("reult", limelight.getLatestResult());
 //            telemetry.addData("is result vaid", result.isValid());
     }

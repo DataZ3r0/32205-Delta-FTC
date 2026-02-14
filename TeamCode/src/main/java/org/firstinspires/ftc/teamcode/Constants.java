@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 
@@ -77,7 +78,7 @@ public class Constants {
         public static boolean loadingServoRev = false;
         public static double loadingServoSpeed = 1; //degrees
         public static final double ticksPerRev = 28;
-        public static final double shooterRPMTolerance = 100;
+        public static final double shooterRPMTolerance = 50;
         public static final double goalHeight = 0.0;
         public static final double ballTolerance = 2.5;
         public static final double shooterHeight = 0.0;
@@ -126,6 +127,16 @@ public class Constants {
 
         @Config
         public static final class AutoPoints{
+            public static Pose startPose =  new Pose(0,0,0);
+            public static Pose shootPose =  new Pose(0,0,0);
+            public static Pose pickupEntry1 =  new Pose(0,0,0);
+            public static Pose pickupEntry2 = new Pose(0,0,0);
+            public static Pose pickupEntry3 = new Pose(0,0,0);
+            public static Pose pickupEnd1 = new Pose(0,0,0);
+            public static Pose pickupEnd2 = new Pose(0,0,0);
+            public static Pose pickupEnd3 = new Pose(0,0,0);
+
+
             public static SparkFunOTOS.Pose2D testPoint1 = new SparkFunOTOS.Pose2D(30,30, 45);
             public static SparkFunOTOS.Pose2D testPoint2 = new SparkFunOTOS.Pose2D(0,0, 0);
             public static SparkFunOTOS.Pose2D startpos = new SparkFunOTOS.Pose2D(0,0, 0);
