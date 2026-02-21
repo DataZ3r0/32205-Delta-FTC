@@ -6,7 +6,9 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
+import com.pedropathing.ftc.localization.Encoder;
 import com.pedropathing.ftc.localization.constants.OTOSConstants;
+import com.pedropathing.ftc.localization.constants.ThreeWheelConstants;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,9 +19,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(9.97903)
-            .lateralZeroPowerAcceleration(-54.4096)
-            .forwardZeroPowerAcceleration(-27.0827)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.2, 0.0005, 0.001, 0.05))
+            .lateralZeroPowerAcceleration(-91.3029)
+            .forwardZeroPowerAcceleration(-32.9268)
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.2, 0.0, 0.0, 0.0))
             .headingPIDFCoefficients(new PIDFCoefficients(1.0, 0.5, 0.05, 0.01))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.03, 0.001, 0.001, 0.1, 0.01));
 
@@ -33,15 +35,22 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .xVelocity(74.6202)
-            .yVelocity(28.3027);
+            .xVelocity(79.847229)
+            .yVelocity(38.3027);
 
-    public static OTOSConstants localizerConstants = new OTOSConstants()
-            .hardwareMapName("otos")
-            .linearUnit(DistanceUnit.INCH)
-            .angleUnit(AngleUnit.RADIANS)
-            .linearScalar(1.0862)
-            .angularScalar(0.9971);
+    public static ThreeWheelConstants localizerConstants = new ThreeWheelConstants()
+            .forwardTicksToInches(6.003292E-4)
+            .strafeTicksToInches(6.102184E-4)
+            .turnTicksToInches(6.445494E-4)
+            .leftPodY(1.0)
+            .rightPodY(0.2)
+            .strafePodX(2.0)
+            .leftEncoder_HardwareMapName("frontLeft0")
+            .rightEncoder_HardwareMapName("backRight3")
+            .strafeEncoder_HardwareMapName("frontRight1")
+            .leftEncoderDirection(Encoder.FORWARD)
+            .rightEncoderDirection(Encoder.FORWARD)
+            .strafeEncoderDirection(Encoder.FORWARD);
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
@@ -49,7 +58,7 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
-                .OTOSLocalizer(localizerConstants)
+                .threeWheelLocalizer(localizerConstants)
                 .build();
     }
 }

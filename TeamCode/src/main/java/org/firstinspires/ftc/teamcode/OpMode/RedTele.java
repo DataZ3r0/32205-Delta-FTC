@@ -4,12 +4,14 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.ftc.localization.constants.ThreeWheelConstants;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Commands.TurretCalculator;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
+import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.NewTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
@@ -34,6 +36,7 @@ public class RedTele extends LinearOpMode {
     Shooter s_shooter;
     NewTurret s_turret;
     OTOS s_otos;
+    Odometry s_odometry;
     GlobalPoseEstimation poseEstimation;
     TurretCalculator turretCalculator;
 
@@ -75,8 +78,9 @@ public class RedTele extends LinearOpMode {
         s_turret = new NewTurret(hardwareMap, s_drivetrain, m_telemetry);
 
         s_otos = new OTOS(hardwareMap, m_telemetry);
+        s_odometry = new Odometry(hardwareMap,  new ThreeWheelConstants(), m_telemetry);
 
-        turretCalculator = new TurretCalculator(s_otos, s_aprilVision, s_turret);
+        turretCalculator = new TurretCalculator(s_odometry, s_aprilVision, s_turret);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
@@ -122,7 +126,7 @@ public class RedTele extends LinearOpMode {
 
 
             if (s_aprilVision.foundTarget()) {
-                turretCalculator.correctOTOS();
+//                turretCalculator.correctOTOS();
                 s_turret.setSetpoint(s_turret.getFieldTurretAngle() + s_aprilVision.getTx());
             } else {
                 s_turret.setSetpoint(turretCalculator.getTurretSetpointRed(new SparkFunOTOS.Pose2D(72, 72, 0)));

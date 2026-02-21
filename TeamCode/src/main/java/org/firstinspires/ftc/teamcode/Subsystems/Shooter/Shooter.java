@@ -93,8 +93,14 @@ public class Shooter extends SubsystemBase {
             closeStopper();
         }
     }
+    public void stopperAutoPeriodic(boolean allowshoot) {
+        if (allowshoot) {
+            openStopper();
+        } else {
+            closeStopper();
+        }
+    }
 
-// op.isDown(button) && turretAtSetpoint
 
     public void setPower(double desiredPower) {
         shooterMotor.setPower(desiredPower);
@@ -132,24 +138,7 @@ public class Shooter extends SubsystemBase {
         return shooterMotor.getCurrent(CurrentUnit.AMPS);
     }
 
-//    public boolean isShooting() {
-//        double shootingCurrentThresh = 3;
-//        return getShooterCurrent() > shootingCurrentThresh;
-//    }
-
-//    public void readVal() {
-//        lastState = currState;
-//        currState = isShooting();
-//    }
-
-//    public boolean wasBallShot() {
-//        return (lastState && !currState);
-//    }
-
-//-0.0116909x^{2}+10.43324x+1822.88718
     public void setDesiredVelocity(double targetRange) {
-//        double tagDistanceMetres = targetRange * 0.0254;
-        //-0.0036901x^{2}+7.60414x+2032.12807
         double desiredVelocity = (-0.0036901 * Math.pow(targetRange, 2)) + (7.60414 * targetRange) + 1982.12807;
         setSetpoint(desiredVelocity * Constants.shooterConstants.shooterConfigs.kShoot);
     }
@@ -161,15 +150,10 @@ public class Shooter extends SubsystemBase {
     }
 
     public void periodic() {
-//        readVal();
 
         runShooter(setpoint);
 
         telemetry.addData("Shooter RPM: ", getRPM());
-//        runShooter(Constants.shooterConstants.shooterConfigs.testRPM);
-//        telemetry.addData("Shooter Current: ", getShooterCurrent());
         telemetry.addData("shooter setpoint: ", getSetpoint());
-//        telemetry.addData("shooter at setpoint?", atSetpoint());
-//        telemetry.addData("stopper pos", stopperServo.getPosition());
     }
 }

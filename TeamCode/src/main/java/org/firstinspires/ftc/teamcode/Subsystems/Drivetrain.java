@@ -39,7 +39,6 @@ public class Drivetrain extends SubsystemBase {
 
     private double yawOffset;
 
-//    private Constants.DrivetrainConstants.rotatingDirections rotationDirection;
     public Drivetrain(HardwareMap hardwaremap, MultipleTelemetry telemetry) {
         frontLeft = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontLeftMotor);
         frontRight = hardwaremap.get(DcMotorEx.class, Constants.DrivetrainConstants.frontRightMotor);
@@ -96,19 +95,8 @@ public class Drivetrain extends SubsystemBase {
         backRight.setPower(backRightPower);
 
 
-//        if (rotation < -0.01) {
-//            rotationDirection = Constants.DrivetrainConstants.rotatingDirections.CLOCKWISE;
-//        }
     }
 
-//    public rotationDirections getRotatingDirection() {
-//        return rotatingClockwise;
-//    }
-
-//    public double getRawHeading() {
-//        Orientation angles = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//        return angles.firstAngle;
-//    }
     public double getHeading() {
         double heading = IMU.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);;
 
@@ -126,9 +114,6 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void stop() {
-//        double yPow = drivePID.calculate(otos.getY(), otos.getY());
-//        double xPow = strafePID.calculate(otos.getX(), otos.getX());
-//        double hPow = turnPID.calculate(otos.getH(), otos.getH());
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -140,11 +125,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void periodic() {
         telemetry.addData("DRIVE: Heading: ", getHeading());
-//        telemetry.addData("DRIVE: Clockwise?", getRotatingDirection());
-//        m_telemetry.addData("DRIVE: Front Left Power: ", frontLeft.getPower());
-//        m_telemetry.addData("DRIVE: Front Right Power: ", frontRight.getPower());
-//        m_telemetry.addData("DRIVE: Back Left Power: ", backLeft.getPower());
-//        m_telemetry.addData("DRIVE: Back Right Power: ", backRight.getPower());
+
     }
 
 

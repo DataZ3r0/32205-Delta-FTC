@@ -46,38 +46,8 @@ public class AprilVision extends SubsystemBase {
     public int goodTagID;
 
 
-//    public LLResult result;
-    //Fx/Fy = 946.233
-    //Cx = 667.521
-    //Cy = 464.348
-//    Radial distortion (Brown's Model)
-//            K1: 0.0607443 K2: 0.0624121 K3: -0.303675
-//            P1: 0.0142314 P2: 0.00530697
-//            Skew: 0
-    //Mean Square Reprojection Error: 0.433367 pixels
-
     public AprilVision(HardwareMap hardwaremap, MultipleTelemetry telemetry, VisionStates visionState, int goodTagID) {
-//        aprilTag = new AprilTagProcessor.Builder()
-//                .setDrawAxes(true)
-//                .setDrawCubeProjection(true)
-//                .setDrawTagID(true)
-//                .setDrawTagOutline(true)
-//                .setLensIntrinsics(946.233, 946.233, 667.521, 464.348)
-//                .build();
-//        if (Constants.toggles.toggleCamStream) {
-//            s_Processor = new CameraStreamProcessor();
-//            visionPortal = new VisionPortal.Builder()
-//                    .addProcessor(aprilTag)
-//                    .addProcessor(s_Processor)
-//                    .setCameraResolution(new Size(1280, 800))
-//                    .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-//                    .setCamera(hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam))
-//                    .build();
-//            FtcDashboard.getInstance().startCameraStream(s_Processor, 120);
-//        } else {
-//            visionPortal = VisionPortal.easyCreateWithDefaults(
-//                    hardwaremap.get(WebcamName.class, Constants.VisionConstants.webcam), aprilTag);
-//        }
+
         limelight = hardwaremap.get(Limelight3A.class, "Limelight");
 
         telemetry.setMsTransmissionInterval(11);
@@ -191,38 +161,11 @@ public class AprilVision extends SubsystemBase {
         return robotPose;
     }
 
-
-//    public void setTargetY(double y) {
-//        targetYaw = y;
-//    }
-//    public double getTargetY() {
-//        return desiredTag.ftcPose.y;
-//    }
-//
-//    public void setTargetX(double x) {
-//        targetX = x;
-//    }
-//    public double getTargetX() {
-//        return desiredTag.ftcPose.x;
-//    }
-//
-//    public void setRobotRange(double range) {
-//        robotRange = range;
-//    }
-//    public static double getRobotRange() {
-//        return robotRange;
-//    }
     public void periodic() {
         refreshDesiredID();
         fifo.add(getTargetRange());
 
         LLStatus status = limelight.getStatus();
-//        telemetry.addData("Name", "%s",
-//                status.getName());
-//        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-//                status.getTemp(), status.getCpu(),(int)status.getFps());
-//        telemetry.addData("Pipeline", "Index: %d, Type: %s",
-//                status.getPipelineIndex(), status.getPipelineType());
         telemetry.addData("targetFound", foundTarget());
             getAprilTagData(telemetry);
 
@@ -230,7 +173,5 @@ public class AprilVision extends SubsystemBase {
 
         telemetry.addData("TARGET RANGE AVG:", getRangeAvg());
         telemetry.addData("ROBOT POSE: ", robotPose);
-//        telemetry.addData("reult", limelight.getLatestResult());
-//            telemetry.addData("is result vaid", result.isValid());
     }
 }

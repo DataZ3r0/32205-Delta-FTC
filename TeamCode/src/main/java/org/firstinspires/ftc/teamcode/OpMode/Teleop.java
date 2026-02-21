@@ -4,12 +4,15 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.ftc.localization.constants.ThreeWheelConstants;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Commands.TurretCalculator;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake.MiddleStage;
+import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter.NewTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
@@ -19,6 +22,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.GlobalPoseEstimation;
 import org.firstinspires.ftc.teamcode.VisionStates;
 import org.firstinspires.ftc.teamcode.Subsystems.distanceSensor;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @TeleOp(name="DeltaBlue", group="Teleop")
 public class Teleop extends LinearOpMode {
@@ -33,7 +37,7 @@ public class Teleop extends LinearOpMode {
     MiddleStage s_middleStage;
     Shooter s_shooter;
     NewTurret s_turret;
-    OTOS s_otos;
+    Odometry s_odometry;
     GlobalPoseEstimation poseEstimation;
     TurretCalculator turretCalculator;
 
@@ -74,9 +78,9 @@ public class Teleop extends LinearOpMode {
         s_shooter = new Shooter(hardwareMap, m_telemetry, opGamepad.isDown(GamepadKeys.Button.A));
         s_turret = new NewTurret(hardwareMap, s_drivetrain, m_telemetry);
 
-        s_otos = new OTOS(hardwareMap, m_telemetry);
+        s_odometry = new Odometry(hardwareMap, Constants.localizerConstants, m_telemetry);
 
-        turretCalculator = new TurretCalculator(s_otos, s_aprilVision, s_turret);
+        turretCalculator = new TurretCalculator(s_odometry, s_aprilVision, s_turret);
 //        poseEstimation = new GlobalPoseEstimation(s_otos, s_aprilVision, s_turret);
 
         intakeTrigger = GamepadKeys.Trigger.RIGHT_TRIGGER;
@@ -101,7 +105,8 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             s_drivetrain.periodic();
-            s_otos.periodic();
+            s_odometry.update();
+            s_odometry.updateEncoders();
             s_shooter.periodic();
             s_turret.periodic();
             s_aprilVision.periodic();
@@ -122,7 +127,6 @@ public class Teleop extends LinearOpMode {
 
 
             if (s_aprilVision.foundTarget()) {
-                turretCalculator.correctOTOS();
                 s_turret.setSetpoint(s_turret.getFieldTurretAngle() + s_aprilVision.getTx());
             } else {
                 s_turret.setSetpoint(turretCalculator.getTurretSetpointBlue(new SparkFunOTOS.Pose2D(-72, 72, 0)));
@@ -141,11 +145,19 @@ public class Teleop extends LinearOpMode {
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.X)){
                 s_drivetrain.resetYaw();
-                s_otos.resetOTOS();
+                s_odometry.setPose(new Pose(0, 0, Math.toRadians(0)));
             }
 
             if (driverGamepad.wasJustPressed(GamepadKeys.Button.A)) {
-                s_otos.setPose(new SparkFunOTOS.Pose2D(0 ,0, s_otos.getH()));
+                s_odometry.setPose(new Pose(0 , 0, Math.toRadians(s_drivetrain.getHeading())));
+            }
+
+            if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                s_odometry.setPose(new Pose(0 , 48, Math.toRadians(s_drivetrain.getHeading())));
+            }
+
+            if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                s_odometry.setPose(new Pose(48 , 48, Math.toRadians(s_drivetrain.getHeading())));
             }
 
             if (triggerDown(driverGamepad, intakeTrigger)) {
